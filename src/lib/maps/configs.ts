@@ -57,7 +57,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/anizay_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/anizay_height.json"
+      height_data: "/height_data/anizay_height.json"
     }
   },
   {
@@ -94,7 +94,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/gogland_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/gogland_height.json"
+      height_data: "/height_data/gogland_height.json"
     }
   },
   {
@@ -113,7 +113,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 5,
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/kunar_sat_z5_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/kunar_height.json"
+      height_data: "/height_data/kunar_height.json"
     }
   },
   {
@@ -177,7 +177,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/saigon_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/saigon_height.json"
+      height_data: "/height_data/saigon_height.json"
     }
   },
   {
@@ -205,7 +205,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/takistan_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/takistan_height.json"
+      height_data: "/height_data/takistan_height.json"
     }
   },
   {
@@ -224,7 +224,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6,
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/zarichne_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/zarichne_height.json"
+      height_data: "/height_data/zarichne_height.json"
     }
   },
   {
@@ -234,7 +234,7 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/zimnitrita_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/zimnitrita_height.json"
+      height_data: "/height_data/zimnitrita_height.json"
     }
   }
 ]
