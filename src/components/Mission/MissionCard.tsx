@@ -9,6 +9,7 @@
  */
 
 import { useState } from 'react';
+import { RotateCcw, Trash2 } from 'lucide-react';
 import type { FireMission } from '../../types';
 import { useMissionsStore } from '../../stores/useMissionsStore';
 import { useAppStore } from '../../stores/useAppStore';
@@ -61,62 +62,60 @@ export function MissionCard({ mission, isSelected = false }: MissionCardProps) {
     <>
       <div
         className={`
-          bg-gray-800 rounded-lg p-3 space-y-2 transition-all
-          ${isSelected ? 'ring-2 ring-blue-500 shadow-lg shadow-blue-500/20' : 'hover:bg-gray-750'}
+          panel space-y-2 transition-all
+          ${isSelected ? 'ring-2 ring-primary shadow-lg shadow-primary/20' : 'hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10'}
         `}
       >
         {/* Mission Header */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-white truncate">
+            <h3 className="font-semibold text-foreground truncate">
               {mission.name}
             </h3>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-muted-foreground">
               {formatDate(mission.createdAt)}
             </p>
           </div>
 
           {/* Selected Badge */}
           {isSelected && (
-            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full">
-              Aktiv
-            </span>
+            <span className="badge badge-primary">Aktiv</span>
           )}
         </div>
 
         {/* Fire Solution Preview */}
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="bg-gray-900/50 rounded p-2">
-            <div className="text-xs text-gray-400">Azimut</div>
-            <div className="font-mono font-semibold text-blue-400">
+          <div className="bg-muted/30 rounded p-2">
+            <div className="text-xs text-muted-foreground">Azimut</div>
+            <div className="font-mono font-semibold text-primary">
               {mission.fireSolution.azimuthMil.toFixed(0)} MIL
             </div>
           </div>
-          <div className="bg-gray-900/50 rounded p-2">
-            <div className="text-xs text-gray-400">Elevation</div>
-            <div className="font-mono font-semibold text-green-400">
+          <div className="bg-muted/30 rounded p-2">
+            <div className="text-xs text-muted-foreground">Elevation</div>
+            <div className="font-mono font-semibold text-primary">
               {mission.fireSolution.elevationAdj.toFixed(0)} MIL
             </div>
           </div>
         </div>
 
         {/* Additional Info */}
-        <div className="text-xs text-gray-400 space-y-0.5">
+        <div className="text-xs text-muted-foreground space-y-0.5">
           <div className="flex justify-between">
             <span>Entfernung:</span>
-            <span className="font-mono text-gray-300">
+            <span className="font-mono text-foreground">
               {mission.fireSolution.distance.toFixed(0)}m
             </span>
           </div>
           <div className="flex justify-between">
             <span>Ladung:</span>
-            <span className="font-mono text-gray-300">
+            <span className="font-mono text-foreground">
               {mission.mortarConfig.charge} Ringe
             </span>
           </div>
           <div className="flex justify-between">
             <span>Typ:</span>
-            <span className="text-gray-300">
+            <span className="text-foreground">
               {mission.mortarConfig.type} / {mission.mortarConfig.ammo}
             </span>
           </div>
@@ -124,17 +123,17 @@ export function MissionCard({ mission, isSelected = false }: MissionCardProps) {
 
         {/* Action Buttons */}
         <div className="flex gap-2 pt-1">
-          <button
-            onClick={handleLoadMission}
-            className="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
-          >
-            Laden
+          <button onClick={handleLoadMission} className="btn-secondary flex-1">
+            <div className="flex items-center justify-center gap-1.5">
+              <RotateCcw className="w-4 h-4" />
+              <span>Laden</span>
+            </div>
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="px-3 py-1.5 bg-red-600/80 hover:bg-red-600 text-white text-sm font-medium rounded transition-colors"
+            className="btn-danger px-3"
           >
-            Löschen
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>

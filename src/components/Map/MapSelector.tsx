@@ -34,14 +34,11 @@ export function MapSelector() {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label
-          htmlFor="map-select"
-          className="block text-gray-400 text-xs uppercase font-medium"
-        >
+        <label htmlFor="map-select" className="section-header">
           {t('sidebar.map')}
         </label>
         {selectedMapConfig?.hasHeightData && (
-          <div className="flex items-center gap-1 text-xs text-green-400">
+          <div className="flex items-center gap-1 text-xs text-primary">
             <Mountain className="w-3 h-3" />
             <span>{t('sidebar.heightData')}</span>
           </div>
@@ -49,31 +46,13 @@ export function MapSelector() {
       </div>
       <div className="relative">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <Map className="w-4 h-4 text-gray-400" />
+          <Map className="w-4 h-4 text-muted-foreground" />
         </div>
         <select
           id="map-select"
           value={selectedMap}
           onChange={handleMapChange}
-          className="
-            w-full
-            pl-10 pr-10 py-3
-            bg-gray-800
-            border border-gray-700
-            text-white
-            rounded
-            appearance-none
-            cursor-pointer
-            transition-all duration-150 ease-in-out
-            hover:bg-gray-750
-            hover:border-gray-600
-            focus:outline-none
-            focus:ring-2
-            focus:ring-blue-500
-            focus:border-transparent
-            font-medium
-            text-sm
-          "
+          className="select-field w-full pl-10 pr-10 py-3 appearance-none font-medium text-sm"
         >
           <optgroup label={t('sidebar.vanilla')}>
             {vanilla.map((map) => (
@@ -92,7 +71,7 @@ export function MapSelector() {
         </select>
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
           <svg
-            className="w-4 h-4 text-gray-400"
+            className="w-4 h-4 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

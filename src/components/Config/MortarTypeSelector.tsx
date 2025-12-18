@@ -3,6 +3,7 @@
  * Toggle between US and RUS mortar types
  */
 
+import { Target } from 'lucide-react';
 import type { MortarType } from '../../types';
 
 interface MortarTypeSelectorProps {
@@ -18,43 +19,31 @@ export function MortarTypeSelector({
 }: MortarTypeSelectorProps) {
   return (
     <div>
-      <label className="block text-gray-400 text-xs uppercase mb-2 font-medium">
-        Mörser-Typ
-      </label>
+      <label className="section-header mb-2 block">Mörser-Typ</label>
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
           onClick={() => onChange('US')}
           disabled={disabled}
           className={`
-            px-4 py-3 rounded font-semibold text-sm uppercase tracking-wide
-            transition-all duration-150 ease-in-out
-            disabled:opacity-50 disabled:cursor-not-allowed
-            ${
-              value === 'US'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }
+            btn-toggle flex items-center justify-center gap-2
+            ${value === 'US' ? 'active' : ''}
           `}
         >
-          US M252
+          <Target className="w-4 h-4" />
+          <span>US M252</span>
         </button>
         <button
           type="button"
           onClick={() => onChange('RUS')}
           disabled={disabled}
           className={`
-            px-4 py-3 rounded font-semibold text-sm uppercase tracking-wide
-            transition-all duration-150 ease-in-out
-            disabled:opacity-50 disabled:cursor-not-allowed
-            ${
-              value === 'RUS'
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }
+            btn-toggle flex items-center justify-center gap-2
+            ${value === 'RUS' ? 'active' : ''}
           `}
         >
-          RUS 2B14
+          <Target className="w-4 h-4" />
+          <span>RUS 2B14</span>
         </button>
       </div>
     </div>

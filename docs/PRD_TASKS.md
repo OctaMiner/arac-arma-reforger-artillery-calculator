@@ -322,15 +322,15 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | `TargetMarker.tsx` - Draggable Ziel-Icon | `/map` | 1 | 5.2.1 |
 | [x] | `FireLine.tsx` - Linie zwischen Mörser und Ziel | `/map` | 1 | 5.2.4-5 |
 | [x] | `CoordinateGrid.tsx` - Adaptives Raster (10m-1000m je nach Zoom) | `/map` | 2 | 5.2.1 |
-| [ ] | `StationMarkers.tsx` - Gespeicherte Stellungen anzeigen | `/map` | 2 | 4.1.20 |
-| [ ] | `SpotterMarker.tsx` - Spotter Position + Sichtlinie | `/spotter` | 2 | 4.1.29 |
+| [x] | `StationMarkers.tsx` - Gespeicherte Stellungen anzeigen | `/map` | 2 | 4.1.20 |
+| [x] | `SpotterMarker.tsx` - Spotter Position + Sichtlinie | `/spotter` | 2 | 4.1.29 |
 | [ ] | `ImpactMarker.tsx` - Einschlagpunkt für Korrektur | `/spotter` | 3 | 4.1.31 |
 | [x] | Click Handler: Mörser setzen (Linksklick) | `/map` | 1 | 5.2.4 |
 | [x] | Click Handler: Ziel setzen (Ctrl+Klick oder Rechtsklick) | `/map` | 1 | 5.2.5 |
 | [x] | Drag Handler: Position Update während Drag | `/map` | 1 | 5.2.4-5 |
 | [x] | Zoom Controls Styling | `/design` | 2 | 5.2.1 |
 | [x] | Koordinaten-Anzeige an Mausposition | `/map` | 2 | 5.2.1 |
-| [ ] | **Loading-Indikator**: Spinner während Karten-Download | `/design` | 2 | 5.2.3 |
+| [x] | **Loading-Indikator**: Spinner während Karten-Download | `/design` | 2 | 5.2.3 |
 
 ## 5.3 Config Components (Sidebar)
 
@@ -343,7 +343,7 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | `CoordinateInput.tsx` - Manuelle Ost/Nord Eingabe | `/frontend` | 1 | 4.1.4-5 |
 | [x] | `HeightInput.tsx` - Höheneingabe für Mörser/Ziel | `/frontend` | 1 | 4.1.4-5 |
 | [x] | `PositionSection.tsx` - Kombiniert Coordinate+Height | `/frontend` | 1 | 5.3.5-6 |
-| [ ] | `QuickStationSelect.tsx` - Dropdown für gespeicherte Stellungen | `/frontend` | 2 | 4.1.24 |
+| [x] | `QuickStationSelect.tsx` - Dropdown für gespeicherte Stellungen | `/frontend` | 2 | 4.1.24 |
 | [x] | Input Validierung (nur Zahlen, Bereich) | `/frontend` | 1 | 5.3.5-6 |
 | [x] | Auto-Berechnung bei Input-Änderung | `/frontend` | 1 | 4.2.1 |
 | [x] | Styling: Kompakte, dunkle Inputs | `/design` | 1 | 5.3.1-8 |
@@ -401,14 +401,14 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | `SpotterToggle.tsx` - Spotter-Modus Ein/Aus | `/spotter` | 1 | 4.1.33 |
 | [x] | `SpotterPositionInput.tsx` - GPS Position des Spotters | `/spotter` | 1 | 4.1.29 |
 | [x] | `VectorMeasurementInput.tsx` - Entfernung + Azimut | `/spotter` | 1 | 4.1.30 |
-| [ ] | `HeightDiffInput.tsx` - Höhendifferenz vom Spotter | `/spotter` | 2 | 5.7.4 |
+| [x] | `HeightDiffInput.tsx` - Höhendifferenz vom Spotter | `/spotter` | 2 | 5.7.4 |
 | [x] | "Ziel berechnen" Button | `/spotter` | 1 | 2.4.1 |
 | [x] | Berechnetes Ziel Anzeige | `/spotter` | 1 | 5.7.6 |
 | [x] | `CorrectionPanel.tsx` - Feuerkorrektur-Eingabe | `/spotter` | 1 | 4.1.31 |
 | [x] | `CorrectionInput.tsx` - L/R und Add/Drop Felder | `/spotter` | 1 | 5.7.8 |
 | [x] | "Korrektur anwenden" Button | `/spotter` | 1 | 4.1.35 |
 | [x] | `CorrectionHistory.tsx` - Liste vorheriger Korrekturen | `/spotter` | 2 | 4.1.31 |
-| [ ] | Visual: Spotter-Sichtlinie auf Karte | `/spotter` | 2 | 5.2.9 |
+| [x] | Visual: Spotter-Sichtlinie auf Karte | `/spotter` | 2 | 5.2.9 |
 | [x] | Styling: Spotter-Panel im taktischen Look | `/design` | 1 | 5.7.1-11 |
 
 ## 5.8 History Components
@@ -453,10 +453,10 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | Alle Stores miteinander verbinden | `/frontend` | 1 | Phase 4 komplett |
-| [ ] | Alle Components mit Stores verbinden | `/frontend` | 1 | Phase 5 komplett |
-| [ ] | Electron IPC in Hooks integrieren | `/frontend` | 1 | Phase 3 komplett |
-| [ ] | Initiales Laden aller Daten beim App-Start | `/frontend` | 1 | 6.1.1-3 |
+| [x] | Alle Stores miteinander verbinden | `/frontend` | 1 | Phase 4 komplett |
+| [x] | Alle Components mit Stores verbinden | `/frontend` | 1 | Phase 5 komplett |
+| [x] | Electron IPC in Hooks integrieren | `/frontend` | 1 | Phase 3 komplett |
+| [x] | Initiales Laden aller Daten beim App-Start | `/frontend` | 1 | 6.1.1-3 |
 | [ ] | Error Boundaries für alle Hauptbereiche | `/frontend` | 2 | 6.1.2 |
 | [ ] | Loading States für async Operationen | `/frontend` | 2 | 6.1.3 |
 
@@ -464,13 +464,13 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | Konsistentes Spacing/Padding überall | `/design` | 1 | Phase 5 komplett |
-| [ ] | Hover States für alle interaktiven Elemente | `/design` | 1 | 6.2.1 |
-| [ ] | Focus States für Accessibility | `/design` | 2 | 6.2.2 |
-| [ ] | Transitions/Animationen für State-Änderungen | `/design` | 2 | 6.2.1 |
+| [x] | Konsistentes Spacing/Padding überall | `/design` | 1 | Phase 5 komplett |
+| [x] | Hover States für alle interaktiven Elemente | `/design` | 1 | 6.2.1 |
+| [x] | Focus States für Accessibility | `/design` | 2 | 6.2.2 |
+| [x] | Transitions/Animationen für State-Änderungen | `/design` | 2 | 6.2.1 |
 | [ ] | Toast Notifications für Aktionen | `/design` | 2 | 6.1.2 |
 | [ ] | Tooltips für komplexe UI-Elemente | `/design` | 3 | 6.2.1 |
-| [ ] | Icons für alle Buttons (Lucide/Heroicons) | `/design` | 2 | Phase 5 komplett |
+| [x] | Icons für alle Buttons (Lucide/Heroicons) | `/design` | 2 | Phase 5 komplett |
 | [ ] | App Icon für Electron (ICO, PNG) | `/design` | 2 | 3.1.2 |
 
 ## 6.3 Performance Optimierung

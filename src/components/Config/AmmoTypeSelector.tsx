@@ -3,6 +3,7 @@
  * Select ammunition type (HE, Smoke, Illumination)
  */
 
+import { Flame, Cloud, Lightbulb } from 'lucide-react';
 import type { AmmoType } from '../../types';
 
 interface AmmoTypeSelectorProps {
@@ -19,34 +20,32 @@ export function AmmoTypeSelector({
   const ammoOptions: Array<{
     type: AmmoType;
     label: string;
-    color: string;
-    activeColor: string;
+    icon: React.ReactNode;
+    colorClass: string;
   }> = [
     {
       type: 'HE',
       label: 'HE',
-      color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-red-600 text-white shadow-lg shadow-red-900/50',
+      icon: <Flame className="w-4 h-4" />,
+      colorClass: 'bg-destructive hover:bg-destructive/90 border-destructive/30',
     },
     {
       type: 'Smoke',
       label: 'Smoke',
-      color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-gray-500 text-white shadow-lg shadow-gray-800/50',
+      icon: <Cloud className="w-4 h-4" />,
+      colorClass: 'bg-gray-400 hover:bg-gray-300 border-gray-500/30 text-black',
     },
     {
       type: 'Illumination',
       label: 'Illum',
-      color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50',
+      icon: <Lightbulb className="w-4 h-4" />,
+      colorClass: 'bg-amber-600 hover:bg-amber-700 border-amber-600/30',
     },
   ];
 
   return (
     <div>
-      <label className="block text-gray-400 text-xs uppercase mb-2 font-medium">
-        Munitionstyp
-      </label>
+      <label className="section-header mb-2 block">Munitionstyp</label>
       <div className="grid grid-cols-3 gap-2">
         {ammoOptions.map((option) => (
           <button
@@ -55,13 +54,12 @@ export function AmmoTypeSelector({
             onClick={() => onChange(option.type)}
             disabled={disabled}
             className={`
-              px-3 py-3 rounded font-semibold text-xs uppercase tracking-wide
-              transition-all duration-150 ease-in-out
-              disabled:opacity-50 disabled:cursor-not-allowed
-              ${value === option.type ? option.activeColor : option.color}
+              btn-toggle flex flex-col items-center justify-center gap-1 py-3
+              ${value === option.type ? `active ${option.colorClass}` : ''}
             `}
           >
-            {option.label}
+            {option.icon}
+            <span className="text-xs">{option.label}</span>
           </button>
         ))}
       </div>

@@ -10,6 +10,7 @@
 
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { RotateCcw } from 'lucide-react';
 import type { HistoryEntry } from '../../types';
 import { useAppStore } from '../../stores/useAppStore';
 import { useMissionsStore } from '../../stores/useMissionsStore';
@@ -89,13 +90,13 @@ export function HistoryEntry({ entry }: HistoryEntryProps) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-3 space-y-2 hover:bg-gray-750 transition-all">
+    <div className="panel hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all space-y-2">
       {/* Timestamp + Mission Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-gray-400">{formattedTime}</p>
+          <p className="text-xs text-muted-foreground">{formattedTime}</p>
           {missionName && (
-            <p className="text-xs text-blue-400 truncate">
+            <p className="text-xs text-primary truncate">
               {t('history.missionRef')} {missionName}
             </p>
           )}
@@ -104,45 +105,45 @@ export function HistoryEntry({ entry }: HistoryEntryProps) {
 
       {/* Fire Solution Preview */}
       <div className="grid grid-cols-2 gap-2 text-sm">
-        <div className="bg-gray-900/50 rounded p-2">
-          <div className="text-xs text-gray-400">{t('results.azimuth')}</div>
-          <div className="font-mono font-semibold text-blue-400">
+        <div className="bg-muted/30 rounded p-2">
+          <div className="text-xs text-muted-foreground">{t('results.azimuth')}</div>
+          <div className="font-mono font-semibold text-primary">
             {entry.fireSolution.azimuthMil.toFixed(0)} {t('common.mil')}
           </div>
         </div>
-        <div className="bg-gray-900/50 rounded p-2">
-          <div className="text-xs text-gray-400">{t('results.elevation')}</div>
-          <div className="font-mono font-semibold text-green-400">
+        <div className="bg-muted/30 rounded p-2">
+          <div className="text-xs text-muted-foreground">{t('results.elevation')}</div>
+          <div className="font-mono font-semibold text-primary">
             {entry.fireSolution.elevationAdj.toFixed(0)} {t('common.mil')}
           </div>
         </div>
       </div>
 
       {/* Additional Info */}
-      <div className="text-xs text-gray-400 space-y-0.5">
+      <div className="text-xs text-muted-foreground space-y-0.5">
         <div className="flex justify-between">
           <span>{t('results.distance')}:</span>
-          <span className="font-mono text-gray-300">
+          <span className="font-mono text-foreground">
             {entry.fireSolution.distance.toFixed(0)}
             {t('common.meters')}
           </span>
         </div>
         <div className="flex justify-between">
           <span>{t('config.charge')}:</span>
-          <span className="font-mono text-gray-300">
+          <span className="font-mono text-foreground">
             {entry.mortarConfig.charge} {t('config.ring')}
           </span>
         </div>
         <div className="flex justify-between">
           <span>{t('positions.mortar')}:</span>
-          <span className="font-mono text-gray-300">
+          <span className="font-mono text-foreground">
             {formatCoord(entry.mortarPos.east)} /{' '}
             {formatCoord(entry.mortarPos.north)}
           </span>
         </div>
         <div className="flex justify-between">
           <span>{t('positions.target')}:</span>
-          <span className="font-mono text-gray-300">
+          <span className="font-mono text-foreground">
             {formatCoord(entry.targetPos.east)} /{' '}
             {formatCoord(entry.targetPos.north)}
           </span>
@@ -156,11 +157,11 @@ export function HistoryEntry({ entry }: HistoryEntryProps) {
       </div>
 
       {/* Load Button */}
-      <button
-        onClick={handleLoadEntry}
-        className="w-full px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
-      >
-        {t('history.load')}
+      <button onClick={handleLoadEntry} className="btn-secondary w-full">
+        <div className="flex items-center justify-center gap-2">
+          <RotateCcw className="w-4 h-4" />
+          <span>{t('history.load')}</span>
+        </div>
       </button>
     </div>
   );

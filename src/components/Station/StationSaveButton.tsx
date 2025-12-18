@@ -9,6 +9,7 @@
  */
 
 import { useState } from 'react';
+import { MapPin } from 'lucide-react';
 import { useAppStore } from '../../stores/useAppStore';
 import { StationSaveDialog } from './StationSaveDialog';
 
@@ -25,31 +26,13 @@ export function StationSaveButton() {
       <button
         onClick={() => setShowDialog(true)}
         disabled={!canSave}
-        className="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:text-gray-500 text-white font-semibold rounded-lg transition-colors shadow-lg disabled:shadow-none disabled:cursor-not-allowed group"
+        className="btn-primary w-full bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-600 border-emerald-600/30"
         title={
           canSave ? 'Stellung speichern' : 'Setze zuerst eine Mörser-Position'
         }
       >
         <div className="flex items-center justify-center gap-2">
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
+          <MapPin className="w-5 h-5" />
           <span>Stellung speichern</span>
         </div>
       </button>

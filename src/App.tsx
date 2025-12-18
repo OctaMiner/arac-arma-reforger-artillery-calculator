@@ -21,8 +21,51 @@ import { MapView } from './components/Map';
 import { useAutoHeight } from './hooks/useAutoHeight';
 import { useAutoCalculate } from './hooks/useAutoCalculate';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { useInitialize } from './hooks/useInitialize';
+
+/**
+ * Loading Screen Component
+ * Displayed during app initialization
+ */
+function LoadingScreen({ error }: { error?: string | null }) {
+  return (
+    <div className="h-screen flex items-center justify-center bg-background">
+      <div className="text-center space-y-4">
+        {error ? (
+          <>
+            <div className="text-destructive text-6xl mb-4">⚠️</div>
+            <h2 className="text-2xl font-bold text-destructive">
+              Fehler beim Laden
+            </h2>
+            <p className="text-muted-foreground max-w-md">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+            >
+              Neu laden
+            </button>
+          </>
+        ) : (
+          <>
+            <div className="text-primary text-6xl mb-4">🎯</div>
+            <h2 className="text-2xl font-bold">ARAC wird geladen...</h2>
+            <p className="text-muted-foreground">
+              Artillery Calculator initialisiert
+            </p>
+            <div className="flex justify-center mt-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function App() {
+  // Initialize app - load all persisted data
+  const { isInitialized, isLoading, error } = useInitialize();
+
   // Enable automatic height loading when positions change
   useAutoHeight();
 
@@ -34,6 +77,11 @@ function App() {
     enabled: true,
     // Note: Ring count shortcuts (1-5) work automatically
   });
+
+  // Show loading screen during initialization
+  if (isLoading || !isInitialized) {
+    return <LoadingScreen error={error} />;
+  }
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">

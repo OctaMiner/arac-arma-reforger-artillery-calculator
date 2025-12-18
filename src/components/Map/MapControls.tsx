@@ -3,6 +3,7 @@
  * Provides toggles for grid, range circles, and other map features
  */
 
+import { Grid3x3 } from 'lucide-react';
 import { useAppStore } from '../../stores/useAppStore';
 
 const MapControls = () => {
@@ -17,28 +18,17 @@ const MapControls = () => {
         className={`
           px-3 py-2 rounded-lg backdrop-blur-md text-sm font-medium
           transition-all duration-200 shadow-lg
+          focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background
           ${
             showGrid
-              ? 'bg-green-600/90 text-white hover:bg-green-700/90'
-              : 'bg-gray-800/90 text-gray-300 hover:bg-gray-700/90'
+              ? 'bg-primary/90 text-primary-foreground hover:bg-primary shadow-primary/30'
+              : 'bg-card/90 text-foreground hover:bg-card/80 hover:border-primary/40'
           }
         `}
         title={showGrid ? 'Grid ausblenden' : 'Grid einblenden'}
       >
         <div className="flex items-center gap-2">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 5h16M4 12h16M4 19h16"
-            />
-          </svg>
+          <Grid3x3 className="w-4 h-4" />
           <span>Grid</span>
         </div>
       </button>

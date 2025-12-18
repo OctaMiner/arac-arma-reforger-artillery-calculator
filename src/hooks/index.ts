@@ -31,5 +31,8 @@ export type { Coordinate, TerrainHeightResult } from './useTerrainHeight';
 // Auto Height Hook
 export { useAutoHeight, useAutoHeightStatus } from './useAutoHeight';
 
+// App Initialization Hook
+export { useInitialize, useInitializeStatus } from './useInitialize';
+
 // Re-export all stores for convenience
 export * from '../stores';

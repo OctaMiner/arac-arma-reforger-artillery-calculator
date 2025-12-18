@@ -157,13 +157,11 @@ export function CoordinateInput({
 
   return (
     <div>
-      <label className="block text-gray-400 text-xs uppercase mb-2 font-medium">
-        {label}
-      </label>
+      <label className="section-header mb-2 block">{label}</label>
       <div className="grid grid-cols-2 gap-2">
         {/* East Input */}
         <div>
-          <label className="block text-gray-500 text-[10px] uppercase mb-1">
+          <label className="block text-muted-foreground text-[10px] uppercase mb-1">
             Ost (E)
           </label>
           <input
@@ -176,16 +174,16 @@ export function CoordinateInput({
             onKeyDown={handleEastKeyDown}
             disabled={disabled}
             placeholder="000"
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white text-center font-mono text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="input-field w-full text-center text-sm"
           />
-          <div className="text-[10px] text-gray-600 mt-1 text-center">
+          <div className="text-[10px] text-muted-foreground mt-1 text-center">
             {position ? `${position.east}m` : '—'}
           </div>
         </div>
 
         {/* North Input */}
         <div>
-          <label className="block text-gray-500 text-[10px] uppercase mb-1">
+          <label className="block text-muted-foreground text-[10px] uppercase mb-1">
             Nord (N)
           </label>
           <input
@@ -198,14 +196,14 @@ export function CoordinateInput({
             onKeyDown={handleNorthKeyDown}
             disabled={disabled}
             placeholder="000"
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white text-center font-mono text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="input-field w-full text-center text-sm"
           />
-          <div className="text-[10px] text-gray-600 mt-1 text-center">
+          <div className="text-[10px] text-muted-foreground mt-1 text-center">
             {position ? `${position.north}m` : '—'}
           </div>
         </div>
       </div>
-      <div className="text-[10px] text-gray-500 mt-2">
+      <div className="text-[10px] text-muted-foreground mt-2">
         Eingabe: 3-stellig (Grid) oder mit "m" (z.B. 8245m)
       </div>
     </div>
