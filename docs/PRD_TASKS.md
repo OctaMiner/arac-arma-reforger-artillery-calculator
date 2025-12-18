@@ -483,6 +483,7 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | Debounced Berechnung beim Drag (< 16ms) | `/frontend` | 1 | 4.2.2 |
 | [ ] | Lazy Loading für Map Tiles | `/map` | 2 | 5.2.1 |
 | [ ] | Bundle Size Analyse | `/electron` | 3 | 6.3.1-5 |
+| [ ] | **findBestRing Integration**: Terrain-Profil in Auto-Berechnung | `/ballistics` | 1 | 6.3.4 |
 
 ## 6.4 Keyboard Shortcuts
 
