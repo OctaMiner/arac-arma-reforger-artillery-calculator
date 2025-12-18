@@ -3,16 +3,16 @@
 // ============================================
 // Berechnet und wendet Feuerkorrekturen an
 
-import type { Coordinate } from '../../types'
+import type { Coordinate } from '../../types';
 
 /**
  * Korrektur-Input vom Spotter
  */
 export interface CorrectionInput {
-  leftRight: number       // Seitenabweichung in Metern (+ = rechts, - = links)
-  addDrop: number         // Längsabweichung in Metern (+ = zu kurz/Add, - = zu weit/Drop)
-  currentAzimuth: number  // Aktueller Azimut zum Ziel in Grad (0-360)
-  currentDistance: number // Aktuelle Entfernung zum Ziel in Metern
+  leftRight: number; // Seitenabweichung in Metern (+ = rechts, - = links)
+  addDrop: number; // Längsabweichung in Metern (+ = zu kurz/Add, - = zu weit/Drop)
+  currentAzimuth: number; // Aktueller Azimut zum Ziel in Grad (0-360)
+  currentDistance: number; // Aktuelle Entfernung zum Ziel in Metern
 }
 
 /**
@@ -31,36 +31,39 @@ export interface CorrectionInput {
  *   currentDistance: 1000
  * })
  */
-export function applyCorrection(target: Coordinate, correction: CorrectionInput): Coordinate {
-  const { leftRight, addDrop, currentAzimuth } = correction
+export function applyCorrection(
+  target: Coordinate,
+  correction: CorrectionInput
+): Coordinate {
+  const { leftRight, addDrop, currentAzimuth } = correction;
 
   // Azimut in Radianten konvertieren
-  const azimuthRad = (currentAzimuth * Math.PI) / 180
+  const azimuthRad = (currentAzimuth * Math.PI) / 180;
 
   // Links/Rechts Korrektur (senkrecht zum Azimut)
   // Rechts = Azimut + 90°, Links = Azimut - 90°
-  const lateralAngleRad = azimuthRad + Math.PI / 2
-  const deltaEastLateral = leftRight * Math.sin(lateralAngleRad)
-  const deltaNorthLateral = leftRight * Math.cos(lateralAngleRad)
+  const lateralAngleRad = azimuthRad + Math.PI / 2;
+  const deltaEastLateral = leftRight * Math.sin(lateralAngleRad);
+  const deltaNorthLateral = leftRight * Math.cos(lateralAngleRad);
 
   // Add/Drop Korrektur (entlang des Azimuts)
   // Add (zu kurz) = in Azimut-Richtung, Drop (zu weit) = gegen Azimut-Richtung
-  const deltaEastLongitudinal = addDrop * Math.sin(azimuthRad)
-  const deltaNorthLongitudinal = addDrop * Math.cos(azimuthRad)
+  const deltaEastLongitudinal = addDrop * Math.sin(azimuthRad);
+  const deltaNorthLongitudinal = addDrop * Math.cos(azimuthRad);
 
   // Gesamt-Korrektur in Metern
-  const totalDeltaEastMeters = deltaEastLateral + deltaEastLongitudinal
-  const totalDeltaNorthMeters = deltaNorthLateral + deltaNorthLongitudinal
+  const totalDeltaEastMeters = deltaEastLateral + deltaEastLongitudinal;
+  const totalDeltaNorthMeters = deltaNorthLateral + deltaNorthLongitudinal;
 
   // In Arma-Koordinaten konvertieren (10m Einheiten)
-  const deltaEast = totalDeltaEastMeters / 10
-  const deltaNorth = totalDeltaNorthMeters / 10
+  const deltaEast = totalDeltaEastMeters / 10;
+  const deltaNorth = totalDeltaNorthMeters / 10;
 
   return {
     east: target.east + deltaEast,
     north: target.north + deltaNorth,
-    height: target.height // Höhe bleibt gleich
-  }
+    height: target.height, // Höhe bleibt gleich
+  };
 }
 
 /**
@@ -74,12 +77,15 @@ export function applyCorrection(target: Coordinate, correction: CorrectionInput)
  * // 10m Abweichung bei 1000m Entfernung
  * const milCorrection = lateralToMilCorrection(10, 1000) // = 10 MIL
  */
-export function lateralToMilCorrection(lateralMeters: number, distance: number): number {
+export function lateralToMilCorrection(
+  lateralMeters: number,
+  distance: number
+): number {
   if (distance === 0) {
-    return 0
+    return 0;
   }
   // MIL = (Abweichung / Entfernung) * 1000
-  return (lateralMeters / distance) * 1000
+  return (lateralMeters / distance) * 1000;
 }
 
 /**
@@ -89,9 +95,12 @@ export function lateralToMilCorrection(lateralMeters: number, distance: number):
  * @param distance - Entfernung zum Ziel in Metern
  * @returns Seitenabweichung in Metern
  */
-export function milToLateralCorrection(milCorrection: number, distance: number): number {
+export function milToLateralCorrection(
+  milCorrection: number,
+  distance: number
+): number {
   // Meter = (MIL * Entfernung) / 1000
-  return (milCorrection * distance) / 1000
+  return (milCorrection * distance) / 1000;
 }
 
 /**
@@ -112,31 +121,35 @@ export function calculateCorrectionFromImpact(
   azimuth: number
 ): CorrectionInput {
   // Differenz in Metern berechnen
-  const deltaEastMeters = (target.east - impact.east) * 10
-  const deltaNorthMeters = (target.north - impact.north) * 10
+  const deltaEastMeters = (target.east - impact.east) * 10;
+  const deltaNorthMeters = (target.north - impact.north) * 10;
 
   // Azimut in Radianten konvertieren
-  const azimuthRad = (azimuth * Math.PI) / 180
+  const azimuthRad = (azimuth * Math.PI) / 180;
 
   // Zerlegung in Längs- und Seitenkomponente
   // Längsrichtung: entlang des Azimuts
   const longitudinal =
-    deltaEastMeters * Math.sin(azimuthRad) + deltaNorthMeters * Math.cos(azimuthRad)
+    deltaEastMeters * Math.sin(azimuthRad) +
+    deltaNorthMeters * Math.cos(azimuthRad);
 
   // Seitenrichtung: senkrecht zum Azimut (Azimut + 90°)
-  const lateralAngleRad = azimuthRad + Math.PI / 2
+  const lateralAngleRad = azimuthRad + Math.PI / 2;
   const lateral =
-    deltaEastMeters * Math.sin(lateralAngleRad) + deltaNorthMeters * Math.cos(lateralAngleRad)
+    deltaEastMeters * Math.sin(lateralAngleRad) +
+    deltaNorthMeters * Math.cos(lateralAngleRad);
 
   // Entfernung für MIL-Berechnung
-  const distance = Math.sqrt(deltaEastMeters * deltaEastMeters + deltaNorthMeters * deltaNorthMeters)
+  const distance = Math.sqrt(
+    deltaEastMeters * deltaEastMeters + deltaNorthMeters * deltaNorthMeters
+  );
 
   return {
     leftRight: lateral,
     addDrop: longitudinal,
     currentAzimuth: azimuth,
-    currentDistance: distance
-  }
+    currentDistance: distance,
+  };
 }
 
 /**
@@ -145,29 +158,31 @@ export function calculateCorrectionFromImpact(
  * @param corrections - Array von CorrectionInput-Objekten
  * @returns Aggregierte Gesamtkorrektur
  */
-export function aggregateCorrections(corrections: CorrectionInput[]): CorrectionInput {
+export function aggregateCorrections(
+  corrections: CorrectionInput[]
+): CorrectionInput {
   if (corrections.length === 0) {
     return {
       leftRight: 0,
       addDrop: 0,
       currentAzimuth: 0,
-      currentDistance: 0
-    }
+      currentDistance: 0,
+    };
   }
 
   // Verwende den Azimut der letzten Korrektur
-  const lastCorrection = corrections[corrections.length - 1]
+  const lastCorrection = corrections[corrections.length - 1];
 
   // Summiere alle Korrekturen
-  const totalLeftRight = corrections.reduce((sum, c) => sum + c.leftRight, 0)
-  const totalAddDrop = corrections.reduce((sum, c) => sum + c.addDrop, 0)
+  const totalLeftRight = corrections.reduce((sum, c) => sum + c.leftRight, 0);
+  const totalAddDrop = corrections.reduce((sum, c) => sum + c.addDrop, 0);
 
   return {
     leftRight: totalLeftRight,
     addDrop: totalAddDrop,
     currentAzimuth: lastCorrection.currentAzimuth,
-    currentDistance: lastCorrection.currentDistance
-  }
+    currentDistance: lastCorrection.currentDistance,
+  };
 }
 
 /**
@@ -181,25 +196,25 @@ export function aggregateCorrections(corrections: CorrectionInput[]): Correction
  * // "Korrektur: 20 rechts, 30 Drop"
  */
 export function formatCorrectionCall(correction: CorrectionInput): string {
-  const parts: string[] = []
+  const parts: string[] = [];
 
   // Seitenkorrektur
   if (correction.leftRight !== 0) {
-    const absLR = Math.abs(correction.leftRight)
-    const direction = correction.leftRight > 0 ? 'rechts' : 'links'
-    parts.push(`${absLR.toFixed(0)} ${direction}`)
+    const absLR = Math.abs(correction.leftRight);
+    const direction = correction.leftRight > 0 ? 'rechts' : 'links';
+    parts.push(`${absLR.toFixed(0)} ${direction}`);
   }
 
   // Längskorrektur
   if (correction.addDrop !== 0) {
-    const absAD = Math.abs(correction.addDrop)
-    const direction = correction.addDrop > 0 ? 'Add' : 'Drop'
-    parts.push(`${absAD.toFixed(0)} ${direction}`)
+    const absAD = Math.abs(correction.addDrop);
+    const direction = correction.addDrop > 0 ? 'Add' : 'Drop';
+    parts.push(`${absAD.toFixed(0)} ${direction}`);
   }
 
   if (parts.length === 0) {
-    return 'Korrektur: Auf Ziel'
+    return 'Korrektur: Auf Ziel';
   }
 
-  return 'Korrektur: ' + parts.join(', ')
+  return 'Korrektur: ' + parts.join(', ');
 }

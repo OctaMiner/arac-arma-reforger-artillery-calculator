@@ -3,16 +3,16 @@
 // ============================================
 // Berechnet die Ziel-Koordinaten aus Vector 21 Fernglas-Daten
 
-import type { Coordinate } from '../../types'
+import type { Coordinate } from '../../types';
 
 /**
  * Input-Daten vom Spotter/Vector 21 Fernglas
  */
 export interface SpotterInput {
-  spotterPosition: Coordinate  // GPS-Position des Spotters
-  distance: number             // Laser-Entfernung zum Ziel in Metern
-  azimuth: number              // Kompass-Azimut zum Ziel in Grad (0-360)
-  heightAngle?: number         // Optional: Höhenwinkel in Grad (-90 bis +90)
+  spotterPosition: Coordinate; // GPS-Position des Spotters
+  distance: number; // Laser-Entfernung zum Ziel in Metern
+  azimuth: number; // Kompass-Azimut zum Ziel in Grad (0-360)
+  heightAngle?: number; // Optional: Höhenwinkel in Grad (-90 bis +90)
 }
 
 /**
@@ -30,39 +30,39 @@ export interface SpotterInput {
  * })
  */
 export function calculateTargetFromSpotter(input: SpotterInput): Coordinate {
-  const { spotterPosition, distance, azimuth, heightAngle } = input
+  const { spotterPosition, distance, azimuth, heightAngle } = input;
 
   // Azimut von Grad in Radianten konvertieren
-  const azimuthRad = (azimuth * Math.PI) / 180
+  const azimuthRad = (azimuth * Math.PI) / 180;
 
   // Horizontale Distanz bei Höhenwinkel berechnen
-  let horizontalDistance = distance
+  let horizontalDistance = distance;
   if (heightAngle !== undefined) {
-    const heightAngleRad = (heightAngle * Math.PI) / 180
-    horizontalDistance = distance * Math.cos(heightAngleRad)
+    const heightAngleRad = (heightAngle * Math.PI) / 180;
+    horizontalDistance = distance * Math.cos(heightAngleRad);
   }
 
   // Ost- und Nord-Verschiebung berechnen (in Metern)
-  const deltaEastMeters = horizontalDistance * Math.sin(azimuthRad)
-  const deltaNorthMeters = horizontalDistance * Math.cos(azimuthRad)
+  const deltaEastMeters = horizontalDistance * Math.sin(azimuthRad);
+  const deltaNorthMeters = horizontalDistance * Math.cos(azimuthRad);
 
   // In Arma-Koordinaten konvertieren (10m Einheiten)
-  const deltaEast = deltaEastMeters / 10
-  const deltaNorth = deltaNorthMeters / 10
+  const deltaEast = deltaEastMeters / 10;
+  const deltaNorth = deltaNorthMeters / 10;
 
   // Höhenänderung berechnen
-  let deltaHeight = 0
+  let deltaHeight = 0;
   if (heightAngle !== undefined) {
-    const heightAngleRad = (heightAngle * Math.PI) / 180
-    deltaHeight = distance * Math.sin(heightAngleRad)
+    const heightAngleRad = (heightAngle * Math.PI) / 180;
+    deltaHeight = distance * Math.sin(heightAngleRad);
   }
 
   // Zielposition berechnen
   return {
     east: spotterPosition.east + deltaEast,
     north: spotterPosition.north + deltaNorth,
-    height: spotterPosition.height + deltaHeight
-  }
+    height: spotterPosition.height + deltaHeight,
+  };
 }
 
 /**
@@ -74,19 +74,19 @@ export function calculateTargetFromSpotter(input: SpotterInput): Coordinate {
  */
 export function calculateAzimuth(from: Coordinate, to: Coordinate): number {
   // Differenzen in Metern berechnen
-  const deltaEastMeters = (to.east - from.east) * 10
-  const deltaNorthMeters = (to.north - from.north) * 10
+  const deltaEastMeters = (to.east - from.east) * 10;
+  const deltaNorthMeters = (to.north - from.north) * 10;
 
   // Azimut in Radianten berechnen
-  let azimuthRad = Math.atan2(deltaEastMeters, deltaNorthMeters)
+  const azimuthRad = Math.atan2(deltaEastMeters, deltaNorthMeters);
 
   // In Grad konvertieren und normalisieren (0-360)
-  let azimuthDeg = (azimuthRad * 180) / Math.PI
+  let azimuthDeg = (azimuthRad * 180) / Math.PI;
   if (azimuthDeg < 0) {
-    azimuthDeg += 360
+    azimuthDeg += 360;
   }
 
-  return azimuthDeg
+  return azimuthDeg;
 }
 
 /**
@@ -98,11 +98,13 @@ export function calculateAzimuth(from: Coordinate, to: Coordinate): number {
  */
 export function calculateDistance(from: Coordinate, to: Coordinate): number {
   // Differenzen in Metern berechnen
-  const deltaEastMeters = (to.east - from.east) * 10
-  const deltaNorthMeters = (to.north - from.north) * 10
+  const deltaEastMeters = (to.east - from.east) * 10;
+  const deltaNorthMeters = (to.north - from.north) * 10;
 
   // Pythagoras für horizontale Entfernung
-  return Math.sqrt(deltaEastMeters * deltaEastMeters + deltaNorthMeters * deltaNorthMeters)
+  return Math.sqrt(
+    deltaEastMeters * deltaEastMeters + deltaNorthMeters * deltaNorthMeters
+  );
 }
 
 /**
@@ -113,15 +115,15 @@ export function calculateDistance(from: Coordinate, to: Coordinate): number {
  * @returns Höhenwinkel in Grad (-90 bis +90)
  */
 export function calculateHeightAngle(from: Coordinate, to: Coordinate): number {
-  const horizontalDistance = calculateDistance(from, to)
-  const heightDiff = to.height - from.height
+  const horizontalDistance = calculateDistance(from, to);
+  const heightDiff = to.height - from.height;
 
   if (horizontalDistance === 0) {
-    return heightDiff > 0 ? 90 : heightDiff < 0 ? -90 : 0
+    return heightDiff > 0 ? 90 : heightDiff < 0 ? -90 : 0;
   }
 
-  const angleRad = Math.atan(heightDiff / horizontalDistance)
-  return (angleRad * 180) / Math.PI
+  const angleRad = Math.atan(heightDiff / horizontalDistance);
+  return (angleRad * 180) / Math.PI;
 }
 
 /**
@@ -135,20 +137,20 @@ export function createSpotterInputFromCoordinates(
   spotterPosition: Coordinate,
   targetPosition: Coordinate
 ): SpotterInput {
-  const horizontalDistance = calculateDistance(spotterPosition, targetPosition)
-  const azimuth = calculateAzimuth(spotterPosition, targetPosition)
-  const heightAngle = calculateHeightAngle(spotterPosition, targetPosition)
+  const horizontalDistance = calculateDistance(spotterPosition, targetPosition);
+  const azimuth = calculateAzimuth(spotterPosition, targetPosition);
+  const heightAngle = calculateHeightAngle(spotterPosition, targetPosition);
 
   // Schrägdistanz berechnen
-  const heightDiff = targetPosition.height - spotterPosition.height
+  const heightDiff = targetPosition.height - spotterPosition.height;
   const distance = Math.sqrt(
     horizontalDistance * horizontalDistance + heightDiff * heightDiff
-  )
+  );
 
   return {
     spotterPosition,
     distance,
     azimuth,
-    heightAngle
-  }
+    heightAngle,
+  };
 }

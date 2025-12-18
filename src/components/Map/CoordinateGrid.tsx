@@ -14,68 +14,70 @@
  * - Zoom >= 4: 10m grid
  */
 
-import { useEffect, useState, useRef } from 'react'
-import { useMap, useMapEvents } from 'react-leaflet'
-import L from 'leaflet'
-import { useAppStore } from '../../stores/useAppStore'
-import { getMapConfig } from '../../lib/maps'
+import { useEffect, useState, useRef } from 'react';
+import { useMap, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import { useAppStore } from '../../stores/useAppStore';
+import { getMapConfig } from '../../lib/maps';
 
 interface CoordinateGridProps {
-  color?: string
-  weight?: number
-  opacity?: number
-  dashArray?: string
+  color?: string;
+  weight?: number;
+  opacity?: number;
+  dashArray?: string;
 }
 
 /**
  * Calculate grid size based on zoom level (Gene's updateGridSizeForZoom)
  */
 const getGridSizeForZoom = (zoom: number): number => {
-  if (zoom < -1) return 1000  // 1km grid at very low zoom
-  if (zoom < 0) return 500
-  if (zoom < 1) return 200
-  if (zoom < 2) return 100
-  if (zoom < 3) return 50
-  if (zoom < 4) return 20
-  return 10  // 10m grid at high zoom
-}
+  if (zoom < -1) return 1000; // 1km grid at very low zoom
+  if (zoom < 0) return 500;
+  if (zoom < 1) return 200;
+  if (zoom < 2) return 100;
+  if (zoom < 3) return 50;
+  if (zoom < 4) return 20;
+  return 10; // 10m grid at high zoom
+};
 
 const CoordinateGrid = ({
   color = '#ffffff',
   weight = 1,
   opacity = 0.3,
-  dashArray = '5, 5'
+  dashArray = '5, 5',
 }: CoordinateGridProps) => {
-  const map = useMap()
-  const selectedMap = useAppStore((state) => state.selectedMap)
-  const mapConfig = getMapConfig(selectedMap as any)
+  const map = useMap();
+  const selectedMap = useAppStore((state) => state.selectedMap);
+  const mapConfig = getMapConfig(selectedMap as any);
 
-  const gridLayerRef = useRef<L.LayerGroup | null>(null)
-  const [gridSize, setGridSize] = useState(() => getGridSizeForZoom(map.getZoom()))
+  const gridLayerRef = useRef<L.LayerGroup | null>(null);
+  const [gridSize, setGridSize] = useState(() =>
+    getGridSizeForZoom(map.getZoom())
+  );
 
   // Get map dimensions (Gene's approach: use map size directly)
-  const [mapWidth, mapHeight] = mapConfig.size
+  const [mapWidth, mapHeight] = mapConfig.size;
 
   // Update grid size on zoom change only
   useMapEvents({
     zoomend: () => {
-      const newSize = getGridSizeForZoom(map.getZoom())
+      const newSize = getGridSizeForZoom(map.getZoom());
       if (newSize !== gridSize) {
-        setGridSize(newSize)
+        setGridSize(newSize);
       }
-    }
-  })
+    },
+  });
 
   // Draw grid when gridSize or map changes
   useEffect(() => {
     // Remove existing grid
     if (gridLayerRef.current) {
-      map.removeLayer(gridLayerRef.current)
+      map.removeLayer(gridLayerRef.current);
     }
 
     // Create new layer group for grid
-    const gridLayer = L.layerGroup()
-    gridLayerRef.current = gridLayer
+    const gridLayer = L.layerGroup();
+    gridLayerRef.current = gridLayer;
 
     // Gene's approach: Draw lines for entire map (0 to width/height)
     // Leaflet handles clipping/rendering optimization automatically
@@ -84,48 +86,48 @@ const CoordinateGrid = ({
     for (let x = 0; x <= mapWidth; x += gridSize) {
       L.polyline(
         [
-          [0, x],           // [south, east]
-          [mapHeight, x]    // [north, east]
+          [0, x], // [south, east]
+          [mapHeight, x], // [north, east]
         ],
         {
           color,
           weight,
           opacity,
           dashArray,
-          interactive: false
+          interactive: false,
         }
-      ).addTo(gridLayer)
+      ).addTo(gridLayer);
     }
 
     // Horizontal lines (North direction) - y from 0 to mapHeight
     for (let y = 0; y <= mapHeight; y += gridSize) {
       L.polyline(
         [
-          [y, 0],          // [north, west]
-          [y, mapWidth]    // [north, east]
+          [y, 0], // [north, west]
+          [y, mapWidth], // [north, east]
         ],
         {
           color,
           weight,
           opacity,
           dashArray,
-          interactive: false
+          interactive: false,
         }
-      ).addTo(gridLayer)
+      ).addTo(gridLayer);
     }
 
     // Add grid to map
-    gridLayer.addTo(map)
+    gridLayer.addTo(map);
 
     // Cleanup
     return () => {
       if (gridLayerRef.current) {
-        map.removeLayer(gridLayerRef.current)
+        map.removeLayer(gridLayerRef.current);
       }
-    }
-  }, [map, mapWidth, mapHeight, gridSize, color, weight, opacity, dashArray])
+    };
+  }, [map, mapWidth, mapHeight, gridSize, color, weight, opacity, dashArray]);
 
-  return null
-}
+  return null;
+};
 
-export default CoordinateGrid
+export default CoordinateGrid;

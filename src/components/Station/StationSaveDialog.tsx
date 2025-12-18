@@ -10,57 +10,57 @@
  * - Closes on save or cancel
  */
 
-import { useState, useEffect } from 'react'
-import { useAppStore } from '../../stores/useAppStore'
-import { useStationsStore } from '../../stores/useStationsStore'
-import { formatGridPosition } from '../../lib/coordinates/transform'
+import { useState, useEffect } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
+import { useStationsStore } from '../../stores/useStationsStore';
+import { formatGridPosition } from '../../lib/coordinates/transform';
 
 interface StationSaveDialogProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 export function StationSaveDialog({ onClose }: StationSaveDialogProps) {
-  const [stationName, setStationName] = useState('')
-  const [saveConfig, setSaveConfig] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [stationName, setStationName] = useState('');
+  const [saveConfig, setSaveConfig] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // App state for current configuration
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const selectedMap = useAppStore((state) => state.selectedMap)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const selectedMap = useAppStore((state) => state.selectedMap);
 
   // Station store
-  const saveStation = useStationsStore((state) => state.saveStation)
-  const isLoading = useStationsStore((state) => state.isLoading)
+  const saveStation = useStationsStore((state) => state.saveStation);
+  const isLoading = useStationsStore((state) => state.isLoading);
 
   // Auto-generate default name
   useEffect(() => {
-    const now = new Date()
+    const now = new Date();
     const defaultName = `Stellung ${now.toLocaleDateString('de-DE', {
       day: '2-digit',
-      month: '2-digit'
+      month: '2-digit',
     })} ${now.toLocaleTimeString('de-DE', {
       hour: '2-digit',
-      minute: '2-digit'
-    })}`
-    setStationName(defaultName)
-  }, [])
+      minute: '2-digit',
+    })}`;
+    setStationName(defaultName);
+  }, []);
 
   // Validate and save station
   const handleSave = async () => {
     // Validation
     if (!stationName.trim()) {
-      setError('Bitte einen Namen eingeben')
-      return
+      setError('Bitte einen Namen eingeben');
+      return;
     }
 
     if (!mortarPosition) {
-      setError('Keine Mörser-Position gesetzt')
-      return
+      setError('Keine Mörser-Position gesetzt');
+      return;
     }
 
     try {
-      setError(null)
+      setError(null);
 
       // Save station
       await saveStation(
@@ -68,26 +68,26 @@ export function StationSaveDialog({ onClose }: StationSaveDialogProps) {
         selectedMap,
         mortarPosition,
         saveConfig ? mortarConfig : undefined
-      )
+      );
 
       // Close dialog on success
-      onClose()
+      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Fehler beim Speichern')
+      setError(err instanceof Error ? err.message : 'Fehler beim Speichern');
     }
-  }
+  };
 
   // Handle ESC key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -158,11 +158,15 @@ export function StationSaveDialog({ onClose }: StationSaveDialogProps) {
               onChange={(e) => setSaveConfig(e.target.checked)}
               className="mt-0.5 w-4 h-4 text-green-600 bg-gray-900 border-gray-600 rounded focus:ring-green-500 focus:ring-2"
             />
-            <label htmlFor="save-config" className="flex-1 text-sm text-gray-300">
+            <label
+              htmlFor="save-config"
+              className="flex-1 text-sm text-gray-300"
+            >
               Aktuelle Konfiguration als Standard speichern
               {saveConfig && mortarConfig && (
                 <div className="text-xs text-gray-400 mt-1 font-mono">
-                  {mortarConfig.type} • {mortarConfig.ammo} • Ladung {mortarConfig.charge}
+                  {mortarConfig.type} • {mortarConfig.ammo} • Ladung{' '}
+                  {mortarConfig.charge}
                 </div>
               )}
             </label>
@@ -195,5 +199,5 @@ export function StationSaveDialog({ onClose }: StationSaveDialogProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

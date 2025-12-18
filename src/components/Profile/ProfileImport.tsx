@@ -9,139 +9,150 @@
  * - Shows success/error messages
  */
 
-import { useState, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Upload, AlertTriangle } from 'lucide-react'
-import { useUserStore } from '../../stores/useUserStore'
-import { useMissionsStore } from '../../stores/useMissionsStore'
-import { useStationsStore } from '../../stores/useStationsStore'
-import { useHistoryStore } from '../../stores/useHistoryStore'
-import type { UserProfile, AppSettings, FireMission, MortarStation, HistoryEntry } from '../../types'
+import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Upload, AlertTriangle } from 'lucide-react';
+import { useUserStore } from '../../stores/useUserStore';
+import { useMissionsStore } from '../../stores/useMissionsStore';
+import { useStationsStore } from '../../stores/useStationsStore';
+import { useHistoryStore } from '../../stores/useHistoryStore';
+import type {
+  UserProfile,
+  AppSettings,
+  FireMission,
+  MortarStation,
+  HistoryEntry,
+} from '../../types';
 
 interface ImportData {
-  version?: string
-  exportDate?: string
-  profile?: UserProfile
-  settings?: AppSettings
-  missions?: FireMission[]
-  stations?: MortarStation[]
-  history?: HistoryEntry[]
+  version?: string;
+  exportDate?: string;
+  profile?: UserProfile;
+  settings?: AppSettings;
+  missions?: FireMission[];
+  stations?: MortarStation[];
+  history?: HistoryEntry[];
 }
 
 export function ProfileImport() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isImporting, setIsImporting] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [importData, setImportData] = useState<ImportData | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [importData, setImportData] = useState<ImportData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const saveUserProfile = useUserStore((state) => state.saveUserProfile)
-  const saveSettings = useUserStore((state) => state.saveSettings)
+  const saveUserProfile = useUserStore((state) => state.saveUserProfile);
+  const saveSettings = useUserStore((state) => state.saveSettings);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setError(null)
+    setError(null);
 
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const json = event.target?.result as string
-        const data: ImportData = JSON.parse(json)
+        const json = event.target?.result as string;
+        const data: ImportData = JSON.parse(json);
 
         // Basic validation
-        if (!data.profile && !data.settings && !data.missions && !data.stations) {
-          throw new Error(t('profile.invalidFile'))
+        if (
+          !data.profile &&
+          !data.settings &&
+          !data.missions &&
+          !data.stations
+        ) {
+          throw new Error(t('profile.invalidFile'));
         }
 
-        setImportData(data)
-        setShowConfirm(true)
+        setImportData(data);
+        setShowConfirm(true);
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('profile.importError'))
+        setError(err instanceof Error ? err.message : t('profile.importError'));
       }
-    }
+    };
 
     reader.onerror = () => {
-      setError(t('profile.importError'))
-    }
+      setError(t('profile.importError'));
+    };
 
-    reader.readAsText(file)
+    reader.readAsText(file);
 
     // Reset file input
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = '';
     }
-  }
+  };
 
   const handleImport = async () => {
-    if (!importData) return
+    if (!importData) return;
 
-    setIsImporting(true)
-    setError(null)
+    setIsImporting(true);
+    setError(null);
 
     try {
       // Import user profile
       if (importData.profile) {
-        await saveUserProfile(importData.profile)
+        await saveUserProfile(importData.profile);
       }
 
       // Import settings
       if (importData.settings) {
-        await saveSettings(importData.settings)
+        await saveSettings(importData.settings);
       }
 
       // Import missions
       if (importData.missions && window.api) {
         for (const mission of importData.missions) {
-          await window.api.saveMission(mission)
+          await window.api.saveMission(mission);
         }
         // Reload missions store
-        const missionsStore = useMissionsStore.getState()
-        await missionsStore.loadMissions()
+        const missionsStore = useMissionsStore.getState();
+        await missionsStore.loadMissions();
       }
 
       // Import stations
       if (importData.stations && window.api) {
         for (const station of importData.stations) {
-          await window.api.saveStation(station)
+          await window.api.saveStation(station);
         }
         // Reload stations store
-        const stationsStore = useStationsStore.getState()
-        await stationsStore.loadStations()
+        const stationsStore = useStationsStore.getState();
+        await stationsStore.loadStations();
       }
 
       // Import history
       if (importData.history && window.api) {
         for (const entry of importData.history) {
-          const { id, timestamp, ...entryData } = entry
-          await window.api.addHistory(entryData)
+          const { id, timestamp, ...entryData } = entry;
+          await window.api.addHistory(entryData);
         }
         // Reload history store
-        const historyStore = useHistoryStore.getState()
-        await historyStore.loadHistory()
+        const historyStore = useHistoryStore.getState();
+        await historyStore.loadHistory();
       }
 
       // Success
-      setShowConfirm(false)
-      setImportData(null)
+      setShowConfirm(false);
+      setImportData(null);
 
       // Show success message (you could use a toast here)
-      alert(t('profile.importSuccess'))
+      alert(t('profile.importSuccess'));
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('profile.importError'))
+      setError(err instanceof Error ? err.message : t('profile.importError'));
     } finally {
-      setIsImporting(false)
+      setIsImporting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setShowConfirm(false)
-    setImportData(null)
-    setError(null)
-  }
+    setShowConfirm(false);
+    setImportData(null);
+    setError(null);
+  };
 
   return (
     <>
@@ -161,7 +172,9 @@ export function ProfileImport() {
           <Upload className="w-5 h-5 flex-shrink-0" />
           <div className="flex-1 text-left">
             <div className="font-medium">{t('profile.import')}</div>
-            <div className="text-xs text-gray-300">{t('profile.importDesc')}</div>
+            <div className="text-xs text-gray-300">
+              {t('profile.importDesc')}
+            </div>
           </div>
         </label>
 
@@ -201,19 +214,25 @@ export function ProfileImport() {
                 {importData?.missions && (
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
-                    <span>{importData.missions.length} {t('profile.missions')}</span>
+                    <span>
+                      {importData.missions.length} {t('profile.missions')}
+                    </span>
                   </div>
                 )}
                 {importData?.stations && (
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-blue-400 rounded-full" />
-                    <span>{importData.stations.length} {t('profile.stations')}</span>
+                    <span>
+                      {importData.stations.length} {t('profile.stations')}
+                    </span>
                   </div>
                 )}
                 {importData?.history && (
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 bg-red-400 rounded-full" />
-                    <span>{importData.history.length} {t('profile.shots')}</span>
+                    <span>
+                      {importData.history.length} {t('profile.shots')}
+                    </span>
                   </div>
                 )}
               </div>
@@ -240,5 +259,5 @@ export function ProfileImport() {
         </div>
       )}
     </>
-  )
+  );
 }

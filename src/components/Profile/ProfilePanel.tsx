@@ -9,15 +9,15 @@
  * - Consistent styling with other panels (MissionPanel, StationPanel, HistoryPanel)
  */
 
-import { useTranslation } from 'react-i18next'
-import { User } from 'lucide-react'
-import { UsernameInput } from './UsernameInput'
-import { ProfileStats } from './ProfileStats'
-import { ProfileExport } from './ProfileExport'
-import { ProfileImport } from './ProfileImport'
+import { useTranslation } from 'react-i18next';
+import { User } from 'lucide-react';
+import { UsernameInput } from './UsernameInput';
+import { ProfileStats } from './ProfileStats';
+import { ProfileExport } from './ProfileExport';
+import { ProfileImport } from './ProfileImport';
 
 export function ProfilePanel() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="bg-gray-800/50 rounded-lg border border-gray-700">
@@ -56,5 +56,5 @@ export function ProfilePanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }

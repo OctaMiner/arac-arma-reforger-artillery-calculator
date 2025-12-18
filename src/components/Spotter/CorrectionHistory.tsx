@@ -3,32 +3,32 @@
  * Displays history of applied corrections
  */
 
-import { useSpotterStore } from '../../stores/useSpotterStore'
+import { useSpotterStore } from '../../stores/useSpotterStore';
 
 export function CorrectionHistory() {
-  const corrections = useSpotterStore((state) => state.corrections)
+  const corrections = useSpotterStore((state) => state.corrections);
   const removeLastCorrection = useSpotterStore(
     (state) => state.removeLastCorrection
-  )
-  const clearCorrections = useSpotterStore((state) => state.clearCorrections)
+  );
+  const clearCorrections = useSpotterStore((state) => state.clearCorrections);
 
   if (corrections.length === 0) {
     return (
       <div className="text-center py-4 text-gray-500 text-xs">
         Noch keine Korrekturen
       </div>
-    )
+    );
   }
 
   const formatCorrection = (value: number, type: 'lr' | 'ad'): string => {
     if (type === 'lr') {
-      if (value === 0) return '0m'
-      return value > 0 ? `R ${value}m` : `L ${Math.abs(value)}m`
+      if (value === 0) return '0m';
+      return value > 0 ? `R ${value}m` : `L ${Math.abs(value)}m`;
     } else {
-      if (value === 0) return '0m'
-      return value > 0 ? `A ${value}m` : `D ${Math.abs(value)}m`
+      if (value === 0) return '0m';
+      return value > 0 ? `A ${value}m` : `D ${Math.abs(value)}m`;
     }
-  }
+  };
 
   return (
     <div className="space-y-2">
@@ -113,5 +113,5 @@ export function CorrectionHistory() {
         </div>
       )}
     </div>
-  )
+  );
 }

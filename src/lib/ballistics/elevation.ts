@@ -3,8 +3,8 @@
  * Handles altitude differences between mortar and target
  */
 
-import type { RingCount } from '../../types/index.js'
-import deltaElevCoefficients from './data/delta-elev-coefficients.json'
+import type { RingCount } from '../../types/index.js';
+import deltaElevCoefficients from './data/delta-elev-coefficients.json';
 
 /**
  * Get the delta elevation coefficient per 100m for a given ring count
@@ -16,8 +16,9 @@ import deltaElevCoefficients from './data/delta-elev-coefficients.json'
  * @returns Delta elevation in mils per 100m altitude difference
  */
 export function getDeltaElevPer100m(ringCount: RingCount): number {
-  const ringKey = `ring${ringCount}` as keyof typeof deltaElevCoefficients.coefficients
-  return deltaElevCoefficients.coefficients[ringKey].coefficient
+  const ringKey =
+    `ring${ringCount}` as keyof typeof deltaElevCoefficients.coefficients;
+  return deltaElevCoefficients.coefficients[ringKey].coefficient;
 }
 
 /**
@@ -42,11 +43,11 @@ export function calculateDeltaElevation(
   ringCount: RingCount
 ): number {
   // Get coefficient for this ring count
-  const coefficient = getDeltaElevPer100m(ringCount)
+  const coefficient = getDeltaElevPer100m(ringCount);
 
   // Calculate adjustment
   // coefficient is in mils per 100m, so we divide by 100
-  return heightDiff * (coefficient / 100)
+  return heightDiff * (coefficient / 100);
 }
 
 /**
@@ -62,7 +63,7 @@ export function calculateDeltaElevationFromTable(
   heightDiff: number,
   dElevPer100m: number
 ): number {
-  return heightDiff * (dElevPer100m / 100)
+  return heightDiff * (dElevPer100m / 100);
 }
 
 /**
@@ -89,5 +90,5 @@ export function applyHeightCorrection(
 ): number {
   // If heightCorrection is positive (target higher), subtract
   // If heightCorrection is negative (target lower), add (which is subtracting a negative)
-  return baseElevation - heightCorrection
+  return baseElevation - heightCorrection;
 }

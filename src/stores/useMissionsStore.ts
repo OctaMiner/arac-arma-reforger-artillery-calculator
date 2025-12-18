@@ -8,24 +8,26 @@
  * - Auto-save functionality
  */
 
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
-import type { FireMission } from '../types'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import type { FireMission } from '../types';
 
 interface MissionsState {
   // State
-  missions: FireMission[]
-  selectedMission: FireMission | null
-  isLoading: boolean
-  error: string | null
+  missions: FireMission[];
+  selectedMission: FireMission | null;
+  isLoading: boolean;
+  error: string | null;
 
   // Actions
-  loadMissions: () => Promise<void>
-  saveMission: (mission: Omit<FireMission, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>
-  updateMission: (mission: FireMission) => Promise<void>
-  deleteMission: (id: string) => Promise<void>
-  selectMission: (id: string | null) => void
-  clearSelection: () => void
+  loadMissions: () => Promise<void>;
+  saveMission: (
+    mission: Omit<FireMission, 'id' | 'createdAt' | 'updatedAt'>
+  ) => Promise<void>;
+  updateMission: (mission: FireMission) => Promise<void>;
+  deleteMission: (id: string) => Promise<void>;
+  selectMission: (id: string | null) => void;
+  clearSelection: () => void;
 }
 
 export const useMissionsStore = create<MissionsState>()(
@@ -39,58 +41,58 @@ export const useMissionsStore = create<MissionsState>()(
 
       // Load all missions from Electron
       loadMissions: async () => {
-        set({ isLoading: true, error: null }, false, 'loadMissions/start')
+        set({ isLoading: true, error: null }, false, 'loadMissions/start');
 
         try {
           // Check if running in Electron
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
-          const missions = await window.api.loadMissions()
+          const missions = await window.api.loadMissions();
 
           set(
             {
               missions,
               isLoading: false,
-              error: null
+              error: null,
             },
             false,
             'loadMissions/success'
-          )
+          );
         } catch (err) {
           set(
             {
               missions: [],
               isLoading: false,
-              error: err instanceof Error ? err.message : 'Fehler beim Laden'
+              error: err instanceof Error ? err.message : 'Fehler beim Laden',
             },
             false,
             'loadMissions/error'
-          )
+          );
         }
       },
 
       // Save new mission
       saveMission: async (missionData) => {
-        set({ isLoading: true, error: null }, false, 'saveMission/start')
+        set({ isLoading: true, error: null }, false, 'saveMission/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
           // Create complete mission object
-          const now = new Date().toISOString()
+          const now = new Date().toISOString();
           const mission: FireMission = {
             ...missionData,
             id: crypto.randomUUID(),
             createdAt: now,
-            updatedAt: now
-          }
+            updatedAt: now,
+          };
 
           // Save via Electron API
-          await window.api.saveMission(mission)
+          await window.api.saveMission(mission);
 
           // Update local state
           set(
@@ -98,41 +100,41 @@ export const useMissionsStore = create<MissionsState>()(
               missions: [...state.missions, mission],
               selectedMission: mission,
               isLoading: false,
-              error: null
+              error: null,
             }),
             false,
             'saveMission/success'
-          )
+          );
         } catch (err) {
           set(
             {
               isLoading: false,
               error:
-                err instanceof Error ? err.message : 'Fehler beim Speichern'
+                err instanceof Error ? err.message : 'Fehler beim Speichern',
             },
             false,
             'saveMission/error'
-          )
+          );
         }
       },
 
       // Update existing mission
       updateMission: async (mission) => {
-        set({ isLoading: true, error: null }, false, 'updateMission/start')
+        set({ isLoading: true, error: null }, false, 'updateMission/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
           // Update timestamp
           const updatedMission: FireMission = {
             ...mission,
-            updatedAt: new Date().toISOString()
-          }
+            updatedAt: new Date().toISOString(),
+          };
 
           // Save via Electron API
-          await window.api.updateMission(updatedMission)
+          await window.api.updateMission(updatedMission);
 
           // Update local state
           set(
@@ -145,11 +147,11 @@ export const useMissionsStore = create<MissionsState>()(
                   ? updatedMission
                   : state.selectedMission,
               isLoading: false,
-              error: null
+              error: null,
             }),
             false,
             'updateMission/success'
-          )
+          );
         } catch (err) {
           set(
             {
@@ -157,25 +159,25 @@ export const useMissionsStore = create<MissionsState>()(
               error:
                 err instanceof Error
                   ? err.message
-                  : 'Fehler beim Aktualisieren'
+                  : 'Fehler beim Aktualisieren',
             },
             false,
             'updateMission/error'
-          )
+          );
         }
       },
 
       // Delete mission
       deleteMission: async (id) => {
-        set({ isLoading: true, error: null }, false, 'deleteMission/start')
+        set({ isLoading: true, error: null }, false, 'deleteMission/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
           // Delete via Electron API
-          await window.api.deleteMission(id)
+          await window.api.deleteMission(id);
 
           // Update local state
           set(
@@ -184,50 +186,51 @@ export const useMissionsStore = create<MissionsState>()(
               selectedMission:
                 state.selectedMission?.id === id ? null : state.selectedMission,
               isLoading: false,
-              error: null
+              error: null,
             }),
             false,
             'deleteMission/success'
-          )
+          );
         } catch (err) {
           set(
             {
               isLoading: false,
-              error: err instanceof Error ? err.message : 'Fehler beim Löschen'
+              error: err instanceof Error ? err.message : 'Fehler beim Löschen',
             },
             false,
             'deleteMission/error'
-          )
+          );
         }
       },
 
       // Select mission by ID
       selectMission: (id) => {
-        const state = get()
-        const mission = state.missions.find((m) => m.id === id)
+        const state = get();
+        const mission = state.missions.find((m) => m.id === id);
 
         set(
           {
-            selectedMission: mission || null
+            selectedMission: mission || null,
           },
           false,
           'selectMission'
-        )
+        );
       },
 
       // Clear selection
-      clearSelection: () => set({ selectedMission: null }, false, 'clearSelection')
+      clearSelection: () =>
+        set({ selectedMission: null }, false, 'clearSelection'),
     }),
     {
       name: 'missions-store',
-      enabled: process.env.NODE_ENV === 'development'
+      enabled: process.env.NODE_ENV === 'development',
     }
   )
-)
+);
 
 // Selectors
-export const selectMissions = (state: MissionsState) => state.missions
+export const selectMissions = (state: MissionsState) => state.missions;
 export const selectSelectedMission = (state: MissionsState) =>
-  state.selectedMission
-export const selectMissionsLoading = (state: MissionsState) => state.isLoading
-export const selectMissionsError = (state: MissionsState) => state.error
+  state.selectedMission;
+export const selectMissionsLoading = (state: MissionsState) => state.isLoading;
+export const selectMissionsError = (state: MissionsState) => state.error;

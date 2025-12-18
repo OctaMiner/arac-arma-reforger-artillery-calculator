@@ -9,66 +9,66 @@
  * - Updates user profile via store
  */
 
-import { useState, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { User, Edit2, Check, X } from 'lucide-react'
-import { useUserStore } from '../../stores/useUserStore'
+import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { User, Edit2, Check, X } from 'lucide-react';
+import { useUserStore } from '../../stores/useUserStore';
 
 export function UsernameInput() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const userProfile = useUserStore((state) => state.userProfile)
-  const saveUserProfile = useUserStore((state) => state.saveUserProfile)
+  const userProfile = useUserStore((state) => state.userProfile);
+  const saveUserProfile = useUserStore((state) => state.saveUserProfile);
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [editValue, setEditValue] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentName = userProfile?.name || t('profile.noProfile')
+  const currentName = userProfile?.name || t('profile.noProfile');
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      inputRef.current.focus()
-      inputRef.current.select()
+      inputRef.current.focus();
+      inputRef.current.select();
     }
-  }, [isEditing])
+  }, [isEditing]);
 
   const handleStartEdit = () => {
-    setEditValue(currentName)
-    setIsEditing(true)
-  }
+    setEditValue(currentName);
+    setIsEditing(true);
+  };
 
   const handleSave = async () => {
-    if (!userProfile) return
+    if (!userProfile) return;
 
-    const trimmedValue = editValue.trim()
+    const trimmedValue = editValue.trim();
     if (!trimmedValue) {
-      setIsEditing(false)
-      return
+      setIsEditing(false);
+      return;
     }
 
     if (trimmedValue !== currentName) {
       await saveUserProfile({
         ...userProfile,
-        name: trimmedValue
-      })
+        name: trimmedValue,
+      });
     }
 
-    setIsEditing(false)
-  }
+    setIsEditing(false);
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
-    setEditValue('')
-  }
+    setIsEditing(false);
+    setEditValue('');
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSave()
+      handleSave();
     } else if (e.key === 'Escape') {
-      handleCancel()
+      handleCancel();
     }
-  }
+  };
 
   if (isEditing) {
     return (
@@ -101,7 +101,7 @@ export function UsernameInput() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -116,5 +116,5 @@ export function UsernameInput() {
       </span>
       <Edit2 className="w-4 h-4 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
     </button>
-  )
+  );
 }

@@ -3,14 +3,14 @@
  * Validates if target is within mortar capabilities
  */
 
-import type { AmmoType, MortarType, RingCount } from '../../types/index.js'
-import ballisticTablesIndex from './data/ballistic-tables-index.json'
+import type { AmmoType, MortarType, RingCount } from '../../types/index.js';
+import ballisticTablesIndex from './data/ballistic-tables-index.json';
 
 interface RangeCheckResult {
-  inRange: boolean
-  warning?: string
-  minRange?: number
-  maxRange?: number
+  inRange: boolean;
+  warning?: string;
+  minRange?: number;
+  maxRange?: number;
 }
 
 /**
@@ -31,8 +31,8 @@ export function checkRange(
       inRange: false,
       warning: `Target too close (${distance}m). Minimum range: ${minRange}m`,
       minRange,
-      maxRange
-    }
+      maxRange,
+    };
   }
 
   if (distance > maxRange) {
@@ -40,15 +40,15 @@ export function checkRange(
       inRange: false,
       warning: `Target too far (${distance}m). Maximum range: ${maxRange}m`,
       minRange,
-      maxRange
-    }
+      maxRange,
+    };
   }
 
   return {
     inRange: true,
     minRange,
-    maxRange
-  }
+    maxRange,
+  };
 }
 
 /**
@@ -76,14 +76,14 @@ export function findOptimalRingCount(
       t.mortarType === mortarType &&
       t.ammoType === ammoType &&
       typeof t.ringCount === 'number' // HE has separate ring tables
-  )
+  );
 
   // Sort by ring count (ascending)
   tables.sort((a, b) => {
-    const ringA = typeof a.ringCount === 'number' ? a.ringCount : 0
-    const ringB = typeof b.ringCount === 'number' ? b.ringCount : 0
-    return ringA - ringB
-  })
+    const ringA = typeof a.ringCount === 'number' ? a.ringCount : 0;
+    const ringB = typeof b.ringCount === 'number' ? b.ringCount : 0;
+    return ringA - ringB;
+  });
 
   // Find first ring count that can reach the distance
   for (const table of tables) {
@@ -92,12 +92,12 @@ export function findOptimalRingCount(
       distance >= table.minRange &&
       distance <= table.maxRange
     ) {
-      return table.ringCount as RingCount
+      return table.ringCount as RingCount;
     }
   }
 
   // No valid ring count found
-  return -1
+  return -1;
 }
 
 /**
@@ -118,9 +118,9 @@ export function getValidRingCounts(
       t.mortarType === mortarType &&
       t.ammoType === ammoType &&
       typeof t.ringCount === 'number'
-  )
+  );
 
-  const validRings: RingCount[] = []
+  const validRings: RingCount[] = [];
 
   for (const table of tables) {
     if (
@@ -128,11 +128,11 @@ export function getValidRingCounts(
       distance >= table.minRange &&
       distance <= table.maxRange
     ) {
-      validRings.push(table.ringCount as RingCount)
+      validRings.push(table.ringCount as RingCount);
     }
   }
 
-  return validRings.sort((a, b) => a - b)
+  return validRings.sort((a, b) => a - b);
 }
 
 /**
@@ -148,16 +148,16 @@ export function getMaximumRange(
 ): number {
   const tables = ballisticTablesIndex.tables.filter(
     (t) => t.mortarType === mortarType && t.ammoType === ammoType
-  )
+  );
 
-  let maxRange = 0
+  let maxRange = 0;
   for (const table of tables) {
     if (table.maxRange > maxRange) {
-      maxRange = table.maxRange
+      maxRange = table.maxRange;
     }
   }
 
-  return maxRange
+  return maxRange;
 }
 
 /**
@@ -173,25 +173,25 @@ export function getMinimumRange(
 ): number {
   const tables = ballisticTablesIndex.tables.filter(
     (t) => t.mortarType === mortarType && t.ammoType === ammoType
-  )
+  );
 
-  let minRange = Infinity
+  let minRange = Infinity;
   for (const table of tables) {
     if (table.minRange < minRange) {
-      minRange = table.minRange
+      minRange = table.minRange;
     }
   }
 
-  return minRange === Infinity ? 0 : minRange
+  return minRange === Infinity ? 0 : minRange;
 }
 
 /**
  * Range information for a single ring/charge level
  */
 export interface RingRange {
-  ringCount: number
-  minRange: number
-  maxRange: number
+  ringCount: number;
+  minRange: number;
+  maxRange: number;
 }
 
 /**
@@ -210,13 +210,13 @@ export function getAllRingRanges(
       t.mortarType === mortarType &&
       t.ammoType === ammoType &&
       typeof t.ringCount === 'number'
-  )
+  );
 
   return tables
     .map((t) => ({
       ringCount: t.ringCount as number,
       minRange: t.minRange,
-      maxRange: t.maxRange
+      maxRange: t.maxRange,
     }))
-    .sort((a, b) => a.ringCount - b.ringCount)
+    .sort((a, b) => a.ringCount - b.ringCount);
 }

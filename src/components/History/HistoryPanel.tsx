@@ -8,23 +8,23 @@
  * - Consistent styling with MissionPanel and StationPanel
  */
 
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useHistoryStore } from '../../stores/useHistoryStore'
-import { HistoryList } from './HistoryList'
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistoryStore } from '../../stores/useHistoryStore';
+import { HistoryList } from './HistoryList';
 
 export function HistoryPanel() {
-  const { t } = useTranslation()
-  const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const { t } = useTranslation();
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  const history = useHistoryStore((state) => state.history)
-  const clearHistory = useHistoryStore((state) => state.clearHistory)
-  const isLoading = useHistoryStore((state) => state.isLoading)
+  const history = useHistoryStore((state) => state.history);
+  const clearHistory = useHistoryStore((state) => state.clearHistory);
+  const isLoading = useHistoryStore((state) => state.isLoading);
 
   const handleClearHistory = async () => {
-    await clearHistory()
-    setShowClearConfirm(false)
-  }
+    await clearHistory();
+    setShowClearConfirm(false);
+  };
 
   return (
     <>
@@ -141,5 +141,5 @@ export function HistoryPanel() {
         </div>
       )}
     </>
-  )
+  );
 }

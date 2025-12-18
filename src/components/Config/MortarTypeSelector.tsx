@@ -3,18 +3,18 @@
  * Toggle between US and RUS mortar types
  */
 
-import type { MortarType } from '../../types'
+import type { MortarType } from '../../types';
 
 interface MortarTypeSelectorProps {
-  value: MortarType
-  onChange: (type: MortarType) => void
-  disabled?: boolean
+  value: MortarType;
+  onChange: (type: MortarType) => void;
+  disabled?: boolean;
 }
 
 export function MortarTypeSelector({
   value,
   onChange,
-  disabled = false
+  disabled = false,
 }: MortarTypeSelectorProps) {
   return (
     <div>
@@ -58,5 +58,5 @@ export function MortarTypeSelector({
         </button>
       </div>
     </div>
-  )
+  );
 }

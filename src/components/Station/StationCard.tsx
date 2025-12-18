@@ -8,46 +8,46 @@
  * - Compact card layout
  */
 
-import type { MortarStation } from '../../types'
-import { useAppStore } from '../../stores/useAppStore'
-import { useStationsStore } from '../../stores/useStationsStore'
-import { formatGridPosition } from '../../lib/coordinates/transform'
+import type { MortarStation } from '../../types';
+import { useAppStore } from '../../stores/useAppStore';
+import { useStationsStore } from '../../stores/useStationsStore';
+import { formatGridPosition } from '../../lib/coordinates/transform';
 
 interface StationCardProps {
-  station: MortarStation
+  station: MortarStation;
 }
 
 export function StationCard({ station }: StationCardProps) {
   // App store actions
-  const setMortarPosition = useAppStore((state) => state.setMortarPosition)
-  const setMortarType = useAppStore((state) => state.setMortarType)
-  const setAmmoType = useAppStore((state) => state.setAmmoType)
-  const setCharge = useAppStore((state) => state.setCharge)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
+  const setMortarPosition = useAppStore((state) => state.setMortarPosition);
+  const setMortarType = useAppStore((state) => state.setMortarType);
+  const setAmmoType = useAppStore((state) => state.setAmmoType);
+  const setCharge = useAppStore((state) => state.setCharge);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
   // Station store actions
-  const deleteStation = useStationsStore((state) => state.deleteStation)
+  const deleteStation = useStationsStore((state) => state.deleteStation);
 
   const handleLoadStation = () => {
     // Set mortar position
-    setMortarPosition(station.position)
+    setMortarPosition(station.position);
 
     // Set default config if available
     if (station.defaultConfig) {
-      setMortarType(station.defaultConfig.type)
-      setAmmoType(station.defaultConfig.ammo)
-      setCharge(station.defaultConfig.charge)
+      setMortarType(station.defaultConfig.type);
+      setAmmoType(station.defaultConfig.ammo);
+      setCharge(station.defaultConfig.charge);
     }
 
     // Recalculate solution
-    calculateSolution()
-  }
+    calculateSolution();
+  };
 
   const handleDelete = async () => {
     if (confirm(`Stellung "${station.name}" wirklich löschen?`)) {
-      await deleteStation(station.id)
+      await deleteStation(station.id);
     }
-  }
+  };
 
   return (
     <div className="bg-gray-800 rounded-lg p-3 border border-gray-700 hover:border-gray-600 transition-colors">
@@ -111,7 +111,8 @@ export function StationCard({ station }: StationCardProps) {
               />
             </svg>
             <span>
-              {station.defaultConfig.type} • {station.defaultConfig.ammo} • Ladung {station.defaultConfig.charge}
+              {station.defaultConfig.type} • {station.defaultConfig.ammo} •
+              Ladung {station.defaultConfig.charge}
             </span>
           </div>
         )}
@@ -146,5 +147,5 @@ export function StationCard({ station }: StationCardProps) {
         </div>
       </button>
     </div>
-  )
+  );
 }

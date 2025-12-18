@@ -8,43 +8,39 @@
  * - Tracks selected mission
  */
 
-import { useEffect } from 'react'
-import { useMissionsStore } from '../../stores/useMissionsStore'
-import { MissionCard } from './MissionCard'
+import { useEffect } from 'react';
+import { useMissionsStore } from '../../stores/useMissionsStore';
+import { MissionCard } from './MissionCard';
 
 export function MissionList() {
   // Store state
-  const missions = useMissionsStore((state) => state.missions)
-  const selectedMission = useMissionsStore((state) => state.selectedMission)
-  const isLoading = useMissionsStore((state) => state.isLoading)
-  const error = useMissionsStore((state) => state.error)
-  const loadMissions = useMissionsStore((state) => state.loadMissions)
+  const missions = useMissionsStore((state) => state.missions);
+  const selectedMission = useMissionsStore((state) => state.selectedMission);
+  const isLoading = useMissionsStore((state) => state.isLoading);
+  const error = useMissionsStore((state) => state.error);
+  const loadMissions = useMissionsStore((state) => state.loadMissions);
 
   // Load missions on mount
   useEffect(() => {
-    loadMissions()
-  }, [loadMissions])
+    loadMissions();
+  }, [loadMissions]);
 
   // Loading state
   if (isLoading && missions.length === 0) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="text-gray-400 text-sm">
-          Lade Missionen...
-        </div>
+        <div className="text-gray-400 text-sm">Lade Missionen...</div>
       </div>
-    )
+    );
   }
 
   // Error state
   if (error) {
     return (
       <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
-        <p className="text-red-400 text-sm">
-          Fehler beim Laden: {error}
-        </p>
+        <p className="text-red-400 text-sm">Fehler beim Laden: {error}</p>
       </div>
-    )
+    );
   }
 
   // Empty state
@@ -71,7 +67,7 @@ export function MissionList() {
           </p>
         </div>
       </div>
-    )
+    );
   }
 
   // Missions list
@@ -85,5 +81,5 @@ export function MissionList() {
         />
       ))}
     </div>
-  )
+  );
 }

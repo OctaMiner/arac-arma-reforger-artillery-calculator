@@ -3,23 +3,23 @@
 ## Beispiel 1: Einfache Berechnung
 
 ```tsx
-import { useAppStore } from '@/stores'
+import { useAppStore } from '@/stores';
 
 const SimpleCalculator = () => {
-  const mortarConfig = useAppStore(state => state.mortarConfig)
-  const setMortarPosition = useAppStore(state => state.setMortarPosition)
-  const setTargetPosition = useAppStore(state => state.setTargetPosition)
-  const calculateSolution = useAppStore(state => state.calculateSolution)
-  const fireSolution = useAppStore(state => state.fireSolution)
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const setMortarPosition = useAppStore((state) => state.setMortarPosition);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
+  const fireSolution = useAppStore((state) => state.fireSolution);
 
   const handleCalculate = () => {
     // Set positions
-    setMortarPosition({ east: 100, north: 100, height: 50 })
-    setTargetPosition({ east: 150, north: 150, height: 55 })
+    setMortarPosition({ east: 100, north: 100, height: 50 });
+    setTargetPosition({ east: 150, north: 150, height: 55 });
 
     // Calculate
-    calculateSolution()
-  }
+    calculateSolution();
+  };
 
   return (
     <div>
@@ -32,33 +32,33 @@ const SimpleCalculator = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 2: Auto-Calculation mit Custom Hook
 
 ```tsx
-import { useCalculation } from '@/hooks'
-import { useAppStore } from '@/stores'
+import { useCalculation } from '@/hooks';
+import { useAppStore } from '@/stores';
 
 const AutoCalculator = () => {
-  const setMortarPosition = useAppStore(state => state.setMortarPosition)
-  const setTargetPosition = useAppStore(state => state.setTargetPosition)
+  const setMortarPosition = useAppStore((state) => state.setMortarPosition);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
 
   const { fireSolution, isCalculating, error } = useCalculation({
-    autoCalculate: true,  // Auto-berechnen bei Änderungen
-    autoHistory: true,    // Auto-speichern in History
-    debounceMs: 300,      // Debounce für Map Dragging
+    autoCalculate: true, // Auto-berechnen bei Änderungen
+    autoHistory: true, // Auto-speichern in History
+    debounceMs: 300, // Debounce für Map Dragging
     onCalculated: () => {
-      console.log('Calculation completed!')
-    }
-  })
+      console.log('Calculation completed!');
+    },
+  });
 
   const handleMapClick = (position) => {
     // Einfach Position setzen - Berechnung erfolgt automatisch!
-    setTargetPosition(position)
-  }
+    setTargetPosition(position);
+  };
 
   return (
     <div>
@@ -71,18 +71,18 @@ const AutoCalculator = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 3: Mission speichern und laden
 
 ```tsx
-import { useMissions } from '@/hooks'
-import { useState } from 'react'
+import { useMissions } from '@/hooks';
+import { useState } from 'react';
 
 const MissionPanel = () => {
-  const [missionName, setMissionName] = useState('')
+  const [missionName, setMissionName] = useState('');
 
   const {
     missions,
@@ -90,21 +90,21 @@ const MissionPanel = () => {
     loadIntoCalculator,
     deleteMissionById,
     canSaveCurrent,
-    isLoading
+    isLoading,
   } = useMissions({
     autoLoad: true,
-    mapId: 'everon' // Nur Everon Missionen
-  })
+    mapId: 'everon', // Nur Everon Missionen
+  });
 
   const handleSave = async () => {
     try {
-      await saveCurrent(missionName)
-      setMissionName('')
-      alert('Mission gespeichert!')
+      await saveCurrent(missionName);
+      setMissionName('');
+      alert('Mission gespeichert!');
     } catch (error) {
-      alert('Fehler: ' + error.message)
+      alert('Fehler: ' + error.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -115,10 +115,7 @@ const MissionPanel = () => {
           onChange={(e) => setMissionName(e.target.value)}
           placeholder="Mission Name"
         />
-        <button
-          onClick={handleSave}
-          disabled={!canSaveCurrent || !missionName}
-        >
+        <button onClick={handleSave} disabled={!canSaveCurrent || !missionName}>
           Save Current
         </button>
       </div>
@@ -127,12 +124,10 @@ const MissionPanel = () => {
       <div>
         <h3>Saved Missions</h3>
         {isLoading && <p>Loading...</p>}
-        {missions.map(mission => (
+        {missions.map((mission) => (
           <div key={mission.id}>
             <span>{mission.name}</span>
-            <button onClick={() => loadIntoCalculator(mission)}>
-              Load
-            </button>
+            <button onClick={() => loadIntoCalculator(mission)}>Load</button>
             <button onClick={() => deleteMissionById(mission.id)}>
               Delete
             </button>
@@ -140,18 +135,18 @@ const MissionPanel = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 4: Mortar Stations
 
 ```tsx
-import { useStations } from '@/hooks'
-import { useState } from 'react'
+import { useStations } from '@/hooks';
+import { useState } from 'react';
 
 const StationPanel = () => {
-  const [stationName, setStationName] = useState('')
+  const [stationName, setStationName] = useState('');
 
   const {
     stations,
@@ -160,33 +155,33 @@ const StationPanel = () => {
     deleteStationById,
     canSaveCurrentAsStation,
     isPositionSaved,
-    findNearestStation
+    findNearestStation,
   } = useStations({
     autoLoad: true,
-    mapId: 'everon'
-  })
+    mapId: 'everon',
+  });
 
   const handleSave = async () => {
     try {
       await saveCurrentAsStation(
         stationName,
         true // Include mortar config
-      )
-      setStationName('')
-      alert('Station gespeichert!')
+      );
+      setStationName('');
+      alert('Station gespeichert!');
     } catch (error) {
-      alert('Fehler: ' + error.message)
+      alert('Fehler: ' + error.message);
     }
-  }
+  };
 
   const handleFindNearest = () => {
-    const currentPos = { east: 100, north: 100, height: 50 }
-    const result = findNearestStation(currentPos)
+    const currentPos = { east: 100, north: 100, height: 50 };
+    const result = findNearestStation(currentPos);
 
     if (result) {
-      console.log(`Nearest: ${result.station.name} (${result.distance}m away)`)
+      console.log(`Nearest: ${result.station.name} (${result.distance}m away)`);
     }
-  }
+  };
 
   return (
     <div>
@@ -208,7 +203,7 @@ const StationPanel = () => {
       {/* Station Liste */}
       <div>
         <h3>Saved Stations</h3>
-        {stations.map(station => (
+        {stations.map((station) => (
           <div key={station.id}>
             <span>{station.name}</span>
             <button onClick={() => loadStationIntoCalculator(station)}>
@@ -222,18 +217,16 @@ const StationPanel = () => {
       </div>
 
       {/* Utilities */}
-      <button onClick={handleFindNearest}>
-        Find Nearest Station
-      </button>
+      <button onClick={handleFindNearest}>Find Nearest Station</button>
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 5: Spotter Mode mit Korrekturen
 
 ```tsx
-import { useSpotter } from '@/hooks'
+import { useSpotter } from '@/hooks';
 
 const SpotterPanel = () => {
   const {
@@ -248,8 +241,8 @@ const SpotterPanel = () => {
     clearCorrections,
     removeLastCorrection,
     canApplyCorrection,
-    hasCorrections
-  } = useSpotter()
+    hasCorrections,
+  } = useSpotter();
 
   return (
     <div>
@@ -269,9 +262,7 @@ const SpotterPanel = () => {
             <button onClick={() => quickCorrection('right', 50)}>
               50m RIGHT
             </button>
-            <button onClick={() => quickCorrection('add', 50)}>
-              50m ADD
-            </button>
+            <button onClick={() => quickCorrection('add', 50)}>50m ADD</button>
             <button onClick={() => quickCorrection('drop', 50)}>
               50m DROP
             </button>
@@ -281,9 +272,7 @@ const SpotterPanel = () => {
           <div>
             <h3>Manual Correction</h3>
             <button
-              onClick={() =>
-                applyCorrection({ leftRight: 10, addDrop: 25 })
-              }
+              onClick={() => applyCorrection({ leftRight: 10, addDrop: 25 })}
             >
               Apply Custom Correction
             </button>
@@ -306,12 +295,8 @@ const SpotterPanel = () => {
               </p>
 
               {/* Actions */}
-              <button onClick={removeLastCorrection}>
-                Undo Last
-              </button>
-              <button onClick={clearCorrections}>
-                Clear All
-              </button>
+              <button onClick={removeLastCorrection}>Undo Last</button>
+              <button onClick={clearCorrections}>Clear All</button>
               <button
                 onClick={applyCorrectedTarget}
                 disabled={!canApplyCorrection}
@@ -334,24 +319,24 @@ const SpotterPanel = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 6: User Settings
 
 ```tsx
-import { useUserStore } from '@/stores'
+import { useUserStore } from '@/stores';
 
 const SettingsPanel = () => {
-  const theme = useUserStore(state => state.settings.theme)
-  const language = useUserStore(state => state.settings.language)
-  const showGrid = useUserStore(state => state.settings.showGrid)
-  const statistics = useUserStore(state => state.userProfile?.statistics)
+  const theme = useUserStore((state) => state.settings.theme);
+  const language = useUserStore((state) => state.settings.language);
+  const showGrid = useUserStore((state) => state.settings.showGrid);
+  const statistics = useUserStore((state) => state.userProfile?.statistics);
 
-  const setTheme = useUserStore(state => state.setTheme)
-  const setLanguage = useUserStore(state => state.setLanguage)
-  const toggleGrid = useUserStore(state => state.toggleGrid)
+  const setTheme = useUserStore((state) => state.setTheme);
+  const setLanguage = useUserStore((state) => state.setLanguage);
+  const toggleGrid = useUserStore((state) => state.toggleGrid);
 
   return (
     <div>
@@ -391,28 +376,28 @@ const SettingsPanel = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 7: History mit Pagination
 
 ```tsx
-import { useHistoryStore } from '@/stores'
-import { useEffect } from 'react'
+import { useHistoryStore } from '@/stores';
+import { useEffect } from 'react';
 
 const HistoryPanel = () => {
-  const history = useHistoryStore(state => state.history)
-  const isLoading = useHistoryStore(state => state.isLoading)
-  const hasMore = useHistoryStore(state => state.hasMore)
-  const loadHistory = useHistoryStore(state => state.loadHistory)
-  const loadMore = useHistoryStore(state => state.loadMore)
-  const clearHistory = useHistoryStore(state => state.clearHistory)
+  const history = useHistoryStore((state) => state.history);
+  const isLoading = useHistoryStore((state) => state.isLoading);
+  const hasMore = useHistoryStore((state) => state.hasMore);
+  const loadHistory = useHistoryStore((state) => state.loadHistory);
+  const loadMore = useHistoryStore((state) => state.loadMore);
+  const clearHistory = useHistoryStore((state) => state.clearHistory);
 
   // Initial load
   useEffect(() => {
-    loadHistory(50, 0) // Load first 50 entries
-  }, [loadHistory])
+    loadHistory(50, 0); // Load first 50 entries
+  }, [loadHistory]);
 
   return (
     <div>
@@ -420,20 +405,12 @@ const HistoryPanel = () => {
 
       {/* History List */}
       <div>
-        {history.map(entry => (
+        {history.map((entry) => (
           <div key={entry.id}>
-            <p>
-              {new Date(entry.timestamp).toLocaleString()}
-            </p>
-            <p>
-              Distance: {entry.fireSolution.distance}m
-            </p>
-            <p>
-              Azimuth: {entry.fireSolution.azimuthMil} MIL
-            </p>
-            <p>
-              Elevation: {entry.fireSolution.elevationAdj} MIL
-            </p>
+            <p>{new Date(entry.timestamp).toLocaleString()}</p>
+            <p>Distance: {entry.fireSolution.distance}m</p>
+            <p>Azimuth: {entry.fireSolution.azimuthMil} MIL</p>
+            <p>Elevation: {entry.fireSolution.elevationAdj} MIL</p>
           </div>
         ))}
       </div>
@@ -446,46 +423,39 @@ const HistoryPanel = () => {
       )}
 
       {/* Clear */}
-      <button onClick={clearHistory}>
-        Clear History
-      </button>
+      <button onClick={clearHistory}>Clear History</button>
     </div>
-  )
-}
+  );
+};
 ```
 
 ## Beispiel 8: Complete Calculator Component
 
 ```tsx
-import { useCalculation, useMissions, useStations, useSpotter } from '@/hooks'
-import { useAppStore } from '@/stores'
+import { useCalculation, useMissions, useStations, useSpotter } from '@/hooks';
+import { useAppStore } from '@/stores';
 
 const CompleteCalculator = () => {
   // Main calculation hook
-  const {
-    fireSolution,
-    isCalculating,
-    error,
-    reset
-  } = useCalculation({
+  const { fireSolution, isCalculating, error, reset } = useCalculation({
     autoCalculate: true,
-    autoHistory: true
-  })
+    autoHistory: true,
+  });
 
   // Missions
-  const { saveCurrent: saveMission, canSaveCurrent } = useMissions()
+  const { saveCurrent: saveMission, canSaveCurrent } = useMissions();
 
   // Stations
-  const { saveCurrentAsStation, canSaveCurrentAsStation } = useStations()
+  const { saveCurrentAsStation, canSaveCurrentAsStation } = useStations();
 
   // Spotter
-  const { isActive: spotterActive, toggle: toggleSpotter } = useSpotter()
+  const { isActive: spotterActive, toggle: toggleSpotter } = useSpotter();
 
   // App state
-  const mortarConfig = useAppStore(state => state.mortarConfig)
-  const setMortarType = useAppStore(state => state.setMortarType)
-  const setAmmoType = useAppStore(state => state.setAmmoType)
-  const setCharge = useAppStore(state => state.setCharge)
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const setMortarType = useAppStore((state) => state.setMortarType);
+  const setAmmoType = useAppStore((state) => state.setAmmoType);
+  const setCharge = useAppStore((state) => state.setCharge);
 
   return (
     <div className="calculator">
@@ -564,6 +534,6 @@ const CompleteCalculator = () => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 ```

@@ -8,17 +8,17 @@
  * - Prominent green CTA styling
  */
 
-import { useState } from 'react'
-import { useAppStore } from '../../stores/useAppStore'
-import { StationSaveDialog } from './StationSaveDialog'
+import { useState } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
+import { StationSaveDialog } from './StationSaveDialog';
 
 export function StationSaveButton() {
-  const [showDialog, setShowDialog] = useState(false)
+  const [showDialog, setShowDialog] = useState(false);
 
   // Check if we have a valid mortar position
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
 
-  const canSave = !!mortarPosition
+  const canSave = !!mortarPosition;
 
   return (
     <>
@@ -27,9 +27,7 @@ export function StationSaveButton() {
         disabled={!canSave}
         className="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:text-gray-500 text-white font-semibold rounded-lg transition-colors shadow-lg disabled:shadow-none disabled:cursor-not-allowed group"
         title={
-          canSave
-            ? 'Stellung speichern'
-            : 'Setze zuerst eine Mörser-Position'
+          canSave ? 'Stellung speichern' : 'Setze zuerst eine Mörser-Position'
         }
       >
         <div className="flex items-center justify-center gap-2">
@@ -59,5 +57,5 @@ export function StationSaveButton() {
       {/* Save Dialog */}
       {showDialog && <StationSaveDialog onClose={() => setShowDialog(false)} />}
     </>
-  )
+  );
 }

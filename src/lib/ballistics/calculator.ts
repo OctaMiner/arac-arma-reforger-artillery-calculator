@@ -3,7 +3,7 @@
  * Distance, azimuth, and unit conversions
  */
 
-import type { Coordinate } from '../../types/index.js'
+import type { Coordinate } from '../../types/index.js';
 
 /**
  * Calculate distance between two coordinates
@@ -15,10 +15,13 @@ import type { Coordinate } from '../../types/index.js'
  * @param target - Target position
  * @returns Distance in meters
  */
-export function calculateDistance(mortar: Coordinate, target: Coordinate): number {
-  const dE = mortar.east - target.east
-  const dN = mortar.north - target.north
-  return Math.sqrt(dE * dE + dN * dN)
+export function calculateDistance(
+  mortar: Coordinate,
+  target: Coordinate
+): number {
+  const dE = mortar.east - target.east;
+  const dN = mortar.north - target.north;
+  return Math.sqrt(dE * dE + dN * dN);
 }
 
 /**
@@ -38,20 +41,20 @@ export function calculateAzimuth(
   mortar: Coordinate,
   target: Coordinate
 ): { degrees: number; mils: number } {
-  const dE = target.east - mortar.east
-  const dN = target.north - mortar.north
+  const dE = target.east - mortar.east;
+  const dN = target.north - mortar.north;
 
   // Use atan2 which handles all quadrants correctly
   // atan2(y, x) gives angle from positive x-axis
   // We need angle from north (positive y-axis), so we use atan2(dE, dN)
-  let degrees = (Math.atan2(dE, dN) * 180) / Math.PI
+  let degrees = (Math.atan2(dE, dN) * 180) / Math.PI;
 
   // Normalize to 0-360 range
-  if (degrees < 0) degrees += 360
+  if (degrees < 0) degrees += 360;
 
-  const mils = degToMil(degrees)
+  const mils = degToMil(degrees);
 
-  return { degrees, mils }
+  return { degrees, mils };
 }
 
 /**
@@ -61,7 +64,7 @@ export function calculateAzimuth(
  * @returns Angle in mils (0-6400)
  */
 export function degToMil(degrees: number): number {
-  return (degrees / 360) * 6400
+  return (degrees / 360) * 6400;
 }
 
 /**
@@ -71,5 +74,5 @@ export function degToMil(degrees: number): number {
  * @returns Angle in degrees (0-360)
  */
 export function milToDeg(mils: number): number {
-  return (mils / 6400) * 360
+  return (mils / 6400) * 360;
 }

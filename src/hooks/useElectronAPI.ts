@@ -16,15 +16,15 @@
  * ```
  */
 
-import { useEffect, useState } from 'react'
-import type { ElectronAPI } from '../types'
+import { useEffect, useState } from 'react';
+import type { ElectronAPI } from '../types';
 
 /**
  * Prüft ob die Electron API verfügbar ist
  */
 export const isElectronAPI = (): boolean => {
-  return typeof window !== 'undefined' && 'api' in window
-}
+  return typeof window !== 'undefined' && 'api' in window;
+};
 
 /**
  * Hook für sicheren Zugriff auf Electron API
@@ -35,11 +35,11 @@ export const useElectronAPI = (): ElectronAPI => {
   if (!isElectronAPI()) {
     throw new Error(
       'Electron API nicht verfügbar. Läuft die App im Electron-Kontext?'
-    )
+    );
   }
 
-  return window.api
-}
+  return window.api;
+};
 
 /**
  * Hook zum Laden von Daten mit Loading/Error State
@@ -55,40 +55,40 @@ export const useElectronData = <T>(
   fetcher: (api: ElectronAPI) => Promise<T>,
   deps: unknown[] = []
 ) => {
-  const api = useElectronAPI()
-  const [data, setData] = useState<T | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const api = useElectronAPI();
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     const load = async () => {
       try {
-        setLoading(true)
-        setError(null)
-        const result = await fetcher(api)
+        setLoading(true);
+        setError(null);
+        const result = await fetcher(api);
 
         if (!cancelled) {
-          setData(result)
+          setData(result);
         }
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err : new Error(String(err)))
+          setError(err instanceof Error ? err : new Error(String(err)));
         }
       } finally {
         if (!cancelled) {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }
+    };
 
-    load()
+    load();
 
     return () => {
-      cancelled = true
-    }
-  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
+      cancelled = true;
+    };
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { data, loading, error, reload: () => fetcher(api) }
-}
+  return { data, loading, error, reload: () => fetcher(api) };
+};

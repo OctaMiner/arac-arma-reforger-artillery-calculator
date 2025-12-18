@@ -3,50 +3,50 @@
  * Container for fire correction inputs and history
  */
 
-import { useSpotterStore } from '../../stores/useSpotterStore'
-import { useAppStore } from '../../stores/useAppStore'
-import { applyCorrection } from '../../lib/spotter'
-import { CorrectionInput } from './CorrectionInput'
-import { CorrectionHistory } from './CorrectionHistory'
-import type { CorrectionData } from '../../types'
+import { useSpotterStore } from '../../stores/useSpotterStore';
+import { useAppStore } from '../../stores/useAppStore';
+import { applyCorrection } from '../../lib/spotter';
+import { CorrectionInput } from './CorrectionInput';
+import { CorrectionHistory } from './CorrectionHistory';
+import type { CorrectionData } from '../../types';
 
 export function CorrectionPanel() {
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const setTargetPosition = useAppStore((state) => state.setTargetPosition)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
-  const addCorrection = useSpotterStore((state) => state.applyCorrection)
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
+  const addCorrection = useSpotterStore((state) => state.applyCorrection);
 
   const handleApplyCorrection = (correction: CorrectionData) => {
-    if (!targetPosition || !fireSolution) return
+    if (!targetPosition || !fireSolution) return;
 
     // Calculate distance for correction input
-    const mortarPosition = useAppStore.getState().mortarPosition
-    if (!mortarPosition) return
+    const mortarPosition = useAppStore.getState().mortarPosition;
+    if (!mortarPosition) return;
 
-    const deltaEast = (targetPosition.east - mortarPosition.east) * 10
-    const deltaNorth = (targetPosition.north - mortarPosition.north) * 10
-    const distance = Math.sqrt(deltaEast * deltaEast + deltaNorth * deltaNorth)
+    const deltaEast = (targetPosition.east - mortarPosition.east) * 10;
+    const deltaNorth = (targetPosition.north - mortarPosition.north) * 10;
+    const distance = Math.sqrt(deltaEast * deltaEast + deltaNorth * deltaNorth);
 
     // Apply correction to current target
     const correctedTarget = applyCorrection(targetPosition, {
       leftRight: correction.leftRight,
       addDrop: correction.addDrop,
       currentAzimuth: fireSolution.azimuthDeg,
-      currentDistance: distance
-    })
+      currentDistance: distance,
+    });
 
     // Update target position
-    setTargetPosition(correctedTarget)
+    setTargetPosition(correctedTarget);
 
     // Add to correction history
-    addCorrection(correction)
+    addCorrection(correction);
 
     // Recalculate fire solution
-    calculateSolution()
-  }
+    calculateSolution();
+  };
 
-  const isDisabled = !targetPosition || !fireSolution
+  const isDisabled = !targetPosition || !fireSolution;
 
   return (
     <div className="space-y-4">
@@ -93,5 +93,5 @@ export function CorrectionPanel() {
         <p className="mt-1">Ausgabe: r./l. XX, A./D. XX</p>
       </div>
     </div>
-  )
+  );
 }

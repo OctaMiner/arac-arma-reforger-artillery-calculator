@@ -10,27 +10,27 @@
  * - Military tactical styling
  */
 
-import { useAppStore } from '../../stores/useAppStore'
-import { getMaximumRange, getMinimumRange } from '../../lib/ballistics/range'
-import { AzimuthDisplay } from './AzimuthDisplay'
-import { ElevationDisplay } from './ElevationDisplay'
-import { FlightTimeDisplay } from './FlightTimeDisplay'
-import { DistanceDisplay } from './DistanceDisplay'
-import { RingCountDisplay } from './RingCountDisplay'
-import { RangeWarning } from './RangeWarning'
-import { Target, Crosshair } from 'lucide-react'
+import { useAppStore } from '../../stores/useAppStore';
+import { getMaximumRange, getMinimumRange } from '../../lib/ballistics/range';
+import { AzimuthDisplay } from './AzimuthDisplay';
+import { ElevationDisplay } from './ElevationDisplay';
+import { FlightTimeDisplay } from './FlightTimeDisplay';
+import { DistanceDisplay } from './DistanceDisplay';
+import { RingCountDisplay } from './RingCountDisplay';
+import { RangeWarning } from './RangeWarning';
+import { Target, Crosshair } from 'lucide-react';
 
 export function FireSolutionPanel() {
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const windData = useAppStore((state) => state.windData)
-  const isCalculating = useAppStore((state) => state.isCalculating)
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const windData = useAppStore((state) => state.windData);
+  const isCalculating = useAppStore((state) => state.isCalculating);
 
   // Calculate range limits
-  const maxRange = getMaximumRange(mortarConfig.type, mortarConfig.ammo)
-  const minRange = getMinimumRange(mortarConfig.type, mortarConfig.ammo)
+  const maxRange = getMaximumRange(mortarConfig.type, mortarConfig.ammo);
+  const minRange = getMinimumRange(mortarConfig.type, mortarConfig.ammo);
 
   // Loading state
   if (isCalculating) {
@@ -43,7 +43,7 @@ export function FireSolutionPanel() {
           </span>
         </div>
       </div>
-    )
+    );
   }
 
   // No solution state - show placeholder
@@ -63,13 +63,13 @@ export function FireSolutionPanel() {
               {!mortarPosition && !targetPosition
                 ? 'Set mortar position and target position on the map to calculate fire solution.'
                 : !mortarPosition
-                ? 'Set mortar position on the map.'
-                : 'Set target position on the map.'}
+                  ? 'Set mortar position on the map.'
+                  : 'Set target position on the map.'}
             </p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Render fire solution
@@ -87,7 +87,9 @@ export function FireSolutionPanel() {
       )}
 
       {/* Main Fire Solution Grid */}
-      <div className={`grid grid-cols-2 gap-8 ${!fireSolution.inRange ? 'opacity-50' : ''}`}>
+      <div
+        className={`grid grid-cols-2 gap-8 ${!fireSolution.inRange ? 'opacity-50' : ''}`}
+      >
         {/* PRIMARY VALUES - Top Row (Azimuth & Elevation) */}
         <div className="flex items-center justify-center p-8 bg-bg-secondary border-2 border-accent-blue/30 rounded-lg">
           <AzimuthDisplay
@@ -121,7 +123,9 @@ export function FireSolutionPanel() {
       </div>
 
       {/* TERTIARY INFO - Distance (Full Width) */}
-      <div className={`flex items-center justify-center p-6 bg-bg-secondary border border-border rounded-lg ${!fireSolution.inRange ? 'opacity-50' : ''}`}>
+      <div
+        className={`flex items-center justify-center p-6 bg-bg-secondary border border-border rounded-lg ${!fireSolution.inRange ? 'opacity-50' : ''}`}
+      >
         <DistanceDisplay distance={fireSolution.distance} />
       </div>
 
@@ -131,12 +135,16 @@ export function FireSolutionPanel() {
           <div className="flex items-center justify-center gap-6 text-sm font-mono">
             <div className="flex items-center gap-2">
               <span className="text-text-secondary">Wind Speed:</span>
-              <span className="text-accent-blue font-bold">{windData.speed.toFixed(1)} m/s</span>
+              <span className="text-accent-blue font-bold">
+                {windData.speed.toFixed(1)} m/s
+              </span>
             </div>
             <div className="h-4 w-px bg-accent-blue/30"></div>
             <div className="flex items-center gap-2">
               <span className="text-text-secondary">Direction:</span>
-              <span className="text-accent-blue font-bold">{windData.direction}°</span>
+              <span className="text-accent-blue font-bold">
+                {windData.direction}°
+              </span>
             </div>
             <div className="h-4 w-px bg-accent-blue/30"></div>
             <div className="flex items-center gap-2">
@@ -149,5 +157,5 @@ export function FireSolutionPanel() {
         </div>
       )}
     </div>
-  )
+  );
 }

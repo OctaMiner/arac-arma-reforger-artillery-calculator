@@ -11,14 +11,14 @@
  * This matches the structure in data/maps/all_arma_maps.json
  */
 export interface ArmaMapRaw {
-  name: string // Display name (e.g., "Everon")
-  namespace: string // Unique ID (e.g., "everon")
-  size: [number, number] // [width, height] in pixels (1 pixel ≈ 1 meter)
-  max_zoom: number // Maximum zoom level (5-7)
+  name: string; // Display name (e.g., "Everon")
+  namespace: string; // Unique ID (e.g., "everon")
+  size: [number, number]; // [width, height] in pixels (1 pixel ≈ 1 meter)
+  max_zoom: number; // Maximum zoom level (5-7)
   resources: {
-    map_image: string // CDN URL to full satellite image
-    height_data?: string // CDN URL to height data JSON (optional)
-  }
+    map_image: string; // CDN URL to full satellite image
+    height_data?: string; // CDN URL to height data JSON (optional)
+  };
 }
 
 /**
@@ -26,26 +26,26 @@ export interface ArmaMapRaw {
  * Extends raw data with computed bounds and display properties
  */
 export interface MapConfig {
-  id: string // Same as namespace
-  name: string // Same as namespace (internal)
-  displayName: string // User-friendly name
-  bounds: [[number, number], [number, number]] // [[0, 0], [height, width]] for Leaflet Simple CRS
-  center: [number, number] // [height/2, width/2] center point
-  size: [number, number] // [width, height] in meters
-  imageUrl: string // CDN URL to satellite image
-  heightDataUrl?: string // CDN URL to height data (optional)
-  hasHeightData: boolean // Quick check for height data availability
-  minZoom: number // -2 for overview
-  maxZoom: number // From source data (5-7)
-  defaultZoom: number // Calculated default
-  gridInterval: number // Grid spacing (100m default)
-  category: MapCategory // 'vanilla' or 'mods'
+  id: string; // Same as namespace
+  name: string; // Same as namespace (internal)
+  displayName: string; // User-friendly name
+  bounds: [[number, number], [number, number]]; // [[0, 0], [height, width]] for Leaflet Simple CRS
+  center: [number, number]; // [height/2, width/2] center point
+  size: [number, number]; // [width, height] in meters
+  imageUrl: string; // CDN URL to satellite image
+  heightDataUrl?: string; // CDN URL to height data (optional)
+  hasHeightData: boolean; // Quick check for height data availability
+  minZoom: number; // -2 for overview
+  maxZoom: number; // From source data (5-7)
+  defaultZoom: number; // Calculated default
+  gridInterval: number; // Grid spacing (100m default)
+  category: MapCategory; // 'vanilla' or 'mods'
 }
 
 /**
  * Map categories for organizing the map selector
  */
-export type MapCategory = 'vanilla' | 'mods'
+export type MapCategory = 'vanilla' | 'mods';
 
 /**
  * All available map IDs (namespaces)
@@ -74,37 +74,40 @@ export type MapId =
   | 'takistan'
   | 'udachne'
   | 'zarichne'
-  | 'zimnitrita'
+  | 'zimnitrita';
 
 /**
  * Vanilla maps (official Bohemia maps)
  */
-export const VANILLA_MAPS: MapId[] = ['everon', 'arland', 'kolguev']
+export const VANILLA_MAPS: MapId[] = ['everon', 'arland', 'kolguev'];
 
 /**
  * Maps with height data available (local files < 50MB)
  * Large maps (>50MB) excluded: kolguev, anizay, gogland, saigon, zimnitrita
  */
 export const MAPS_WITH_HEIGHT_DATA: MapId[] = [
-  'everon',   // 8.9 MB
-  'arland',   // 0.9 MB
-  'kunar',    // 20 MB
+  'everon', // 8.9 MB
+  'arland', // 0.9 MB
+  'kunar', // 20 MB
   'takistan', // 29 MB
-  'zarichne'  // 31 MB
-]
+  'zarichne', // 31 MB
+];
 
 /**
  * Convert raw map data to processed MapConfig
  */
 export function convertRawToMapConfig(raw: ArmaMapRaw): MapConfig {
-  const [width, height] = raw.size
-  const isVanilla = VANILLA_MAPS.includes(raw.namespace as MapId)
+  const [width, height] = raw.size;
+  const isVanilla = VANILLA_MAPS.includes(raw.namespace as MapId);
 
   return {
     id: raw.namespace,
     name: raw.namespace,
     displayName: raw.name,
-    bounds: [[0, 0], [height, width]], // Leaflet Simple CRS format
+    bounds: [
+      [0, 0],
+      [height, width],
+    ], // Leaflet Simple CRS format
     center: [height / 2, width / 2],
     size: raw.size,
     imageUrl: raw.resources.map_image,
@@ -114,15 +117,15 @@ export function convertRawToMapConfig(raw: ArmaMapRaw): MapConfig {
     maxZoom: raw.max_zoom,
     defaultZoom: -2, // Start zoomed out to see full map (Gene's approach: fitBounds)
     gridInterval: 100,
-    category: isVanilla ? 'vanilla' : 'mods'
-  }
+    category: isVanilla ? 'vanilla' : 'mods',
+  };
 }
 
 export interface MapTileOptions {
-  tileSize: number
-  noWrap: boolean
-  updateWhenIdle: boolean
-  updateWhenZooming: boolean
+  tileSize: number;
+  noWrap: boolean;
+  updateWhenIdle: boolean;
+  updateWhenZooming: boolean;
 }
 
 /**
@@ -131,6 +134,6 @@ export interface MapTileOptions {
  */
 export interface HeightData {
   [north: number]: {
-    [east: number]: number // Height in meters
-  }
+    [east: number]: number; // Height in meters
+  };
 }

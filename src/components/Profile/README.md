@@ -5,6 +5,7 @@ Diese Components implementieren das User Profile System für ARAC.
 ## Komponenten
 
 ### 📦 ProfilePanel.tsx
+
 **Hauptkomponente** - Container für alle Profile-Features
 
 - Panel Header mit User Icon
@@ -13,6 +14,7 @@ Diese Components implementieren das User Profile System für ARAC.
 - Platzierung in Sidebar (zwischen HistoryPanel und FAQ)
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/components/Profile/ProfilePanel.tsx
 ```
@@ -20,9 +22,11 @@ Diese Components implementieren das User Profile System für ARAC.
 ---
 
 ### 👤 UsernameInput.tsx
+
 **Inline-Edit Komponente** für Benutzername
 
 **Features:**
+
 - Anzeige mit User Icon und Edit-Button (hover)
 - Click to Edit - inline editing
 - Save: Enter oder Blur
@@ -30,6 +34,7 @@ Diese Components implementieren das User Profile System für ARAC.
 - Speichert automatisch im UserStore
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/components/Profile/UsernameInput.tsx
 ```
@@ -37,19 +42,23 @@ Diese Components implementieren das User Profile System für ARAC.
 ---
 
 ### 📊 ProfileStats.tsx
+
 **Statistik-Anzeige** - Zeigt User-Statistiken
 
 **Anzeigt:**
+
 - Anzahl gespeicherter Missionen (aus MissionsStore)
 - Anzahl berechneter Schüsse (aus UserProfile.statistics)
 - Anzahl gespeicherter Stellungen (aus StationsStore)
 
 **Layout:**
+
 - Grid mit 3 Cards
 - Jede Card: Icon + Label + Wert
 - Farbcodiert (amber, red, blue)
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/components/Profile/ProfileStats.tsx
 ```
@@ -57,9 +66,11 @@ Diese Components implementieren das User Profile System für ARAC.
 ---
 
 ### ⬇️ ProfileExport.tsx
+
 **Export-Funktion** - Profil als JSON herunterladen
 
 **Features:**
+
 - Button mit Download Icon
 - Sammelt Daten aus allen Stores:
   - UserProfile
@@ -72,6 +83,7 @@ Diese Components implementieren das User Profile System für ARAC.
 - Dateiname: `arac-{username}-{timestamp}.json`
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/components/Profile/ProfileExport.tsx
 ```
@@ -79,9 +91,11 @@ Diese Components implementieren das User Profile System für ARAC.
 ---
 
 ### ⬆️ ProfileImport.tsx
+
 **Import-Funktion** - Profil aus JSON laden
 
 **Features:**
+
 - File Input (versteckt, als Button gestylt)
 - JSON Validierung
 - Bestätigungs-Dialog mit Vorschau
@@ -91,6 +105,7 @@ Diese Components implementieren das User Profile System für ARAC.
 - Fehlerbehandlung
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/components/Profile/ProfileImport.tsx
 ```
@@ -100,6 +115,7 @@ Diese Components implementieren das User Profile System für ARAC.
 ## Integration
 
 ### App.tsx
+
 ProfilePanel wurde in die Sidebar eingefügt:
 
 ```tsx
@@ -114,6 +130,7 @@ import { ProfilePanel } from './components/Profile'
 ```
 
 **Dateipfad:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/App.tsx
 ```
@@ -125,12 +142,14 @@ import { ProfilePanel } from './components/Profile'
 ### Hinzugefügte Strings in beiden Sprachen (de.json / en.json):
 
 **Dateipfade:**
+
 ```
 /Users/jann/Desktop/Armar Refroger Mörser/src/i18n/locales/de.json
 /Users/jann/Desktop/Armar Refroger Mörser/src/i18n/locales/en.json
 ```
 
 **Neue Section:**
+
 ```json
 "profile": {
   "title": "Profil" / "Profile",
@@ -164,20 +183,24 @@ import { ProfilePanel } from './components/Profile'
 ## Verwendete Stores
 
 ### useUserStore
+
 - `userProfile` - Profil mit Name und Statistiken
 - `settings` - App-Einstellungen
 - `saveUserProfile()` - Profil speichern
 - `saveSettings()` - Einstellungen speichern
 
 ### useMissionsStore
+
 - `missions` - Array aller Missionen
 - `loadMissions()` - Missionen neu laden
 
 ### useStationsStore
+
 - `stations` - Array aller Stellungen
 - `loadStations()` - Stellungen neu laden
 
 ### useHistoryStore
+
 - `history` - Array aller History-Einträge
 - `loadHistory()` - History neu laden
 
@@ -204,13 +227,13 @@ import { ProfilePanel } from './components/Profile'
 
 ```typescript
 interface ExportData {
-  version: string              // "1.0.0"
-  exportDate: string           // ISO timestamp
-  profile: UserProfile | null
-  settings: AppSettings
-  missions: FireMission[]
-  stations: MortarStation[]
-  history: HistoryEntry[]
+  version: string; // "1.0.0"
+  exportDate: string; // ISO timestamp
+  profile: UserProfile | null;
+  settings: AppSettings;
+  missions: FireMission[];
+  stations: MortarStation[];
+  history: HistoryEntry[];
 }
 ```
 

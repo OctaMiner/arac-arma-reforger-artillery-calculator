@@ -3,18 +3,16 @@
  * Toggle switch to enable/disable Spotter Mode
  */
 
-import { useSpotterStore } from '../../stores/useSpotterStore'
+import { useSpotterStore } from '../../stores/useSpotterStore';
 
 export function SpotterToggle() {
-  const spotterMode = useSpotterStore((state) => state.spotterMode)
-  const toggleSpotterMode = useSpotterStore((state) => state.toggleSpotterMode)
+  const spotterMode = useSpotterStore((state) => state.spotterMode);
+  const toggleSpotterMode = useSpotterStore((state) => state.toggleSpotterMode);
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex-1">
-        <h3 className="text-sm font-semibold text-white mb-1">
-          Spotter-Modus
-        </h3>
+        <h3 className="text-sm font-semibold text-white mb-1">Spotter-Modus</h3>
         <p className="text-xs text-gray-400">
           Zielberechnung mit Vector 21 Fernglas
         </p>
@@ -39,5 +37,5 @@ export function SpotterToggle() {
         />
       </button>
     </div>
-  )
+  );
 }

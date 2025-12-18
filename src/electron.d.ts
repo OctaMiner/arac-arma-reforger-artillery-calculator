@@ -5,7 +5,7 @@
  * und wird automatisch von TypeScript erkannt.
  */
 
-import type { ElectronAPI } from './types'
+import type { ElectronAPI } from './types';
 
 declare global {
   interface Window {
@@ -19,8 +19,8 @@ declare global {
      *
      * Alle Methoden sind async und nutzen IPC kommunikation.
      */
-    api: ElectronAPI
+    api: ElectronAPI;
   }
 }
 
-export {}
+export {};

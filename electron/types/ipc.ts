@@ -12,7 +12,7 @@ import type {
   UserProfile,
   FireMission,
   MortarStation,
-  HistoryEntry
+  HistoryEntry,
 } from '../../src/types';
 
 // ============================================
@@ -50,11 +50,11 @@ export const IPC_CHANNELS = {
 
   // App Info
   GET_APP_VERSION: 'get-app-version',
-  GET_APP_PATH: 'get-app-path'
+  GET_APP_PATH: 'get-app-path',
 } as const;
 
 // Type für IPC Channel Namen
-export type IpcChannel = typeof IPC_CHANNELS[keyof typeof IPC_CHANNELS];
+export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS];
 
 // ============================================
 // Request/Response Types

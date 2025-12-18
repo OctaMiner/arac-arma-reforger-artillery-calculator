@@ -23,11 +23,11 @@ Die App nutzt derzeit `ResultsBar` für eine kompakte, horizontale Anzeige am un
 Zeige die detaillierte Ansicht bei Bedarf als Overlay.
 
 ```tsx
-import { FireSolutionPanel } from './components/Results'
-import { useState } from 'react'
+import { FireSolutionPanel } from './components/Results';
+import { useState } from 'react';
 
 function App() {
-  const [showDetailedView, setShowDetailedView] = useState(false)
+  const [showDetailedView, setShowDetailedView] = useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">
@@ -64,7 +64,7 @@ function App() {
         </div>
       )}
     </div>
-  )
+  );
 }
 ```
 
@@ -74,7 +74,7 @@ Wechsel zwischen Karte und Detail-Ansicht.
 
 ```tsx
 function App() {
-  const [activeTab, setActiveTab] = useState<'map' | 'details'>('map')
+  const [activeTab, setActiveTab] = useState<'map' | 'details'>('map');
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">
@@ -112,7 +112,7 @@ function App() {
         )}
       </MainContent>
     </div>
-  )
+  );
 }
 ```
 
@@ -145,7 +145,7 @@ function App() {
         </div>
       </MainContent>
     </div>
-  )
+  );
 }
 ```
 
@@ -154,10 +154,10 @@ function App() {
 Zeige Details bei Click auf ResultsBar.
 
 ```tsx
-import { useState, useRef } from 'react'
+import { useState, useRef } from 'react';
 
 function App() {
-  const [showPopover, setShowPopover] = useState(false)
+  const [showPopover, setShowPopover] = useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">
@@ -183,7 +183,7 @@ function App() {
         )}
       </MainContent>
     </div>
-  )
+  );
 }
 ```
 
@@ -192,17 +192,17 @@ function App() {
 Exportiere Fire Solution für Druck/PDF.
 
 ```tsx
-import { useRef } from 'react'
-import { FireSolutionPanel } from './components/Results'
+import { useRef } from 'react';
+import { FireSolutionPanel } from './components/Results';
 
 function PrintableFiringSolution() {
-  const printRef = useRef<HTMLDivElement>(null)
+  const printRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = () => {
     if (printRef.current) {
-      window.print()
+      window.print();
     }
-  }
+  };
 
   return (
     <>
@@ -218,7 +218,7 @@ function PrintableFiringSolution() {
         </div>
       </div>
     </>
-  )
+  );
 }
 ```
 
@@ -233,14 +233,14 @@ import {
   AzimuthDisplay,
   ElevationDisplay,
   RingCountDisplay,
-  RangeWarning
-} from './components/Results'
+  RangeWarning,
+} from './components/Results';
 
 function CustomFireSolution() {
-  const fireSolution = useAppStore(state => state.fireSolution)
-  const mortarConfig = useAppStore(state => state.mortarConfig)
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
 
-  if (!fireSolution) return null
+  if (!fireSolution) return null;
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -272,7 +272,7 @@ function CustomFireSolution() {
         </div>
       )}
     </div>
-  )
+  );
 }
 ```
 
@@ -280,47 +280,47 @@ function CustomFireSolution() {
 
 ```tsx
 function MinimalFireSolution() {
-  const fireSolution = useAppStore(state => state.fireSolution)
+  const fireSolution = useAppStore((state) => state.fireSolution);
 
-  if (!fireSolution) return null
+  if (!fireSolution) return null;
 
   return (
     <div className="flex gap-8 items-center justify-center">
       <AzimuthDisplay azimuthMil={fireSolution.azimuthMil} />
       <ElevationDisplay elevationAdj={fireSolution.elevationAdj} />
     </div>
-  )
+  );
 }
 ```
 
 ## Best Practices
 
 ### 1. State Management
+
 Die Components holen sich die Daten direkt aus dem Store (via `useAppStore`), daher musst du keine Props durchreichen.
 
 ### 2. Responsive Design
+
 Bei kleineren Bildschirmen solltest du die Grid-Layout anpassen:
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {/* Components */}
-</div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">{/* Components */}</div>
 ```
 
 ### 3. Loading States
+
 FireSolutionPanel handhabt Loading States intern, aber bei eigenen Layouts:
 
 ```tsx
-const isCalculating = useAppStore(state => state.isCalculating)
+const isCalculating = useAppStore((state) => state.isCalculating);
 
-{isCalculating ? (
-  <LoadingSpinner />
-) : (
-  <AzimuthDisplay {...props} />
-)}
+{
+  isCalculating ? <LoadingSpinner /> : <AzimuthDisplay {...props} />;
+}
 ```
 
 ### 4. Animation
+
 Füge Transitions hinzu für smooth UX:
 
 ```tsx

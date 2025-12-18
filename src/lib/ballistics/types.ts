@@ -138,8 +138,8 @@ export interface DeltaElevCoefficients {
 export type {
   WindData,
   WindCorrection,
-  FireSolution
-} from '../../types/index.js'
+  FireSolution,
+} from '../../types/index.js';
 
 /**
  * Interpolation result between two table entries

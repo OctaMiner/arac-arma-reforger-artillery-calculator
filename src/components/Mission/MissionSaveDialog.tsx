@@ -9,57 +9,57 @@
  * - Closes on save or cancel
  */
 
-import { useState, useEffect } from 'react'
-import { useAppStore } from '../../stores/useAppStore'
-import { useMissionsStore } from '../../stores/useMissionsStore'
+import { useState, useEffect } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
+import { useMissionsStore } from '../../stores/useMissionsStore';
 
 interface MissionSaveDialogProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 export function MissionSaveDialog({ onClose }: MissionSaveDialogProps) {
-  const [missionName, setMissionName] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [missionName, setMissionName] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   // App state for current configuration
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const selectedMap = useAppStore((state) => state.selectedMap)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const selectedMap = useAppStore((state) => state.selectedMap);
 
   // Mission store
-  const saveMission = useMissionsStore((state) => state.saveMission)
-  const isLoading = useMissionsStore((state) => state.isLoading)
+  const saveMission = useMissionsStore((state) => state.saveMission);
+  const isLoading = useMissionsStore((state) => state.isLoading);
 
   // Auto-generate default name
   useEffect(() => {
-    const now = new Date()
+    const now = new Date();
     const defaultName = `Mission ${now.toLocaleDateString('de-DE', {
       day: '2-digit',
-      month: '2-digit'
+      month: '2-digit',
     })} ${now.toLocaleTimeString('de-DE', {
       hour: '2-digit',
-      minute: '2-digit'
-    })}`
-    setMissionName(defaultName)
-  }, [])
+      minute: '2-digit',
+    })}`;
+    setMissionName(defaultName);
+  }, []);
 
   // Validate and save mission
   const handleSave = async () => {
     // Validation
     if (!missionName.trim()) {
-      setError('Bitte einen Namen eingeben')
-      return
+      setError('Bitte einen Namen eingeben');
+      return;
     }
 
     if (!mortarPosition || !targetPosition || !fireSolution) {
-      setError('Keine vollständige Feuerlösung vorhanden')
-      return
+      setError('Keine vollständige Feuerlösung vorhanden');
+      return;
     }
 
     try {
-      setError(null)
+      setError(null);
 
       // Save mission
       await saveMission({
@@ -68,27 +68,27 @@ export function MissionSaveDialog({ onClose }: MissionSaveDialogProps) {
         mortarConfig,
         mortarPos: mortarPosition,
         targetPos: targetPosition,
-        fireSolution
-      })
+        fireSolution,
+      });
 
       // Close dialog on success
-      onClose()
+      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Fehler beim Speichern')
+      setError(err instanceof Error ? err.message : 'Fehler beim Speichern');
     }
-  }
+  };
 
   // Handle ESC key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -200,5 +200,5 @@ export function MissionSaveDialog({ onClose }: MissionSaveDialogProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

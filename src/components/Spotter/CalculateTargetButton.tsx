@@ -3,32 +3,32 @@
  * Calculates target position from spotter measurements
  */
 
-import { useSpotterStore } from '../../stores/useSpotterStore'
-import { useAppStore } from '../../stores/useAppStore'
-import { calculateTargetFromSpotter } from '../../lib/spotter'
+import { useSpotterStore } from '../../stores/useSpotterStore';
+import { useAppStore } from '../../stores/useAppStore';
+import { calculateTargetFromSpotter } from '../../lib/spotter';
 
 export function CalculateTargetButton() {
-  const spotterPosition = useSpotterStore((state) => state.spotterPosition)
-  const measurements = useSpotterStore((state) => state.spotterMeasurements)
-  const setTargetPosition = useAppStore((state) => state.setTargetPosition)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
+  const spotterPosition = useSpotterStore((state) => state.spotterPosition);
+  const measurements = useSpotterStore((state) => state.spotterMeasurements);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
-  const isDisabled = !spotterPosition || !measurements
+  const isDisabled = !spotterPosition || !measurements;
 
   const handleCalculate = () => {
-    if (!spotterPosition || !measurements) return
+    if (!spotterPosition || !measurements) return;
 
     // Calculate target position from spotter data
     const target = calculateTargetFromSpotter({
       spotterPosition,
       distance: measurements.distance,
-      azimuth: measurements.azimuth
-    })
+      azimuth: measurements.azimuth,
+    });
 
     // Set as target position and calculate fire solution
-    setTargetPosition(target)
-    calculateSolution()
-  }
+    setTargetPosition(target);
+    calculateSolution();
+  };
 
   return (
     <button
@@ -59,5 +59,5 @@ export function CalculateTargetButton() {
       </svg>
       Ziel berechnen
     </button>
-  )
+  );
 }

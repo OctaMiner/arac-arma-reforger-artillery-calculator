@@ -8,26 +8,26 @@
  * - Load more button for pagination
  */
 
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useHistoryStore } from '../../stores/useHistoryStore'
-import { HistoryEntry } from './HistoryEntry'
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useHistoryStore } from '../../stores/useHistoryStore';
+import { HistoryEntry } from './HistoryEntry';
 
 export function HistoryList() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   // Store state
-  const history = useHistoryStore((state) => state.history)
-  const isLoading = useHistoryStore((state) => state.isLoading)
-  const error = useHistoryStore((state) => state.error)
-  const hasMore = useHistoryStore((state) => state.hasMore)
-  const loadHistory = useHistoryStore((state) => state.loadHistory)
-  const loadMore = useHistoryStore((state) => state.loadMore)
+  const history = useHistoryStore((state) => state.history);
+  const isLoading = useHistoryStore((state) => state.isLoading);
+  const error = useHistoryStore((state) => state.error);
+  const hasMore = useHistoryStore((state) => state.hasMore);
+  const loadHistory = useHistoryStore((state) => state.loadHistory);
+  const loadMore = useHistoryStore((state) => state.loadMore);
 
   // Load history on mount
   useEffect(() => {
-    loadHistory()
-  }, [loadHistory])
+    loadHistory();
+  }, [loadHistory]);
 
   // Loading state (initial load)
   if (isLoading && history.length === 0) {
@@ -35,7 +35,7 @@ export function HistoryList() {
       <div className="flex items-center justify-center py-8">
         <div className="text-gray-400 text-sm">{t('common.loading')}</div>
       </div>
-    )
+    );
   }
 
   // Error state
@@ -46,7 +46,7 @@ export function HistoryList() {
           {t('common.error')}: {error}
         </p>
       </div>
-    )
+    );
   }
 
   // Empty state
@@ -68,12 +68,10 @@ export function HistoryList() {
             />
           </svg>
           <p className="text-sm font-medium">{t('history.empty')}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {t('history.emptyDesc')}
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{t('history.emptyDesc')}</p>
         </div>
       </div>
-    )
+    );
   }
 
   // History list
@@ -97,5 +95,5 @@ export function HistoryList() {
         </button>
       )}
     </div>
-  )
+  );
 }

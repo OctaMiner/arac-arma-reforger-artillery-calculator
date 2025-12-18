@@ -84,6 +84,8 @@ export async function withErrorHandling<T>(
     return await operation();
   } catch (error) {
     console.error(`[Storage] ${errorMessage}:`, error);
-    throw new Error(`${errorMessage}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `${errorMessage}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }

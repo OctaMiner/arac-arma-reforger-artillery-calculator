@@ -7,17 +7,20 @@ Das ARAC-Projekt unterstützt mehrere Arma Reforger Karten. Aktuell ist nur **Ev
 ## Verfügbare Karten
 
 ### Everon (vollständig)
+
 - Status: Implementiert
 - Bild: `/public/maps/everon.png` (7678x7398px)
 - Größe: 13.6km x 13.0km
 - Grid: X=97-133, Y=0-130
 
 ### Arland (geplant)
+
 - Status: Konfiguration vorhanden, Bild fehlt
 - Benötigt: `/public/maps/arland.png`
 - Geschätzte Größe: ~8km x 8km
 
 ### Conflict (geplant)
+
 - Status: Konfiguration vorhanden, Bild fehlt
 - Benötigt: `/public/maps/conflict.png`
 - Geschätzte Größe: ~6km x 6km
@@ -33,6 +36,7 @@ Das Kartenbild sollte eine hochauflösende PNG-Datei sein:
 - Für 10km Karte: mindestens 5000x5000px
 
 Quellen für Kartenbilder:
+
 - [iZurvive](https://www.izurvive.com/)
 - [Arma-Mortar.com](https://arma-mortar.com/)
 - In-Game Screenshots zusammengesetzt
@@ -54,17 +58,17 @@ export const MEINE_KARTE_CONFIG: MapConfig = {
   name: 'meinekarte',
   displayName: 'Meine Karte',
   bounds: [
-    [0, 0],           // Südwest-Ecke (Y, X) in Metern
-    [10000, 10000]    // Nordost-Ecke
+    [0, 0], // Südwest-Ecke (Y, X) in Metern
+    [10000, 10000], // Nordost-Ecke
   ],
   center: [5000, 5000],
-  minZoom: -3,        // Wie weit kann man rauszoomen
-  maxZoom: 2,         // Wie weit kann man reinzoomen
-  defaultZoom: -2,    // Startzoom
-  gridInterval: 100,  // Grid-Größe (100m standard)
+  minZoom: -3, // Wie weit kann man rauszoomen
+  maxZoom: 2, // Wie weit kann man reinzoomen
+  defaultZoom: -2, // Startzoom
+  gridInterval: 100, // Grid-Größe (100m standard)
   imageUrl: '/maps/meinekarte.png',
-  attribution: 'Arma Reforger - Meine Karte'
-}
+  attribution: 'Arma Reforger - Meine Karte',
+};
 ```
 
 ### 4. Karte registrieren
@@ -76,14 +80,14 @@ export const MAP_CONFIGS: Record<MapId, MapConfig> = {
   everon: EVERON_CONFIG,
   arland: ARLAND_CONFIG,
   conflict: CONFLICT_CONFIG,
-  meinekarte: MEINE_KARTE_CONFIG  // Neu
-}
+  meinekarte: MEINE_KARTE_CONFIG, // Neu
+};
 ```
 
 In `types.ts`:
 
 ```typescript
-export type MapId = 'everon' | 'arland' | 'conflict' | 'meinekarte'
+export type MapId = 'everon' | 'arland' | 'conflict' | 'meinekarte';
 ```
 
 ### 5. Test
@@ -112,13 +116,13 @@ Leaflet nutzt `CRS.Simple` für Spielkarten:
 
 ```typescript
 // Leaflet LatLng [lat, lng] = [north, east] in Metern
-const position = L.latLng(north, east)
+const position = L.latLng(north, east);
 
 // Arma Koordinaten
 const armaCoords = {
-  east: latlng.lng,   // X
-  north: latlng.lat   // Y
-}
+  east: latlng.lng, // X
+  north: latlng.lat, // Y
+};
 ```
 
 ## Grid-System
@@ -134,7 +138,7 @@ Arma Reforger nutzt ein 100m-Grid:
 Für sehr große Karten sollten Tiles genutzt werden:
 
 ```typescript
-tileUrl: '/maps/tiles/{z}/{x}/{y}.png'
+tileUrl: '/maps/tiles/{z}/{x}/{y}.png';
 ```
 
 Siehe `IMPLEMENTATION_PLAN.md` für Details zur Tile-Generierung.
@@ -144,7 +148,7 @@ Siehe `IMPLEMENTATION_PLAN.md` für Details zur Tile-Generierung.
 Für präzise ballistische Berechnungen können Höhendaten integriert werden:
 
 ```typescript
-heightmapUrl: '/height_data/everon_height.json'
+heightmapUrl: '/height_data/everon_height.json';
 ```
 
 Format: 2D-Array mit Höhenwerten in Metern für 10m-Grid-Zellen.
@@ -152,16 +156,19 @@ Format: 2D-Array mit Höhenwerten in Metern für 10m-Grid-Zellen.
 ## Troubleshooting
 
 ### Karte lädt nicht
+
 - Prüfe Browser Console auf Fehler
 - Prüfe ob Bild-Pfad korrekt ist
 - Prüfe ob Datei in `/public/maps/` liegt
 
 ### Koordinaten stimmen nicht
+
 - Prüfe `bounds` Konfiguration
 - Vergleiche mit In-Game Koordinaten
 - Prüfe ob Grid-Interval korrekt ist (100m standard)
 
 ### Performance-Probleme
+
 - Zu große Bilder reduzieren (< 20MB)
 - Erwäge Tile-System für sehr große Karten
 - Reduziere `maxZoom` wenn Bild zu groß

@@ -8,24 +8,24 @@ export {
   calculateDistance,
   calculateAzimuth,
   degToMil,
-  milToDeg
-} from './calculator.js'
+  milToDeg,
+} from './calculator.js';
 
 // Interpolation functions
 export {
   interpolateElevation,
   interpolateFlightTime,
   interpolateDeltaElev,
-  polynomialElevation
-} from './interpolation.js'
+  polynomialElevation,
+} from './interpolation.js';
 
 // Elevation and height corrections
 export {
   getDeltaElevPer100m,
   calculateDeltaElevation,
   calculateDeltaElevationFromTable,
-  applyHeightCorrection
-} from './elevation.js'
+  applyHeightCorrection,
+} from './elevation.js';
 
 // Range checking and charge selection
 export {
@@ -33,15 +33,15 @@ export {
   findOptimalRingCount,
   getValidRingCounts,
   getMaximumRange,
-  getMinimumRange
-} from './range.js'
+  getMinimumRange,
+} from './range.js';
 
 // Fire solution calculator
 export {
   calculateFireSolution,
   calculateFireSolutionAuto,
-  type FireSolutionParams
-} from './fireSolution.js'
+  type FireSolutionParams,
+} from './fireSolution.js';
 
 // Wind correction calculations
 export {
@@ -51,20 +51,20 @@ export {
   kmhToMs,
   msToKmh,
   getWindStrength,
-  getWindDirectionName
-} from './wind.js'
+  getWindDirectionName,
+} from './wind.js';
 
 // Table loader
 export {
   loadBallisticTable,
   filterTableByRingCount,
   hasBallisticTable,
-  type BallisticTableData
-} from './tableLoader.js'
+  type BallisticTableData,
+} from './tableLoader.js';
 
 // Re-export types
 export type {
   BallisticEntry,
   WindData,
-  WindCorrection
-} from '../../types/index.js'
+  WindCorrection,
+} from '../../types/index.js';

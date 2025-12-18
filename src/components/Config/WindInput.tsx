@@ -10,12 +10,12 @@
  * - Wind direction compass visualization
  */
 
-import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Wind, Compass } from 'lucide-react'
-import { useAppStore } from '../../stores/useAppStore'
-import { getWindStrength, getWindDirectionName } from '../../lib/ballistics'
-import type { WindData } from '../../types'
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Wind, Compass } from 'lucide-react';
+import { useAppStore } from '../../stores/useAppStore';
+import { getWindStrength, getWindDirectionName } from '../../lib/ballistics';
+import type { WindData } from '../../types';
 
 const CARDINAL_DIRECTIONS = [
   { name: 'N', deg: 0 },
@@ -25,64 +25,64 @@ const CARDINAL_DIRECTIONS = [
   { name: 'S', deg: 180 },
   { name: 'SW', deg: 225 },
   { name: 'W', deg: 270 },
-  { name: 'NW', deg: 315 }
-]
+  { name: 'NW', deg: 315 },
+];
 
 export function WindInput() {
-  const { t } = useTranslation()
-  const windData = useAppStore((state) => state.windData)
-  const setWindData = useAppStore((state) => state.setWindData)
+  const { t } = useTranslation();
+  const windData = useAppStore((state) => state.windData);
+  const setWindData = useAppStore((state) => state.setWindData);
 
-  const [enabled, setEnabled] = useState(false)
-  const [speed, setSpeed] = useState(5)
-  const [direction, setDirection] = useState(0)
-  const [useCardinal, setUseCardinal] = useState(true)
+  const [enabled, setEnabled] = useState(false);
+  const [speed, setSpeed] = useState(5);
+  const [direction, setDirection] = useState(0);
+  const [useCardinal, setUseCardinal] = useState(true);
 
   // Initialize from store
   useEffect(() => {
     if (windData) {
-      setEnabled(true)
-      setSpeed(windData.speed)
-      setDirection(windData.direction)
+      setEnabled(true);
+      setSpeed(windData.speed);
+      setDirection(windData.direction);
     }
-  }, [])
+  }, []);
 
   // Update store when wind changes
   useEffect(() => {
     if (enabled) {
-      const newWindData: WindData = { speed, direction }
-      setWindData(newWindData)
+      const newWindData: WindData = { speed, direction };
+      setWindData(newWindData);
     } else {
-      setWindData(null)
+      setWindData(null);
     }
-  }, [enabled, speed, direction, setWindData])
+  }, [enabled, speed, direction, setWindData]);
 
   // Note: Recalculation is now handled by useAutoCalculate hook in App.tsx
 
   const handleToggle = () => {
-    setEnabled(!enabled)
-  }
+    setEnabled(!enabled);
+  };
 
   const handleSpeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value)
+    const value = parseFloat(e.target.value);
     if (!isNaN(value) && value >= 0 && value <= 20) {
-      setSpeed(value)
+      setSpeed(value);
     }
-  }
+  };
 
   const handleDirectionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value)
+    const value = parseFloat(e.target.value);
     if (!isNaN(value) && value >= 0 && value <= 360) {
-      setDirection(value)
+      setDirection(value);
     }
-  }
+  };
 
   const handleCardinalSelect = (deg: number) => {
-    setDirection(deg)
-  }
+    setDirection(deg);
+  };
 
-  const windStrength = getWindStrength(speed)
-  const windDirName = getWindDirectionName(direction)
+  const windStrength = getWindStrength(speed);
+  const windDirName = getWindDirectionName(direction);
 
   return (
     <div className="bg-[#1a1a2e] rounded-lg p-4 border border-gray-700">
@@ -111,9 +111,7 @@ export function WindInput() {
       </div>
 
       {!enabled && (
-        <div className="text-sm text-gray-400">
-          {t('wind.disabled')}
-        </div>
+        <div className="text-sm text-gray-400">{t('wind.disabled')}</div>
       )}
 
       {enabled && (
@@ -145,12 +143,17 @@ export function WindInput() {
               <span className="text-sm text-gray-400 font-mono">m/s</span>
             </div>
             <div className="mt-1 flex items-center gap-2">
-              <span className={`text-xs font-semibold uppercase tracking-wide ${
-                speed < 3 ? 'text-green-400' :
-                speed < 6 ? 'text-yellow-400' :
-                speed < 10 ? 'text-orange-400' :
-                'text-red-400'
-              }`}>
+              <span
+                className={`text-xs font-semibold uppercase tracking-wide ${
+                  speed < 3
+                    ? 'text-green-400'
+                    : speed < 6
+                      ? 'text-yellow-400'
+                      : speed < 10
+                        ? 'text-orange-400'
+                        : 'text-red-400'
+                }`}
+              >
                 {windStrength}
               </span>
               <span className="text-xs text-gray-500">
@@ -235,7 +238,9 @@ export function WindInput() {
             <div className="mt-3 flex items-center gap-3">
               <Compass className="w-5 h-5 text-blue-400" />
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">{t('wind.currentDirection')}:</span>
+                <span className="text-sm text-gray-400">
+                  {t('wind.currentDirection')}:
+                </span>
                 <span className="font-mono text-lg font-bold text-blue-400">
                   {windDirName} ({direction}°)
                 </span>
@@ -260,5 +265,5 @@ export function WindInput() {
         </div>
       )}
     </div>
-  )
+  );
 }

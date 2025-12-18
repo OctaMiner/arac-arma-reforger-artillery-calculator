@@ -10,15 +10,15 @@
  * - sandbox: true
  */
 
-import { contextBridge, ipcRenderer } from 'electron'
-import { IPC_CHANNELS } from './types/ipc'
+import { contextBridge, ipcRenderer } from 'electron';
+import { IPC_CHANNELS } from './types/ipc';
 import type {
   AppSettings,
   UserProfile,
   FireMission,
   MortarStation,
-  HistoryEntry
-} from '../src/types'
+  HistoryEntry,
+} from '../src/types';
 
 // ============================================
 // API Definition (Type-Safe)
@@ -70,24 +70,27 @@ const api = {
     ipcRenderer.invoke(IPC_CHANNELS.DELETE_STATION, id),
 
   // --- History ---
-  getHistory: (params?: { limit?: number; offset?: number }): Promise<HistoryEntry[]> =>
+  getHistory: (params?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<HistoryEntry[]> =>
     ipcRenderer.invoke(IPC_CHANNELS.GET_HISTORY, params),
 
   addHistory: (entry: Omit<HistoryEntry, 'id' | 'timestamp'>): Promise<void> =>
     ipcRenderer.invoke(IPC_CHANNELS.ADD_HISTORY, entry),
 
   clearHistory: (): Promise<void> =>
-    ipcRenderer.invoke(IPC_CHANNELS.CLEAR_HISTORY)
-} as const
+    ipcRenderer.invoke(IPC_CHANNELS.CLEAR_HISTORY),
+} as const;
 
 // ============================================
 // Expose to Renderer (Context Bridge)
 // ============================================
 
-contextBridge.exposeInMainWorld('api', api)
+contextBridge.exposeInMainWorld('api', api);
 
 // ============================================
 // Type Export für window.d.ts
 // ============================================
 
-export type ElectronAPI = typeof api
+export type ElectronAPI = typeof api;

@@ -5,11 +5,14 @@ This directory contains all ballistic tables and coefficients extracted from Gen
 ## File Structure
 
 ### 1. Ballistic Tables (HE Ammunition)
+
 Separate files for each ring count:
+
 - `us-he-ring0.json` to `us-he-ring4.json` - US HE ammunition
 - `rus-he-ring0.json` to `rus-he-ring4.json` - RUS HE ammunition
 
 **Format:**
+
 ```json
 {
   "mortarType": "US" | "RUS",
@@ -29,13 +32,16 @@ Separate files for each ring count:
 ```
 
 ### 2. Combined Tables (Smoke & Illumination)
+
 All rings in one file:
+
 - `us-smoke.json` - US Smoke rounds
 - `us-illumination.json` - US Illumination rounds
 - `rus-smoke.json` - RUS Smoke rounds
 - `rus-illumination.json` - RUS Illumination rounds
 
 **Format:**
+
 ```json
 {
   "mortarType": "US" | "RUS",
@@ -53,20 +59,24 @@ All rings in one file:
 ```
 
 ### 3. Coefficients
+
 - `delta-elev-coefficients.json` - Elevation correction per 100m altitude difference
 
 ### 4. Index
+
 - `ballistic-tables-index.json` - Master index of all tables
 
 ## Data Statistics
 
 ### US Mortar
+
 - **HE**: 79 total entries (8+9+15+21+26 across rings 0-4)
 - **Smoke**: 63 entries across 4 rings
 - **Illumination**: 63 entries across 4 rings
 - **Max Range**: 2900m (Ring 4, HE)
 
 ### RUS Mortar
+
 - **HE**: 67 total entries (10+8+13+16+20 across rings 0-4)
 - **Smoke**: 40 entries across 4 rings
 - **Illumination**: 54 entries across 4 rings
@@ -75,20 +85,22 @@ All rings in one file:
 ## Usage Examples
 
 ### Load a specific table
+
 ```typescript
 import usHeRing4 from './data/us-he-ring4.json';
 
 // Find elevation for 2000m target
-const entry = usHeRing4.entries.find(e => e.range === 2000);
+const entry = usHeRing4.entries.find((e) => e.range === 2000);
 console.log(`Elevation: ${entry.elevation} mil`);
 console.log(`Time of Flight: ${entry.tof} sec`);
 ```
 
 ### Interpolate between ranges
+
 ```typescript
 function interpolateElevation(data, targetRange) {
-  const lower = data.entries.findLast(e => e.range <= targetRange);
-  const upper = data.entries.find(e => e.range > targetRange);
+  const lower = data.entries.findLast((e) => e.range <= targetRange);
+  const upper = data.entries.find((e) => e.range > targetRange);
 
   if (!lower || !upper) return null;
 
@@ -98,18 +110,20 @@ function interpolateElevation(data, targetRange) {
 ```
 
 ### Apply altitude correction
+
 ```typescript
 import deltaCoeffs from './data/delta-elev-coefficients.json';
 
 function correctForAltitude(baseElevation, ringCount, altitudeDiff) {
   const coeff = deltaCoeffs.coefficients[`ring${ringCount}`].coefficient;
-  return baseElevation + (coeff * altitudeDiff / 100);
+  return baseElevation + (coeff * altitudeDiff) / 100;
 }
 ```
 
 ## Data Validation
 
 All files have been validated for:
+
 - ✓ Correct min/max range values
 - ✓ No missing entries
 - ✓ No zero values in critical fields
@@ -117,6 +131,7 @@ All files have been validated for:
 - ✓ Consistent data types
 
 Run validation:
+
 ```bash
 python3 extract_ballistics.py
 ```

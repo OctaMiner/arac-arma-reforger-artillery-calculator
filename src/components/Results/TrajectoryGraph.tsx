@@ -11,84 +11,88 @@
  * - Updates with fire solution changes
  */
 
-import { useMemo, useEffect, useState } from 'react'
-import { useAppStore } from '../../stores/useAppStore'
+import { useMemo, useEffect, useState } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
 import {
   getTerrainProfile,
   isHeightDataLoaded,
-  preloadHeightData
-} from '../../lib/maps/heightService'
-import { getAllRingRanges } from '../../lib/ballistics/range'
-import type { RingCount } from '../../types'
+  preloadHeightData,
+} from '../../lib/maps/heightService';
+import { getAllRingRanges } from '../../lib/ballistics/range';
+import type { RingCount } from '../../types';
 
 export function TrajectoryGraph() {
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const selectedMap = useAppStore((state) => state.selectedMap)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const manualChargeOverride = useAppStore((state) => state.manualChargeOverride)
-  const setManualChargeOverride = useAppStore((state) => state.setManualChargeOverride)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const selectedMap = useAppStore((state) => state.selectedMap);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const manualChargeOverride = useAppStore(
+    (state) => state.manualChargeOverride
+  );
+  const setManualChargeOverride = useAppStore(
+    (state) => state.setManualChargeOverride
+  );
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
   // Get available rings based on ammo type
   // HE: 0-4, Smoke/Illumination: 1-4
   const availableRings = useMemo((): RingCount[] => {
     if (mortarConfig.ammo === 'HE') {
-      return [0, 1, 2, 3, 4]
+      return [0, 1, 2, 3, 4];
     }
-    return [1, 2, 3, 4] // Smoke and Illumination have no Ring 0
-  }, [mortarConfig.ammo])
+    return [1, 2, 3, 4]; // Smoke and Illumination have no Ring 0
+  }, [mortarConfig.ammo]);
 
   // Check if we're in auto mode
-  const isAutoMode = manualChargeOverride === null
+  const isAutoMode = manualChargeOverride === null;
 
   // Handle ring change - sets manual override
   const handleRingChange = (ring: RingCount) => {
-    setManualChargeOverride(ring)
+    setManualChargeOverride(ring);
     // Trigger recalculation with the new charge
-    setTimeout(() => calculateSolution(), 0)
-  }
+    setTimeout(() => calculateSolution(), 0);
+  };
 
   // Handle reset to auto mode
   const handleResetToAuto = () => {
-    setManualChargeOverride(null)
+    setManualChargeOverride(null);
     // Trigger recalculation in auto mode
-    setTimeout(() => calculateSolution(), 0)
-  }
+    setTimeout(() => calculateSolution(), 0);
+  };
 
   // Track if height data is loaded
-  const [heightDataReady, setHeightDataReady] = useState(false)
+  const [heightDataReady, setHeightDataReady] = useState(false);
 
   // Preload height data and check if ready
   useEffect(() => {
-    preloadHeightData(selectedMap)
+    preloadHeightData(selectedMap);
 
     // Check periodically if data is loaded
     const checkInterval = setInterval(() => {
       if (isHeightDataLoaded(selectedMap)) {
-        setHeightDataReady(true)
-        clearInterval(checkInterval)
+        setHeightDataReady(true);
+        clearInterval(checkInterval);
       }
-    }, 100)
+    }, 100);
 
     // Also check immediately
     if (isHeightDataLoaded(selectedMap)) {
-      setHeightDataReady(true)
+      setHeightDataReady(true);
     }
 
-    return () => clearInterval(checkInterval)
-  }, [selectedMap])
+    return () => clearInterval(checkInterval);
+  }, [selectedMap]);
 
   // Reset ready state when map changes
   useEffect(() => {
-    setHeightDataReady(isHeightDataLoaded(selectedMap))
-  }, [selectedMap])
+    setHeightDataReady(isHeightDataLoaded(selectedMap));
+  }, [selectedMap]);
 
   // Get terrain profile
   const terrainProfile = useMemo(() => {
     if (!mortarPosition || !targetPosition || !heightDataReady) {
-      return null
+      return null;
     }
 
     return getTerrainProfile(
@@ -98,8 +102,8 @@ export function TrajectoryGraph() {
       targetPosition.east,
       targetPosition.north,
       60 // More samples for smoother terrain
-    )
-  }, [selectedMap, mortarPosition, targetPosition, heightDataReady])
+    );
+  }, [selectedMap, mortarPosition, targetPosition, heightDataReady]);
 
   // Don't render if no solution
   if (!fireSolution || !mortarPosition || !targetPosition) {
@@ -134,9 +138,10 @@ export function TrajectoryGraph() {
               onClick={handleResetToAuto}
               className={`
                 px-2 py-1 text-xs font-medium rounded transition-all
-                ${isAutoMode
-                  ? 'bg-green-600 text-white shadow-lg shadow-green-500/30'
-                  : 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white'
+                ${
+                  isAutoMode
+                    ? 'bg-green-600 text-white shadow-lg shadow-green-500/30'
+                    : 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white'
                 }
               `}
               title="Automatische Ladungsauswahl basierend auf Distanz"
@@ -148,8 +153,8 @@ export function TrajectoryGraph() {
 
             {/* Ring Buttons */}
             {availableRings.map((ring) => {
-              const currentCharge = manualChargeOverride ?? mortarConfig.charge
-              const isActive = !isAutoMode && currentCharge === ring
+              const currentCharge = manualChargeOverride ?? mortarConfig.charge;
+              const isActive = !isAutoMode && currentCharge === ring;
 
               return (
                 <button
@@ -157,18 +162,19 @@ export function TrajectoryGraph() {
                   onClick={() => handleRingChange(ring)}
                   className={`
                     px-2.5 py-1 text-xs font-bold rounded transition-all
-                    ${isActive
-                      ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                      : isAutoMode && mortarConfig.charge === ring
-                        ? 'bg-purple-600/30 text-purple-300 ring-1 ring-purple-500/50'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                    ${
+                      isActive
+                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
+                        : isAutoMode && mortarConfig.charge === ring
+                          ? 'bg-purple-600/30 text-purple-300 ring-1 ring-purple-500/50'
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                     }
                   `}
                   title={`Ring ${ring} - ${ring === 0 ? 'Steilste' : ring === 4 ? 'Flachste' : 'Mittlere'} Flugbahn`}
                 >
                   {ring}
                 </button>
-              )
+              );
             })}
             <span className="text-xs text-gray-500 ml-2">
               ({mortarConfig.ammo})
@@ -181,36 +187,36 @@ export function TrajectoryGraph() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Calculate trajectory parameters
-  const distanceToTarget = fireSolution.distance
-  const mortarHeight = mortarPosition.height
-  const targetHeight = targetPosition.height
-  const isOutOfRange = !fireSolution.inRange
+  const distanceToTarget = fireSolution.distance;
+  const mortarHeight = mortarPosition.height;
+  const targetHeight = targetPosition.height;
+  const isOutOfRange = !fireSolution.inRange;
 
   // Get the max range for the current ring
-  const currentRing = fireSolution.ringCount
-  const ringRanges = getAllRingRanges(mortarConfig.type, mortarConfig.ammo)
-  const currentRingRange = ringRanges.find(r => r.ringCount === currentRing)
-  const maxRangeForRing = currentRingRange?.maxRange ?? distanceToTarget
+  const currentRing = fireSolution.ringCount;
+  const ringRanges = getAllRingRanges(mortarConfig.type, mortarConfig.ammo);
+  const currentRingRange = ringRanges.find((r) => r.ringCount === currentRing);
+  const maxRangeForRing = currentRingRange?.maxRange ?? distanceToTarget;
 
   // Determine actual trajectory end point
   // If out of range, trajectory ends at max range (before target)
   // If in range, trajectory ends at target
   const trajectoryEndDistance = isOutOfRange
     ? Math.min(maxRangeForRing, distanceToTarget * 0.9) // Cap at 90% to show gap
-    : distanceToTarget
+    : distanceToTarget;
 
   // For out-of-range: estimate landing height at impact point
   // For in-range: use target height
   const trajectoryEndHeight = isOutOfRange
     ? mortarHeight // Approximate landing at similar height (shell falls to ground)
-    : targetHeight
+    : targetHeight;
 
   // For SVG display, we need the full distance to show the target
-  const displayDistance = distanceToTarget
+  const displayDistance = distanceToTarget;
 
   // =======================================================
   // PARABOLA THROUGH START AND END POINTS
@@ -227,35 +233,42 @@ export function TrajectoryGraph() {
   // Lower elevation = apex closer to middle (h ≈ d/2)
   // =======================================================
 
-  const d = trajectoryEndDistance
-  const startHeight = mortarHeight
-  const endHeight = trajectoryEndHeight
-  const heightDiff = endHeight - startHeight
+  const d = trajectoryEndDistance;
+  const startHeight = mortarHeight;
+  const endHeight = trajectoryEndHeight;
+  const heightDiff = endHeight - startHeight;
 
   // Determine apex X position based on elevation
-  let flightTime: number
-  let apexXRatio: number  // 0 to 1, where apex is located
+  let flightTime: number;
+  let apexXRatio: number; // 0 to 1, where apex is located
 
-  if (isOutOfRange || fireSolution.elevationAdj === 0 || fireSolution.flightTime === 0) {
-    flightTime = 25
-    apexXRatio = 0.45  // Slightly before middle for max range
+  if (
+    isOutOfRange ||
+    fireSolution.elevationAdj === 0 ||
+    fireSolution.flightTime === 0
+  ) {
+    flightTime = 25;
+    apexXRatio = 0.45; // Slightly before middle for max range
   } else {
-    flightTime = fireSolution.flightTime
-    const elevationMil = fireSolution.elevationAdj
+    flightTime = fireSolution.flightTime;
+    const elevationMil = fireSolution.elevationAdj;
 
     // Higher elevation (steeper) = apex earlier in flight
     // Range: 800 MIL (flat, ~45°) → ratio 0.45
     //        1200 MIL (steep, ~67°) → ratio 0.35
     //        1500 MIL (very steep, ~84°) → ratio 0.25
-    apexXRatio = Math.max(0.25, Math.min(0.48, 0.55 - (elevationMil - 800) / 2000))
+    apexXRatio = Math.max(
+      0.25,
+      Math.min(0.48, 0.55 - (elevationMil - 800) / 2000)
+    );
   }
 
   // Apex X must be less than d/2 for downward-opening parabola when heights are similar
   // Clamp to ensure valid parabola
-  let actualApexX = d * apexXRatio
+  let actualApexX = d * apexXRatio;
 
   // Ensure apex is before midpoint to get downward parabola
-  actualApexX = Math.min(actualApexX, d * 0.48)
+  actualApexX = Math.min(actualApexX, d * 0.48);
 
   // =======================================================
   // Calculate parabola parameters
@@ -264,148 +277,160 @@ export function TrajectoryGraph() {
   // k = startHeight - a × h²
   // =======================================================
 
-  const denominator = d * (d - 2 * actualApexX)
+  const denominator = d * (d - 2 * actualApexX);
 
-  let parabolaA: number
-  let apexHeight: number
+  let parabolaA: number;
+  let apexHeight: number;
 
   if (Math.abs(denominator) > 0.001) {
-    parabolaA = heightDiff / denominator
-    apexHeight = startHeight - parabolaA * actualApexX * actualApexX
+    parabolaA = heightDiff / denominator;
+    apexHeight = startHeight - parabolaA * actualApexX * actualApexX;
   } else {
     // Fallback: apex at midpoint, estimate height from flight time
-    actualApexX = d * 0.4
-    const g = 9.81
-    const timeToApex = flightTime * 0.4
-    apexHeight = startHeight + (timeToApex * timeToApex * g / 2)
-    parabolaA = (startHeight - apexHeight) / (actualApexX * actualApexX)
+    actualApexX = d * 0.4;
+    const g = 9.81;
+    const timeToApex = flightTime * 0.4;
+    apexHeight = startHeight + (timeToApex * timeToApex * g) / 2;
+    parabolaA = (startHeight - apexHeight) / (actualApexX * actualApexX);
   }
 
   // Ensure apex is above both endpoints (sanity check)
-  const minApexHeight = Math.max(startHeight, endHeight) + 30
+  const minApexHeight = Math.max(startHeight, endHeight) + 30;
   if (apexHeight < minApexHeight) {
-    apexHeight = minApexHeight
+    apexHeight = minApexHeight;
     // Recalculate parabolaA to pass through start
-    parabolaA = (startHeight - apexHeight) / (actualApexX * actualApexX)
+    parabolaA = (startHeight - apexHeight) / (actualApexX * actualApexX);
   }
 
   // SVG dimensions - larger graph for better visualization
-  const svgWidth = 400
-  const svgHeight = 280
-  const padding = { top: 25, right: 25, bottom: 35, left: 45 }
-  const graphWidth = svgWidth - padding.left - padding.right
-  const graphHeight = svgHeight - padding.top - padding.bottom
+  const svgWidth = 400;
+  const svgHeight = 280;
+  const padding = { top: 25, right: 25, bottom: 35, left: 45 };
+  const graphWidth = svgWidth - padding.left - padding.right;
+  const graphHeight = svgHeight - padding.top - padding.bottom;
 
   // Calculate height range from terrain (NOT trajectory!)
   // The terrain view should stay constant regardless of which ring is selected
-  let minTerrainHeight = Math.min(mortarHeight, targetHeight)
-  let maxTerrainHeight = Math.max(mortarHeight, targetHeight)
+  let minTerrainHeight = Math.min(mortarHeight, targetHeight);
+  let maxTerrainHeight = Math.max(mortarHeight, targetHeight);
 
   if (terrainProfile && terrainProfile.length > 0) {
-    const terrainHeights = terrainProfile.map((p) => p.height)
-    minTerrainHeight = Math.min(...terrainHeights)
-    maxTerrainHeight = Math.max(...terrainHeights)
+    const terrainHeights = terrainProfile.map((p) => p.height);
+    minTerrainHeight = Math.min(...terrainHeights);
+    maxTerrainHeight = Math.max(...terrainHeights);
   }
 
   // Fixed height range - always show up to 1000m for consistent trajectory visualization
   // This ensures high trajectories (Ring 0) are always fully visible
-  const minHeight = Math.min(minTerrainHeight - 20, 0)
-  const maxHeight = Math.max(1000, apexHeight + 50, maxTerrainHeight + 100)
-  const heightRange = maxHeight - minHeight
+  const minHeight = Math.min(minTerrainHeight - 20, 0);
+  const maxHeight = Math.max(1000, apexHeight + 50, maxTerrainHeight + 100);
+  const heightRange = maxHeight - minHeight;
 
   // Scale factors - use displayDistance so target is always visible
-  const xScale = graphWidth / displayDistance
-  const yScale = graphHeight / heightRange
+  const xScale = graphWidth / displayDistance;
+  const yScale = graphHeight / heightRange;
 
   // Convert real coordinates to SVG coordinates
-  const toSvgX = (x: number) => padding.left + x * xScale
-  const toSvgY = (h: number) => padding.top + graphHeight - (h - minHeight) * yScale
+  const toSvgX = (x: number) => padding.left + x * xScale;
+  const toSvgY = (h: number) =>
+    padding.top + graphHeight - (h - minHeight) * yScale;
 
   // Helper function to calculate trajectory height at any x position
   // Using vertex form: y = a(x - h)² + k where h = actualApexX
   const getTrajectoryHeight = (x: number): number => {
-    return parabolaA * (x - actualApexX) * (x - actualApexX) + apexHeight
-  }
+    return parabolaA * (x - actualApexX) * (x - actualApexX) + apexHeight;
+  };
 
   // Generate trajectory path points - only up to trajectoryEndDistance
-  const trajectoryPoints: string[] = []
-  const numPoints = 50
+  const trajectoryPoints: string[] = [];
+  const numPoints = 50;
 
   for (let i = 0; i <= numPoints; i++) {
-    const x = (i / numPoints) * trajectoryEndDistance  // Only go to trajectory end
-    const y = getTrajectoryHeight(x)
+    const x = (i / numPoints) * trajectoryEndDistance; // Only go to trajectory end
+    const y = getTrajectoryHeight(x);
 
     if (i === 0) {
-      trajectoryPoints.push(`M ${toSvgX(x).toFixed(1)} ${toSvgY(y).toFixed(1)}`)
+      trajectoryPoints.push(
+        `M ${toSvgX(x).toFixed(1)} ${toSvgY(y).toFixed(1)}`
+      );
     } else {
-      trajectoryPoints.push(`L ${toSvgX(x).toFixed(1)} ${toSvgY(y).toFixed(1)}`)
+      trajectoryPoints.push(
+        `L ${toSvgX(x).toFixed(1)} ${toSvgY(y).toFixed(1)}`
+      );
     }
   }
 
-  const trajectoryPath = trajectoryPoints.join(' ')
+  const trajectoryPath = trajectoryPoints.join(' ');
 
   // Generate terrain path
-  let terrainPath = ''
+  let terrainPath = '';
   if (terrainProfile && terrainProfile.length > 0) {
     const terrainPoints = terrainProfile.map((p, i) => {
-      const x = toSvgX(p.distance).toFixed(1)
-      const y = toSvgY(p.height).toFixed(1)
-      return i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`
-    })
+      const x = toSvgX(p.distance).toFixed(1);
+      const y = toSvgY(p.height).toFixed(1);
+      return i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+    });
 
     // Close the terrain area (fill to bottom)
-    const lastPoint = terrainProfile[terrainProfile.length - 1]
-    const firstPoint = terrainProfile[0]
-    terrainPoints.push(`L ${toSvgX(lastPoint.distance).toFixed(1)} ${toSvgY(minHeight).toFixed(1)}`)
-    terrainPoints.push(`L ${toSvgX(firstPoint.distance).toFixed(1)} ${toSvgY(minHeight).toFixed(1)}`)
-    terrainPoints.push('Z')
+    const lastPoint = terrainProfile[terrainProfile.length - 1];
+    const firstPoint = terrainProfile[0];
+    terrainPoints.push(
+      `L ${toSvgX(lastPoint.distance).toFixed(1)} ${toSvgY(minHeight).toFixed(1)}`
+    );
+    terrainPoints.push(
+      `L ${toSvgX(firstPoint.distance).toFixed(1)} ${toSvgY(minHeight).toFixed(1)}`
+    );
+    terrainPoints.push('Z');
 
-    terrainPath = terrainPoints.join(' ')
+    terrainPath = terrainPoints.join(' ');
   }
 
   // Key points for SVG
-  const mortarX = toSvgX(0)
-  const mortarY = toSvgY(mortarHeight)
-  const targetX = toSvgX(displayDistance)  // Target at full distance
-  const targetY = toSvgY(targetHeight)
-  const apexSvgX = toSvgX(actualApexX)
-  const apexSvgY = toSvgY(apexHeight)
+  const mortarX = toSvgX(0);
+  const mortarY = toSvgY(mortarHeight);
+  const targetX = toSvgX(displayDistance); // Target at full distance
+  const targetY = toSvgY(targetHeight);
+  const apexSvgX = toSvgX(actualApexX);
+  const apexSvgY = toSvgY(apexHeight);
 
   // Impact point (where trajectory ends) - different from target if out of range
-  const impactX = toSvgX(trajectoryEndDistance)
-  const impactY = toSvgY(trajectoryEndHeight)
+  const impactX = toSvgX(trajectoryEndDistance);
+  const impactY = toSvgY(trajectoryEndHeight);
 
   // Check if trajectory clears terrain and find worst collision point
-  let trajectoryBlocked = false
+  let trajectoryBlocked = false;
   let worstCollision: {
-    distance: number
-    terrainHeight: number
-    trajectoryHeight: number
-    clearance: number
-  } | null = null
+    distance: number;
+    terrainHeight: number;
+    trajectoryHeight: number;
+    clearance: number;
+  } | null = null;
 
   if (terrainProfile) {
     for (let i = 0; i < terrainProfile.length; i++) {
-      const p = terrainProfile[i]
+      const p = terrainProfile[i];
 
       // Only check terrain up to trajectory end (not beyond impact point)
       if (p.distance > trajectoryEndDistance) {
-        continue
+        continue;
       }
 
       // Skip start and end zones (first/last 5% of trajectory)
       // The trajectory naturally starts at mortar height and ends at impact,
       // so checking these zones would always show false collisions
-      if (p.distance < trajectoryEndDistance * 0.05 || p.distance > trajectoryEndDistance * 0.95) {
-        continue
+      if (
+        p.distance < trajectoryEndDistance * 0.05 ||
+        p.distance > trajectoryEndDistance * 0.95
+      ) {
+        continue;
       }
 
-      const trajectoryHeight = getTrajectoryHeight(p.distance)
-      const clearance = trajectoryHeight - p.height
+      const trajectoryHeight = getTrajectoryHeight(p.distance);
+      const clearance = trajectoryHeight - p.height;
 
       // Check for collision (with 10m safety margin)
       if (clearance < 10) {
-        trajectoryBlocked = true
+        trajectoryBlocked = true;
 
         // Track the worst collision point
         if (!worstCollision || clearance < worstCollision.clearance) {
@@ -413,8 +438,8 @@ export function TrajectoryGraph() {
             distance: p.distance,
             terrainHeight: p.height,
             trajectoryHeight,
-            clearance
-          }
+            clearance,
+          };
         }
       }
     }
@@ -461,9 +486,10 @@ export function TrajectoryGraph() {
             onClick={handleResetToAuto}
             className={`
               px-2 py-1 text-xs font-medium rounded transition-all
-              ${isAutoMode
-                ? 'bg-green-600 text-white shadow-lg shadow-green-500/30'
-                : 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white'
+              ${
+                isAutoMode
+                  ? 'bg-green-600 text-white shadow-lg shadow-green-500/30'
+                  : 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white'
               }
             `}
             title="Automatische Ladungsauswahl basierend auf Distanz"
@@ -475,8 +501,8 @@ export function TrajectoryGraph() {
 
           {/* Ring Buttons */}
           {availableRings.map((ring) => {
-            const currentCharge = manualChargeOverride ?? mortarConfig.charge
-            const isActive = !isAutoMode && currentCharge === ring
+            const currentCharge = manualChargeOverride ?? mortarConfig.charge;
+            const isActive = !isAutoMode && currentCharge === ring;
 
             return (
               <button
@@ -484,18 +510,19 @@ export function TrajectoryGraph() {
                 onClick={() => handleRingChange(ring)}
                 className={`
                   px-2.5 py-1 text-xs font-bold rounded transition-all
-                  ${isActive
-                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
-                    : isAutoMode && mortarConfig.charge === ring
-                      ? 'bg-purple-600/30 text-purple-300 ring-1 ring-purple-500/50'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
+                  ${
+                    isActive
+                      ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30'
+                      : isAutoMode && mortarConfig.charge === ring
+                        ? 'bg-purple-600/30 text-purple-300 ring-1 ring-purple-500/50'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'
                   }
                 `}
                 title={`Ring ${ring} - ${ring === 0 ? 'Steilste' : ring === 4 ? 'Flachste' : 'Mittlere'} Flugbahn`}
               >
                 {ring}
               </button>
-            )
+            );
           })}
           <span className="text-xs text-gray-500 ml-2">
             ({mortarConfig.ammo})
@@ -528,14 +555,26 @@ export function TrajectoryGraph() {
             </pattern>
 
             {/* Trajectory gradient */}
-            <linearGradient id="trajectoryGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient
+              id="trajectoryGradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="0%"
+            >
               <stop offset="0%" stopColor="#22c55e" />
               <stop offset="50%" stopColor="#a855f7" />
               <stop offset="100%" stopColor="#ef4444" />
             </linearGradient>
 
             {/* Terrain gradient */}
-            <linearGradient id="terrainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient
+              id="terrainGradient"
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
               <stop offset="0%" stopColor="rgba(139, 92, 42, 0.6)" />
               <stop offset="100%" stopColor="rgba(139, 92, 42, 0.2)" />
             </linearGradient>
@@ -552,8 +591,8 @@ export function TrajectoryGraph() {
 
           {/* Y-axis labels - more labels for better scale readability */}
           {[0, 0.25, 0.5, 0.75, 1].map((t) => {
-            const h = minHeight + heightRange * t
-            const y = toSvgY(h)
+            const h = minHeight + heightRange * t;
+            const y = toSvgY(h);
             return (
               <g key={t}>
                 <line
@@ -576,16 +615,12 @@ export function TrajectoryGraph() {
                   {h.toFixed(0)}m
                 </text>
               </g>
-            )
+            );
           })}
 
           {/* Terrain fill */}
           {terrainPath && (
-            <path
-              d={terrainPath}
-              fill="url(#terrainGradient)"
-              stroke="none"
-            />
+            <path d={terrainPath} fill="url(#terrainGradient)" stroke="none" />
           )}
 
           {/* Terrain outline */}
@@ -791,18 +826,29 @@ export function TrajectoryGraph() {
                 </div>
                 <div className="text-red-300/80 text-xs mt-1 space-y-0.5">
                   <div>
-                    Bei <span className="font-mono">{worstCollision.distance.toFixed(0)}m</span> Entfernung
+                    Bei{' '}
+                    <span className="font-mono">
+                      {worstCollision.distance.toFixed(0)}m
+                    </span>{' '}
+                    Entfernung
                   </div>
                   <div>
-                    Terrain: <span className="font-mono">{worstCollision.terrainHeight.toFixed(0)}m</span> |
-                    Flugbahn: <span className="font-mono">{worstCollision.trajectoryHeight.toFixed(0)}m</span>
+                    Terrain:{' '}
+                    <span className="font-mono">
+                      {worstCollision.terrainHeight.toFixed(0)}m
+                    </span>{' '}
+                    | Flugbahn:{' '}
+                    <span className="font-mono">
+                      {worstCollision.trajectoryHeight.toFixed(0)}m
+                    </span>
                   </div>
                   <div className="text-red-400 font-medium">
                     Fehlt: {Math.abs(worstCollision.clearance).toFixed(0)}m Höhe
                   </div>
                 </div>
                 <div className="text-yellow-400/90 text-xs mt-2 pt-2 border-t border-red-500/20">
-                  <span className="font-medium">Lösung:</span> Weniger Ladung = höhere Flugbahn
+                  <span className="font-medium">Lösung:</span> Weniger Ladung =
+                  höhere Flugbahn
                 </div>
               </div>
             </div>
@@ -810,26 +856,29 @@ export function TrajectoryGraph() {
         )}
 
         {/* Success indicator when clear AND in range */}
-        {!trajectoryBlocked && !isOutOfRange && terrainProfile && terrainProfile.length > 0 && (
-          <div className="mt-3 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
-            <div className="flex items-center gap-2 text-green-400 text-sm">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              <span>Flugbahn frei - Ziel erreichbar</span>
+        {!trajectoryBlocked &&
+          !isOutOfRange &&
+          terrainProfile &&
+          terrainProfile.length > 0 && (
+            <div className="mt-3 p-2 bg-green-500/10 border border-green-500/30 rounded-lg">
+              <div className="flex items-center gap-2 text-green-400 text-sm">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <span>Flugbahn frei - Ziel erreichbar</span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Terrain loading status */}
         {!heightDataReady && (
@@ -839,5 +888,5 @@ export function TrajectoryGraph() {
         )}
       </div>
     </div>
-  )
+  );
 }

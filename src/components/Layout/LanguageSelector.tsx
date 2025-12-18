@@ -2,22 +2,27 @@
  * LanguageSelector - Dropdown for selecting app language
  */
 
-import { useTranslation } from 'react-i18next'
-import { Globe } from 'lucide-react'
-import { languages } from '../../i18n'
+import { useTranslation } from 'react-i18next';
+import { Globe } from 'lucide-react';
+import { languages } from '../../i18n';
 
 export function LanguageSelector() {
-  const { i18n, t } = useTranslation()
+  const { i18n, t } = useTranslation();
 
-  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    i18n.changeLanguage(event.target.value)
-  }
+  const handleLanguageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    i18n.changeLanguage(event.target.value);
+  };
 
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Globe className="w-4 h-4 text-gray-400" />
-        <label htmlFor="language-select" className="text-gray-400 text-xs uppercase font-medium">
+        <label
+          htmlFor="language-select"
+          className="text-gray-400 text-xs uppercase font-medium"
+        >
           {t('sidebar.language')}
         </label>
       </div>
@@ -53,11 +58,21 @@ export function LanguageSelector() {
           ))}
         </select>
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,0 +1,116 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    ARAC - Keyboard Shortcuts Reference                      ║
+║                  Arma Reforger Artillery Calculator                          ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ MISSION CONTROL                                                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────┐                                                                │
+│  │ Ctrl+S  │  Save Mission                                                  │
+│  │  ⌘ +S   │  Opens save dialog for current fire solution                  │
+│  └─────────┘  Platform: Ctrl (Win/Linux) | Cmd (macOS)                      │
+│                                                                              │
+│  ┌─────────┐                                                                │
+│  │ Ctrl+N  │  New Mission                                                   │
+│  │  ⌘ +N   │  Reset calculator (with confirmation)                          │
+│  └─────────┘  Clears all positions and solutions                            │
+│                                                                              │
+│  ┌─────────┐                                                                │
+│  │   Esc   │  Close Dialog                                                 │
+│  └─────────┘  Works even when typing in input fields                        │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ RING COUNT SELECTION (Quick Fire)                                           │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  Keyboard:  ┌───┬───┬───┬───┬───┬───┐                                       │
+│             │ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │                                       │
+│             └───┴───┴───┴───┴───┴───┘                                       │
+│                 │   │   │   │   │   │                                       │
+│  Ring Count:    0   0   1   2   3   4                                       │
+│                 │                   │                                       │
+│                 └─── Manual Mode ───┘                                       │
+│                                                                              │
+│  Note: Pressing any number key activates MANUAL mode and                    │
+│        disables automatic charge calculation                                │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ INTELLIGENT BEHAVIOR                                                         │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ✓ Input Field Detection                                                    │
+│    Shortcuts are disabled when typing in input fields                       │
+│    Exception: Escape always works                                           │
+│                                                                              │
+│  ✓ Platform Awareness                                                       │
+│    macOS:         ⌘ +S  /  ⌘ +N                                             │
+│    Windows/Linux: Ctrl+S / Ctrl+N                                           │
+│                                                                              │
+│  ✓ Browser Override                                                         │
+│    Prevents default browser actions (save dialog, new window)               │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ WORKFLOW EXAMPLES                                                            │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  QUICK SAVE WORKFLOW                                                         │
+│  ────────────────────────────────────────────────────                       │
+│  1. Set mortar and target positions on map                                  │
+│  2. Press [3] to select Ring Count 2                                        │
+│  3. Verify fire solution                                                    │
+│  4. Press [Ctrl+S] to save                                                  │
+│  5. Enter mission name                                                      │
+│  6. Press [Enter] or click Save                                             │
+│                                                                              │
+│  RAPID ITERATION WORKFLOW                                                   │
+│  ────────────────────────────────────────────────────                       │
+│  1. Calculate first shot                                                    │
+│  2. Press [Ctrl+S] to save "Shot 1"                                         │
+│  3. Adjust target position                                                  │
+│  4. Press [2] for different ring count                                      │
+│  5. Press [Ctrl+S] to save "Shot 2"                                         │
+│  6. Press [Ctrl+N] to start new mission                                     │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ACCESSIBILITY                                                                │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ♿ Keyboard-Only Operation                                                  │
+│     Complete navigation without mouse                                       │
+│     Tab through UI elements                                                 │
+│     Shortcuts for frequent actions                                          │
+│                                                                              │
+│  🔊 Screen Reader Support                                                   │
+│     All shortcuts announced in aria-labels                                  │
+│     Visual hints via getShortcutHint()                                      │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║ QUICK REFERENCE CARD - Print & Keep                                         ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  Mission Control         Ring Count Selection                               ║
+║  ────────────────        ─────────────────────                              ║
+║  Ctrl+S   Save           1   Ring 0                                         ║
+║  Ctrl+N   New            2   Ring 1                                         ║
+║  Esc      Close          3   Ring 2                                         ║
+║                          4   Ring 3                                         ║
+║                          5   Ring 4                                         ║
+║                          0   Ring 0                                         ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Version: 1.0.0
+Last Updated: 2025-12-18
+Phase: 4.2.8 - Keyboard Shortcuts Implementation

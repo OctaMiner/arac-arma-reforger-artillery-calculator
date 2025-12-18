@@ -8,19 +8,19 @@
  * - Loading state
  */
 
-import { useEffect } from 'react'
-import { useStationsStore } from '../../stores/useStationsStore'
-import { StationCard } from './StationCard'
+import { useEffect } from 'react';
+import { useStationsStore } from '../../stores/useStationsStore';
+import { StationCard } from './StationCard';
 
 export function StationList() {
-  const stations = useStationsStore((state) => state.stations)
-  const isLoading = useStationsStore((state) => state.isLoading)
-  const loadStations = useStationsStore((state) => state.loadStations)
+  const stations = useStationsStore((state) => state.stations);
+  const isLoading = useStationsStore((state) => state.isLoading);
+  const loadStations = useStationsStore((state) => state.loadStations);
 
   // Load stations on mount
   useEffect(() => {
-    loadStations()
-  }, [loadStations])
+    loadStations();
+  }, [loadStations]);
 
   // Loading state
   if (isLoading) {
@@ -47,7 +47,7 @@ export function StationList() {
         </svg>
         <span className="text-sm">Lade Stellungen...</span>
       </div>
-    )
+    );
   }
 
   // Empty state
@@ -74,11 +74,9 @@ export function StationList() {
           />
         </svg>
         <p className="text-sm font-medium">Keine Stellungen gespeichert</p>
-        <p className="text-xs mt-1">
-          Speichere deine erste Mörser-Position
-        </p>
+        <p className="text-xs mt-1">Speichere deine erste Mörser-Position</p>
       </div>
-    )
+    );
   }
 
   // Stations list
@@ -88,5 +86,5 @@ export function StationList() {
         <StationCard key={station.id} station={station} />
       ))}
     </div>
-  )
+  );
 }

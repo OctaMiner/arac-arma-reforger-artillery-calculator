@@ -8,16 +8,16 @@
  * - Military tactical styling with alert colors
  */
 
-import { AlertCircle, AlertTriangle } from 'lucide-react'
-import type { MortarType, AmmoType } from '../../types'
+import { AlertCircle, AlertTriangle } from 'lucide-react';
+import type { MortarType, AmmoType } from '../../types';
 
 interface RangeWarningProps {
-  distance: number
-  minRange: number
-  maxRange: number
-  mortarType: MortarType
-  ammoType: AmmoType
-  className?: string
+  distance: number;
+  minRange: number;
+  maxRange: number;
+  mortarType: MortarType;
+  ammoType: AmmoType;
+  className?: string;
 }
 
 export function RangeWarning({
@@ -26,15 +26,17 @@ export function RangeWarning({
   maxRange,
   mortarType,
   ammoType,
-  className = ''
+  className = '',
 }: RangeWarningProps) {
-  const isTooFar = distance > maxRange
-  const isTooClose = distance < minRange
+  const isTooFar = distance > maxRange;
+  const isTooClose = distance < minRange;
 
-  if (!isTooFar && !isTooClose) return null
+  if (!isTooFar && !isTooClose) return null;
 
   return (
-    <div className={`border-2 border-accent-red bg-accent-red/10 rounded-lg ${className}`}>
+    <div
+      className={`border-2 border-accent-red bg-accent-red/10 rounded-lg ${className}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-center gap-3 px-6 py-4 border-b-2 border-accent-red/30">
         <AlertCircle className="w-8 h-8 text-accent-red" />
@@ -77,13 +79,21 @@ export function RangeWarning({
             <p className="text-sm font-mono text-text-primary">
               {isTooFar ? (
                 <>
-                  Target is <span className="font-bold text-accent-red">{Math.round(distance - maxRange)}m</span> beyond maximum range.
-                  {' '}Move mortar closer or reduce distance to target.
+                  Target is{' '}
+                  <span className="font-bold text-accent-red">
+                    {Math.round(distance - maxRange)}m
+                  </span>{' '}
+                  beyond maximum range. Move mortar closer or reduce distance to
+                  target.
                 </>
               ) : (
                 <>
-                  Target is <span className="font-bold text-accent-red">{Math.round(minRange - distance)}m</span> inside minimum range.
-                  {' '}Move mortar further back or increase distance to target.
+                  Target is{' '}
+                  <span className="font-bold text-accent-red">
+                    {Math.round(minRange - distance)}m
+                  </span>{' '}
+                  inside minimum range. Move mortar further back or increase
+                  distance to target.
                 </>
               )}
             </p>
@@ -92,11 +102,19 @@ export function RangeWarning({
 
         {/* System Info */}
         <div className="flex items-center justify-center gap-4 text-xs text-text-secondary font-mono">
-          <span>System: <span className="text-text-primary font-bold">{mortarType === 'US' ? 'M252' : 'M82'}</span></span>
+          <span>
+            System:{' '}
+            <span className="text-text-primary font-bold">
+              {mortarType === 'US' ? 'M252' : 'M82'}
+            </span>
+          </span>
           <span className="opacity-30">|</span>
-          <span>Ammo: <span className="text-text-primary font-bold">{ammoType}</span></span>
+          <span>
+            Ammo:{' '}
+            <span className="text-text-primary font-bold">{ammoType}</span>
+          </span>
         </div>
       </div>
     </div>
-  )
+  );
 }

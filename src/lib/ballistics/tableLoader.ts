@@ -3,38 +3,43 @@
  * Loads and caches ballistic data from JSON files
  */
 
-import type { AmmoType, MortarType, RingCount, BallisticEntry } from '../../types/index.js'
+import type {
+  AmmoType,
+  MortarType,
+  RingCount,
+  BallisticEntry,
+} from '../../types/index.js';
 
 // Import all ballistic tables
-import rusHeRing0 from './data/rus-he-ring0.json'
-import rusHeRing1 from './data/rus-he-ring1.json'
-import rusHeRing2 from './data/rus-he-ring2.json'
-import rusHeRing3 from './data/rus-he-ring3.json'
-import rusHeRing4 from './data/rus-he-ring4.json'
-import rusIllumination from './data/rus-illumination.json'
-import rusSmoke from './data/rus-smoke.json'
+import rusHeRing0 from './data/rus-he-ring0.json';
+import rusHeRing1 from './data/rus-he-ring1.json';
+import rusHeRing2 from './data/rus-he-ring2.json';
+import rusHeRing3 from './data/rus-he-ring3.json';
+import rusHeRing4 from './data/rus-he-ring4.json';
+import rusIllumination from './data/rus-illumination.json';
+import rusSmoke from './data/rus-smoke.json';
 
-import usHeRing0 from './data/us-he-ring0.json'
-import usHeRing1 from './data/us-he-ring1.json'
-import usHeRing2 from './data/us-he-ring2.json'
-import usHeRing3 from './data/us-he-ring3.json'
-import usHeRing4 from './data/us-he-ring4.json'
-import usIllumination from './data/us-illumination.json'
-import usSmoke from './data/us-smoke.json'
+import usHeRing0 from './data/us-he-ring0.json';
+import usHeRing1 from './data/us-he-ring1.json';
+import usHeRing2 from './data/us-he-ring2.json';
+import usHeRing3 from './data/us-he-ring3.json';
+import usHeRing4 from './data/us-he-ring4.json';
+import usIllumination from './data/us-illumination.json';
+import usSmoke from './data/us-smoke.json';
 
 export interface BallisticTableData {
-  mortarType: MortarType
-  ammoType: AmmoType
-  ringCount: RingCount | 'all'
-  minRange: number
-  maxRange: number
-  entries: BallisticEntry[]
+  mortarType: MortarType;
+  ammoType: AmmoType;
+  ringCount: RingCount | 'all';
+  minRange: number;
+  maxRange: number;
+  entries: BallisticEntry[];
 }
 
 /**
  * Table registry mapping mortar/ammo/ring combinations to their data
  */
-const tableRegistry: Map<string, BallisticTableData> = new Map()
+const tableRegistry: Map<string, BallisticTableData> = new Map();
 
 /**
  * Convert raw JSON entry to BallisticEntry format
@@ -46,8 +51,8 @@ function convertEntry(raw: any): BallisticEntry {
     elevation: raw.elevation,
     timeOfFlight: raw.tof,
     dElevPer100m: raw.dElev,
-    tofPer100m: null // Not provided in current JSON data
-  }
+    tofPer100m: null, // Not provided in current JSON data
+  };
 }
 
 /**
@@ -63,19 +68,19 @@ function convertTable(raw: any, ringCount?: RingCount): BallisticTableData {
       ringCount: raw.ringCount,
       minRange: raw.minRange,
       maxRange: raw.maxRange,
-      entries: raw.entries.map(convertEntry)
-    }
+      entries: raw.entries.map(convertEntry),
+    };
   }
 
   // Smoke/Illumination structure: { rings: { "1": [...], "2": [...] } }
   if (raw.rings && ringCount !== undefined) {
-    const ringKey = ringCount.toString()
-    const ringEntries = raw.rings[ringKey]
+    const ringKey = ringCount.toString();
+    const ringEntries = raw.rings[ringKey];
 
     if (!ringEntries) {
       throw new Error(
         `Ring ${ringCount} not found in ${raw.mortarType} ${raw.ammoType} table`
-      )
+      );
     }
 
     return {
@@ -84,45 +89,53 @@ function convertTable(raw: any, ringCount?: RingCount): BallisticTableData {
       ringCount: ringCount,
       minRange: raw.minRange,
       maxRange: raw.maxRange,
-      entries: ringEntries.map(convertEntry)
-    }
+      entries: ringEntries.map(convertEntry),
+    };
   }
 
-  throw new Error('Invalid table structure: missing both entries and rings properties')
+  throw new Error(
+    'Invalid table structure: missing both entries and rings properties'
+  );
 }
 
 /**
  * Initialize the table registry with all imported tables
  */
 function initializeRegistry(): void {
-  if (tableRegistry.size > 0) return // Already initialized
+  if (tableRegistry.size > 0) return; // Already initialized
 
   // RUS HE tables (one file per ring)
-  tableRegistry.set('RUS-HE-0', convertTable(rusHeRing0))
-  tableRegistry.set('RUS-HE-1', convertTable(rusHeRing1))
-  tableRegistry.set('RUS-HE-2', convertTable(rusHeRing2))
-  tableRegistry.set('RUS-HE-3', convertTable(rusHeRing3))
-  tableRegistry.set('RUS-HE-4', convertTable(rusHeRing4))
+  tableRegistry.set('RUS-HE-0', convertTable(rusHeRing0));
+  tableRegistry.set('RUS-HE-1', convertTable(rusHeRing1));
+  tableRegistry.set('RUS-HE-2', convertTable(rusHeRing2));
+  tableRegistry.set('RUS-HE-3', convertTable(rusHeRing3));
+  tableRegistry.set('RUS-HE-4', convertTable(rusHeRing4));
 
   // RUS Smoke/Illumination (one file with multiple rings, register each ring separately)
-  const rusRings: RingCount[] = [1, 2, 3, 4]
+  const rusRings: RingCount[] = [1, 2, 3, 4];
   for (const ring of rusRings) {
-    tableRegistry.set(`RUS-Illumination-${ring}`, convertTable(rusIllumination, ring))
-    tableRegistry.set(`RUS-Smoke-${ring}`, convertTable(rusSmoke, ring))
+    tableRegistry.set(
+      `RUS-Illumination-${ring}`,
+      convertTable(rusIllumination, ring)
+    );
+    tableRegistry.set(`RUS-Smoke-${ring}`, convertTable(rusSmoke, ring));
   }
 
   // US HE tables (one file per ring)
-  tableRegistry.set('US-HE-0', convertTable(usHeRing0))
-  tableRegistry.set('US-HE-1', convertTable(usHeRing1))
-  tableRegistry.set('US-HE-2', convertTable(usHeRing2))
-  tableRegistry.set('US-HE-3', convertTable(usHeRing3))
-  tableRegistry.set('US-HE-4', convertTable(usHeRing4))
+  tableRegistry.set('US-HE-0', convertTable(usHeRing0));
+  tableRegistry.set('US-HE-1', convertTable(usHeRing1));
+  tableRegistry.set('US-HE-2', convertTable(usHeRing2));
+  tableRegistry.set('US-HE-3', convertTable(usHeRing3));
+  tableRegistry.set('US-HE-4', convertTable(usHeRing4));
 
   // US Smoke/Illumination (one file with multiple rings, register each ring separately)
-  const usRings: RingCount[] = [1, 2, 3, 4]
+  const usRings: RingCount[] = [1, 2, 3, 4];
   for (const ring of usRings) {
-    tableRegistry.set(`US-Illumination-${ring}`, convertTable(usIllumination, ring))
-    tableRegistry.set(`US-Smoke-${ring}`, convertTable(usSmoke, ring))
+    tableRegistry.set(
+      `US-Illumination-${ring}`,
+      convertTable(usIllumination, ring)
+    );
+    tableRegistry.set(`US-Smoke-${ring}`, convertTable(usSmoke, ring));
   }
 }
 
@@ -136,10 +149,10 @@ function getTableKey(
 ): string {
   // Ring count is required for all ammunition types
   if (ringCount === undefined) {
-    throw new Error(`Ring count required for ${ammoType} ammunition`)
+    throw new Error(`Ring count required for ${ammoType} ammunition`);
   }
 
-  return `${mortarType}-${ammoType}-${ringCount}`
+  return `${mortarType}-${ammoType}-${ringCount}`;
 }
 
 /**
@@ -157,18 +170,18 @@ export function loadBallisticTable(
   ringCount?: RingCount
 ): BallisticTableData {
   // Initialize registry on first use
-  initializeRegistry()
+  initializeRegistry();
 
-  const key = getTableKey(mortarType, ammoType, ringCount)
-  const table = tableRegistry.get(key)
+  const key = getTableKey(mortarType, ammoType, ringCount);
+  const table = tableRegistry.get(key);
 
   if (!table) {
     throw new Error(
       `Ballistic table not found: ${mortarType} ${ammoType} Ring ${ringCount}`
-    )
+    );
   }
 
-  return table
+  return table;
 }
 
 /**
@@ -184,7 +197,7 @@ export function filterTableByRingCount(
   _ringCount: RingCount
 ): BallisticTableData {
   // Tables are now pre-filtered by ring count during loading
-  return table
+  return table;
 }
 
 /**
@@ -200,12 +213,12 @@ export function hasBallisticTable(
   ammoType: AmmoType,
   ringCount?: RingCount
 ): boolean {
-  initializeRegistry()
+  initializeRegistry();
 
   try {
-    const key = getTableKey(mortarType, ammoType, ringCount)
-    return tableRegistry.has(key)
+    const key = getTableKey(mortarType, ammoType, ringCount);
+    return tableRegistry.has(key);
   } catch {
-    return false
+    return false;
   }
 }

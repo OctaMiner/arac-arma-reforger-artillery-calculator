@@ -49,10 +49,10 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | Electron + Vite Setup | `/electron` | 1 | 1.1.2 |
 | [x] | React 18 einrichten | `/frontend` | 1 | 1.1.3 |
 | [x] | TailwindCSS konfigurieren | `/design` | 1 | 1.1.4 |
-| [ ] | ESLint + Prettier Setup | `/frontend` | 2 | 1.1.4 |
-| [ ] | Vitest Test-Framework einrichten | `/qaa` | 2 | 1.1.4 |
-| [ ] | Git Repository initialisieren (SPÄTER - nicht jetzt) | `/lead` | 4 | 1.1.1 |
-| [ ] | .gitignore verifizieren (keine privaten Pfade, kein .claude/) | `/lead` | 4 | 1.1.8 |
+| [x] | ESLint + Prettier Setup | `/frontend` | 2 | 1.1.4 |
+| [x] | Vitest Test-Framework einrichten | `/qaa` | 2 | 1.1.4 |
+| [x] | Git Repository initialisieren (SPÄTER - nicht jetzt) | `/lead` | 4 | 1.1.1 |
+| [x] | .gitignore verifizieren (keine privaten Pfade, kein .claude/) | `/lead` | 4 | 1.1.8 |
 
 ## 1.2 Projektstruktur anlegen
 

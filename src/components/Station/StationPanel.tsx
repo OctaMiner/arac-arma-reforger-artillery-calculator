@@ -9,12 +9,12 @@
  * - Green theme for stations vs blue for missions
  */
 
-import { useTranslation } from 'react-i18next'
-import { StationSaveButton } from './StationSaveButton'
-import { StationList } from './StationList'
+import { useTranslation } from 'react-i18next';
+import { StationSaveButton } from './StationSaveButton';
+import { StationList } from './StationList';
 
 export function StationPanel() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="bg-gray-800/50 rounded-lg border border-gray-700">
@@ -58,5 +58,5 @@ export function StationPanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }

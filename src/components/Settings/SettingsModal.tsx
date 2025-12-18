@@ -11,9 +11,9 @@
  * - Dark themed design
  */
 
-import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useUserStore } from '../../stores/useUserStore'
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useUserStore } from '../../stores/useUserStore';
 import {
   X,
   Globe,
@@ -23,96 +23,95 @@ import {
   Crosshair,
   Grid3X3,
   RotateCcw,
-  Settings
-} from 'lucide-react'
-import type { MortarType, AmmoType } from '../../types'
+  Settings,
+} from 'lucide-react';
+import type { MortarType, AmmoType } from '../../types';
 
 interface SettingsModalProps {
-  onClose: () => void
+  onClose: () => void;
 }
 
 export function SettingsModal({ onClose }: SettingsModalProps) {
-  const { t, i18n } = useTranslation()
+  const { t, i18n } = useTranslation();
 
   // User store
-  const settings = useUserStore((state) => state.settings)
-  const setTheme = useUserStore((state) => state.setTheme)
-  const setLanguage = useUserStore((state) => state.setLanguage)
-  const toggleGrid = useUserStore((state) => state.toggleGrid)
-  const setDefaultMortarType = useUserStore((state) => state.setDefaultMortarType)
-  const setDefaultAmmo = useUserStore((state) => state.setDefaultAmmo)
-  const saveSettings = useUserStore((state) => state.saveSettings)
+  const settings = useUserStore((state) => state.settings);
+  const setTheme = useUserStore((state) => state.setTheme);
+  const setLanguage = useUserStore((state) => state.setLanguage);
+  const toggleGrid = useUserStore((state) => state.toggleGrid);
+  const setDefaultMortarType = useUserStore(
+    (state) => state.setDefaultMortarType
+  );
+  const setDefaultAmmo = useUserStore((state) => state.setDefaultAmmo);
 
   // Local state for form
-  const [theme, setThemeLocal] = useState(settings.theme)
-  const [language, setLanguageLocal] = useState(settings.language)
-  const [showGrid, setShowGridLocal] = useState(settings.showGrid)
-  const [defaultMortarType, setDefaultMortarTypeLocal] = useState(settings.defaultMortarType)
-  const [defaultAmmo, setDefaultAmmoLocal] = useState(settings.defaultAmmo)
+  const [theme, setThemeLocal] = useState(settings.theme);
+  const [language, setLanguageLocal] = useState(settings.language);
+  const [showGrid, setShowGridLocal] = useState(settings.showGrid);
+  const [defaultMortarType, setDefaultMortarTypeLocal] = useState(
+    settings.defaultMortarType
+  );
+  const [defaultAmmo, setDefaultAmmoLocal] = useState(settings.defaultAmmo);
 
   // Handle ESC key to close
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   // Handle theme change
   const handleThemeChange = (newTheme: 'dark' | 'light') => {
-    setThemeLocal(newTheme)
-    setTheme(newTheme)
-  }
+    setThemeLocal(newTheme);
+    setTheme(newTheme);
+  };
 
   // Handle language change
   const handleLanguageChange = (newLanguage: 'de' | 'en') => {
-    setLanguageLocal(newLanguage)
-    setLanguage(newLanguage)
-    i18n.changeLanguage(newLanguage)
-  }
+    setLanguageLocal(newLanguage);
+    setLanguage(newLanguage);
+    i18n.changeLanguage(newLanguage);
+  };
 
   // Handle grid toggle
   const handleGridToggle = () => {
-    setShowGridLocal(!showGrid)
-    toggleGrid()
-  }
+    setShowGridLocal(!showGrid);
+    toggleGrid();
+  };
 
   // Handle mortar type change
   const handleMortarTypeChange = (type: MortarType) => {
-    setDefaultMortarTypeLocal(type)
-    setDefaultMortarType(type)
-  }
+    setDefaultMortarTypeLocal(type);
+    setDefaultMortarType(type);
+  };
 
   // Handle ammo type change
   const handleAmmoChange = (ammo: AmmoType) => {
-    setDefaultAmmoLocal(ammo)
-    setDefaultAmmo(ammo)
-  }
+    setDefaultAmmoLocal(ammo);
+    setDefaultAmmo(ammo);
+  };
 
   // Reset to defaults
   const handleResetToDefaults = () => {
-    const defaults = {
-      theme: 'dark' as const,
-      language: 'de' as const,
-      showGrid: true,
-      defaultMortarType: 'US' as MortarType,
-      defaultAmmo: 'HE' as AmmoType,
-      defaultCharge: 4
-    }
+    setThemeLocal('dark');
+    setLanguageLocal('de');
+    setShowGridLocal(true);
+    setDefaultMortarTypeLocal('US');
+    setDefaultAmmoLocal('HE');
 
-    setThemeLocal(defaults.theme)
-    setLanguageLocal(defaults.language)
-    setShowGridLocal(defaults.showGrid)
-    setDefaultMortarTypeLocal(defaults.defaultMortarType)
-    setDefaultAmmoLocal(defaults.defaultAmmo)
+    setTheme('dark');
+    setLanguage('de');
+    if (!showGrid) toggleGrid();
+    setDefaultMortarType('US');
+    setDefaultAmmo('HE');
 
-    saveSettings(defaults)
-    i18n.changeLanguage(defaults.language)
-  }
+    i18n.changeLanguage('de');
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -145,7 +144,6 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
         {/* Content */}
         <div className="px-6 py-6 space-y-6 overflow-y-auto flex-1">
-
           {/* Appearance Section */}
           <section className="space-y-4">
             <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
@@ -335,7 +333,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
                   }`}
                 >
-                  <span className="text-sm font-medium">{t('config.smoke')}</span>
+                  <span className="text-sm font-medium">
+                    {t('config.smoke')}
+                  </span>
                 </button>
                 <button
                   onClick={() => handleAmmoChange('Illumination')}
@@ -345,7 +345,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
                   }`}
                 >
-                  <span className="text-sm font-medium">{t('config.illumination')}</span>
+                  <span className="text-sm font-medium">
+                    {t('config.illumination')}
+                  </span>
                 </button>
               </div>
             </div>
@@ -370,5 +372,5 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

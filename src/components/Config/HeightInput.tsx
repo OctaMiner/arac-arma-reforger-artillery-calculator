@@ -3,17 +3,17 @@
  * Reusable component for height (elevation) input
  */
 
-import { type ChangeEvent, useEffect, useState } from 'react'
-import { useAutoHeightStatus } from '@/hooks/useAutoHeight'
-import { getCacheStats } from '@/lib/maps/heightService'
+import { type ChangeEvent, useEffect, useState } from 'react';
+import { useAutoHeightStatus } from '@/hooks/useAutoHeight';
+import { getCacheStats } from '@/lib/maps/heightService';
 
 interface HeightInputProps {
-  label: string
-  value: number
-  onChange: (height: number) => void
-  disabled?: boolean
+  label: string;
+  value: number;
+  onChange: (height: number) => void;
+  disabled?: boolean;
   /** Show auto-height indicator when height > 0 and auto-height is enabled */
-  showAutoIndicator?: boolean
+  showAutoIndicator?: boolean;
 }
 
 export function HeightInput({
@@ -21,38 +21,39 @@ export function HeightInput({
   value,
   onChange,
   disabled = false,
-  showAutoIndicator = false
+  showAutoIndicator = false,
 }: HeightInputProps) {
-  const { enabled: autoHeightEnabled, mapName } = useAutoHeightStatus()
-  const [cacheStatus, setCacheStatus] = useState<string>('')
+  const { enabled: autoHeightEnabled, mapName } = useAutoHeightStatus();
+  const [cacheStatus, setCacheStatus] = useState<string>('');
 
   // Update cache status periodically
   useEffect(() => {
     const updateStatus = () => {
-      const stats = getCacheStats()
+      const stats = getCacheStats();
       if (stats.loaded > 0) {
-        setCacheStatus(`✓ ${stats.loaded} Karten geladen`)
+        setCacheStatus(`✓ ${stats.loaded} Karten geladen`);
       } else if (stats.loading > 0) {
-        setCacheStatus('⏳ Lädt...')
+        setCacheStatus('⏳ Lädt...');
       } else {
-        setCacheStatus('')
+        setCacheStatus('');
       }
-    }
-    updateStatus()
-    const interval = setInterval(updateStatus, 1000)
-    return () => clearInterval(interval)
-  }, [])
+    };
+    updateStatus();
+    const interval = setInterval(updateStatus, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
     // Allow negative values (e.g., -190m below sea level)
     if (inputValue === '' || inputValue === '-' || /^-?\d+$/.test(inputValue)) {
-      const height = inputValue === '' || inputValue === '-' ? 0 : parseInt(inputValue, 10)
-      onChange(Math.min(1000, Math.max(-500, height)))
+      const height =
+        inputValue === '' || inputValue === '-' ? 0 : parseInt(inputValue, 10);
+      onChange(Math.min(1000, Math.max(-500, height)));
     }
-  }
+  };
 
-  const showAutoTag = showAutoIndicator && autoHeightEnabled && value > 0
+  const showAutoTag = showAutoIndicator && autoHeightEnabled && value > 0;
 
   return (
     <div>
@@ -85,12 +86,14 @@ export function HeightInput({
         {autoHeightEnabled ? (
           <span className="flex items-center gap-2">
             <span>Auto-Höhe aktiv ({mapName})</span>
-            {cacheStatus && <span className="text-green-500">{cacheStatus}</span>}
+            {cacheStatus && (
+              <span className="text-green-500">{cacheStatus}</span>
+            )}
           </span>
         ) : (
           <>Keine Höhendaten für diese Karte</>
         )}
       </p>
     </div>
-  )
+  );
 }

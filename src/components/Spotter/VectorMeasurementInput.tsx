@@ -3,36 +3,36 @@
  * Input fields for Vector 21 measurements (Distance and Azimuth)
  */
 
-import { type ChangeEvent } from 'react'
-import { useSpotterStore } from '../../stores/useSpotterStore'
+import { type ChangeEvent } from 'react';
+import { useSpotterStore } from '../../stores/useSpotterStore';
 
 export function VectorMeasurementInput() {
-  const measurements = useSpotterStore((state) => state.spotterMeasurements)
+  const measurements = useSpotterStore((state) => state.spotterMeasurements);
   const setSpotterMeasurements = useSpotterStore(
     (state) => state.setSpotterMeasurements
-  )
+  );
 
   const handleDistanceChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^\d+$/.test(value)) {
-      const distance = value === '' ? 0 : parseInt(value, 10)
+      const distance = value === '' ? 0 : parseInt(value, 10);
       setSpotterMeasurements({
         distance: Math.min(9999, Math.max(0, distance)),
-        azimuth: measurements?.azimuth ?? 0
-      })
+        azimuth: measurements?.azimuth ?? 0,
+      });
     }
-  }
+  };
 
   const handleAzimuthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^\d+(\.\d{0,1})?$/.test(value)) {
-      const azimuth = value === '' ? 0 : parseFloat(value)
+      const azimuth = value === '' ? 0 : parseFloat(value);
       setSpotterMeasurements({
         distance: measurements?.distance ?? 0,
-        azimuth: Math.min(360, Math.max(0, azimuth))
-      })
+        azimuth: Math.min(360, Math.max(0, azimuth)),
+      });
     }
-  }
+  };
 
   return (
     <div className="space-y-3">
@@ -81,5 +81,5 @@ export function VectorMeasurementInput() {
         <p>R + V = Beide gleichzeitig</p>
       </div>
     </div>
-  )
+  );
 }

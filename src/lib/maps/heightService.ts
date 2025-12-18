@@ -34,120 +34,122 @@
  * - In-memory caching per map
  */
 
-import { getMapConfig } from './configs'
-import type { MapId } from './types'
+import { getMapConfig } from './configs';
+import type { MapId } from './types';
 
 /**
  * Raw height data structure from CDN
  * 2D array where array[north][east] = height (as string)
  */
-type RawHeightData = string[][]
+type RawHeightData = string[][];
 
 /**
  * Processed height data with metadata
  */
 interface HeightData {
-  data: number[][] // Converted to numbers for faster access
-  width: number // Number of columns (east dimension)
-  height: number // Number of rows (north dimension)
-  resolution: number // Meters per data point
+  data: number[][]; // Converted to numbers for faster access
+  width: number; // Number of columns (east dimension)
+  height: number; // Number of rows (north dimension)
+  resolution: number; // Meters per data point
 }
 
 /**
  * Cache state for a single map
  */
 interface CacheEntry {
-  data: HeightData | null
-  loading: Promise<HeightData | null> | null
-  error: Error | null
-  timestamp: number // For future cache expiration
+  data: HeightData | null;
+  loading: Promise<HeightData | null> | null;
+  error: Error | null;
+  timestamp: number; // For future cache expiration
 }
 
 /**
  * In-memory cache: mapId -> height data
  */
-const heightCache = new Map<string, CacheEntry>()
+const heightCache = new Map<string, CacheEntry>();
 
 /**
  * Cache timeout (30 minutes)
  */
-const CACHE_TIMEOUT_MS = 30 * 60 * 1000
+const CACHE_TIMEOUT_MS = 30 * 60 * 1000;
 
 /**
  * Check if a map has height data available
  */
 export function hasHeightData(mapId: string): boolean {
-  const config = getMapConfig(mapId as MapId)
-  return config?.hasHeightData ?? false
+  const config = getMapConfig(mapId as MapId);
+  return config?.hasHeightData ?? false;
 }
 
 /**
  * Load height data from CDN with caching
  * Returns null if map has no height data or loading fails
  */
-export async function loadHeightData(mapId: string): Promise<HeightData | null> {
+export async function loadHeightData(
+  mapId: string
+): Promise<HeightData | null> {
   // Check if map has height data
   if (!hasHeightData(mapId)) {
-    return null
+    return null;
   }
 
-  const config = getMapConfig(mapId as MapId)
+  const config = getMapConfig(mapId as MapId);
   if (!config?.heightDataUrl) {
-    return null
+    return null;
   }
 
   // Check cache
-  const cached = heightCache.get(mapId)
+  const cached = heightCache.get(mapId);
 
   // Return cached data if available and not expired
   if (cached?.data) {
-    const age = Date.now() - cached.timestamp
+    const age = Date.now() - cached.timestamp;
     if (age < CACHE_TIMEOUT_MS) {
-      return cached.data
+      return cached.data;
     }
   }
 
   // Return existing loading promise if already loading
   if (cached?.loading) {
-    return cached.loading
+    return cached.loading;
   }
 
   // Start loading
-  const loadingPromise = fetchAndProcessHeightData(mapId, config.heightDataUrl)
+  const loadingPromise = fetchAndProcessHeightData(mapId, config.heightDataUrl);
 
   // Store loading promise in cache
   heightCache.set(mapId, {
     data: null,
     loading: loadingPromise,
     error: null,
-    timestamp: Date.now()
-  })
+    timestamp: Date.now(),
+  });
 
   try {
-    const data = await loadingPromise
+    const data = await loadingPromise;
 
     // Update cache with loaded data
     heightCache.set(mapId, {
       data,
       loading: null,
       error: null,
-      timestamp: Date.now()
-    })
+      timestamp: Date.now(),
+    });
 
-    return data
+    return data;
   } catch (error) {
     // Store error in cache
-    const err = error instanceof Error ? error : new Error(String(error))
+    const err = error instanceof Error ? error : new Error(String(error));
 
     heightCache.set(mapId, {
       data: null,
       loading: null,
       error: err,
-      timestamp: Date.now()
-    })
+      timestamp: Date.now(),
+    });
 
-    console.error(`Failed to load height data for ${mapId}:`, err)
-    return null
+    console.error(`Failed to load height data for ${mapId}:`, err);
+    return null;
   }
 }
 
@@ -159,44 +161,44 @@ async function fetchAndProcessHeightData(
   url: string
 ): Promise<HeightData | null> {
   try {
-    const response = await fetch(url)
+    const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const rawData: RawHeightData = await response.json()
+    const rawData: RawHeightData = await response.json();
 
     // Validate data structure
     if (!Array.isArray(rawData) || rawData.length === 0) {
-      throw new Error('Invalid height data structure: not an array')
+      throw new Error('Invalid height data structure: not an array');
     }
 
-    const height = rawData.length
-    const width = rawData[0]?.length ?? 0
+    const height = rawData.length;
+    const width = rawData[0]?.length ?? 0;
 
     if (width === 0) {
-      throw new Error('Invalid height data structure: empty rows')
+      throw new Error('Invalid height data structure: empty rows');
     }
 
     // Get map dimensions to calculate resolution
-    const config = getMapConfig(mapId as MapId)
-    const [mapWidth, mapHeight] = config?.size ?? [width, height]
+    const config = getMapConfig(mapId as MapId);
+    const [mapWidth, mapHeight] = config?.size ?? [width, height];
 
     // Calculate resolution (meters per data point)
     // Gene's formula: gridSpacing = mapSize / (gridSize - 1)
     // Because N points create N-1 intervals
-    const resolutionX = mapWidth / (width - 1)
-    const resolutionY = mapHeight / (height - 1)
-    const resolution = Math.max(resolutionX, resolutionY)
+    const resolutionX = mapWidth / (width - 1);
+    const resolutionY = mapHeight / (height - 1);
+    const resolution = Math.max(resolutionX, resolutionY);
 
     // Convert strings to numbers for faster access
-    const data = rawData.map(row =>
-      row.map(heightStr => {
-        const h = parseFloat(heightStr)
-        return isNaN(h) ? 0 : h
+    const data = rawData.map((row) =>
+      row.map((heightStr) => {
+        const h = parseFloat(heightStr);
+        return isNaN(h) ? 0 : h;
       })
-    )
+    );
 
     // Height data loaded successfully
     // Debug: console.log(`[HeightService] ${mapId}: ${width}x${height} @ ${resolution.toFixed(1)}m/px`)
@@ -205,11 +207,11 @@ async function fetchAndProcessHeightData(
       data,
       width,
       height,
-      resolution
-    }
+      resolution,
+    };
   } catch (error) {
-    console.error(`Error fetching height data from ${url}:`, error)
-    throw error
+    console.error(`Error fetching height data from ${url}:`, error);
+    throw error;
   }
 }
 
@@ -230,31 +232,33 @@ export async function getTerrainHeight(
   north: number
 ): Promise<number | null> {
   // Load height data (uses cache if available)
-  const heightData = await loadHeightData(mapId)
+  const heightData = await loadHeightData(mapId);
 
   if (!heightData) {
-    return null
+    return null;
   }
 
   // Convert coordinates to array indices
   // IMPORTANT: Data is stored as data[east][north_inverted]!
   // - row = east / spacing (axes swapped!)
   // - col = gridSize - 1 - north / spacing (north inverted!)
-  const row = Math.round(east / heightData.resolution)
-  const col = heightData.height - 1 - Math.round(north / heightData.resolution)
+  const row = Math.round(east / heightData.resolution);
+  const col = heightData.height - 1 - Math.round(north / heightData.resolution);
 
   // Check bounds
   if (
-    row < 0 || row >= heightData.width ||
-    col < 0 || col >= heightData.height
+    row < 0 ||
+    row >= heightData.width ||
+    col < 0 ||
+    col >= heightData.height
   ) {
-    return null
+    return null;
   }
 
   // Get height at index (data stored as data[east][north_inverted])
-  const height = heightData.data[row]?.[col]
+  const height = heightData.data[row]?.[col];
 
-  return height ?? null
+  return height ?? null;
 }
 
 /**
@@ -267,25 +271,27 @@ export function getTerrainHeightSync(
   east: number,
   north: number
 ): number | null {
-  const cached = heightCache.get(mapId)
+  const cached = heightCache.get(mapId);
 
   if (!cached?.data) {
-    return null
+    return null;
   }
 
-  const heightData = cached.data
+  const heightData = cached.data;
   // Data is stored as data[east][north_inverted]
-  const row = Math.round(east / heightData.resolution)
-  const col = heightData.height - 1 - Math.round(north / heightData.resolution)
+  const row = Math.round(east / heightData.resolution);
+  const col = heightData.height - 1 - Math.round(north / heightData.resolution);
 
   if (
-    row < 0 || row >= heightData.width ||
-    col < 0 || col >= heightData.height
+    row < 0 ||
+    row >= heightData.width ||
+    col < 0 ||
+    col >= heightData.height
   ) {
-    return null
+    return null;
   }
 
-  return heightData.data[row]?.[col] ?? null
+  return heightData.data[row]?.[col] ?? null;
 }
 
 /**
@@ -297,52 +303,54 @@ export function getTerrainHeightInterpolated(
   east: number,
   north: number
 ): number | null {
-  const cached = heightCache.get(mapId)
+  const cached = heightCache.get(mapId);
 
   if (!cached?.data) {
-    return null
+    return null;
   }
 
-  const heightData = cached.data
-  const res = heightData.resolution
+  const heightData = cached.data;
+  const res = heightData.resolution;
 
   // Data is stored as data[east][north_inverted]
   // row = east / res, col = gridSize - 1 - north / res
-  const rowF = east / res
-  const northIdx = north / res
+  const rowF = east / res;
+  const northIdx = north / res;
 
-  const row0 = Math.floor(rowF)
-  const row1 = row0 + 1
-  const n0 = Math.floor(northIdx)
-  const n1 = n0 + 1
+  const row0 = Math.floor(rowF);
+  const row1 = row0 + 1;
+  const n0 = Math.floor(northIdx);
+  const n1 = n0 + 1;
 
   // Invert north for column index
-  const col0 = heightData.height - 1 - n0
-  const col1 = heightData.height - 1 - n1
+  const col0 = heightData.height - 1 - n0;
+  const col1 = heightData.height - 1 - n1;
 
   // Check bounds
   if (
-    row0 < 0 || row1 >= heightData.width ||
-    col1 < 0 || col0 >= heightData.height
+    row0 < 0 ||
+    row1 >= heightData.width ||
+    col1 < 0 ||
+    col0 >= heightData.height
   ) {
-    return null
+    return null;
   }
 
   // Get heights at four corners
-  const h00 = heightData.data[row0]?.[col0] ?? 0
-  const h10 = heightData.data[row1]?.[col0] ?? 0
-  const h01 = heightData.data[row0]?.[col1] ?? 0
-  const h11 = heightData.data[row1]?.[col1] ?? 0
+  const h00 = heightData.data[row0]?.[col0] ?? 0;
+  const h10 = heightData.data[row1]?.[col0] ?? 0;
+  const h01 = heightData.data[row0]?.[col1] ?? 0;
+  const h11 = heightData.data[row1]?.[col1] ?? 0;
 
   // Bilinear interpolation
-  const fx = rowF - row0
-  const fy = northIdx - n0
+  const fx = rowF - row0;
+  const fy = northIdx - n0;
 
-  const h0 = h00 * (1 - fx) + h10 * fx
-  const h1 = h01 * (1 - fx) + h11 * fx
-  const height = h0 * (1 - fy) + h1 * fy
+  const h0 = h00 * (1 - fx) + h10 * fx;
+  const h1 = h01 * (1 - fx) + h11 * fx;
+  const height = h0 * (1 - fy) + h1 * fy;
 
-  return height
+  return height;
 }
 
 /**
@@ -351,9 +359,9 @@ export function getTerrainHeightInterpolated(
  */
 export function preloadHeightData(mapId: string): void {
   if (hasHeightData(mapId)) {
-    loadHeightData(mapId).catch(err => {
-      console.warn(`Failed to preload height data for ${mapId}:`, err)
-    })
+    loadHeightData(mapId).catch((err) => {
+      console.warn(`Failed to preload height data for ${mapId}:`, err);
+    });
   }
 }
 
@@ -363,9 +371,9 @@ export function preloadHeightData(mapId: string): void {
  */
 export function clearHeightCache(mapId?: string): void {
   if (mapId) {
-    heightCache.delete(mapId)
+    heightCache.delete(mapId);
   } else {
-    heightCache.clear()
+    heightCache.clear();
   }
 }
 
@@ -378,31 +386,31 @@ export function getCacheStats() {
     loaded: 0,
     loading: 0,
     errors: 0,
-    totalSizeMB: 0
-  }
+    totalSizeMB: 0,
+  };
 
   for (const entry of heightCache.values()) {
     if (entry.data) {
-      stats.loaded++
+      stats.loaded++;
       // Rough size estimate: width * height * 8 bytes per number
-      const sizeMB = (entry.data.width * entry.data.height * 8) / (1024 * 1024)
-      stats.totalSizeMB += sizeMB
+      const sizeMB = (entry.data.width * entry.data.height * 8) / (1024 * 1024);
+      stats.totalSizeMB += sizeMB;
     }
-    if (entry.loading) stats.loading++
-    if (entry.error) stats.errors++
+    if (entry.loading) stats.loading++;
+    if (entry.error) stats.errors++;
   }
 
-  return stats
+  return stats;
 }
 
 /**
  * Terrain profile point
  */
 export interface TerrainProfilePoint {
-  distance: number  // Distance from start (meters)
-  height: number    // Terrain height (meters)
-  east: number      // East coordinate
-  north: number     // North coordinate
+  distance: number; // Distance from start (meters)
+  height: number; // Terrain height (meters)
+  east: number; // East coordinate
+  north: number; // North coordinate
 }
 
 /**
@@ -425,67 +433,72 @@ export function getTerrainProfile(
   endNorth: number,
   numSamples: number = 50
 ): TerrainProfilePoint[] | null {
-  const cached = heightCache.get(mapId)
+  const cached = heightCache.get(mapId);
 
   if (!cached?.data) {
-    return null
+    return null;
   }
 
-  const heightData = cached.data
+  const heightData = cached.data;
 
   // Calculate total distance
-  const deltaEast = endEast - startEast
-  const deltaNorth = endNorth - startNorth
-  const totalDistance = Math.sqrt(deltaEast * deltaEast + deltaNorth * deltaNorth)
+  const deltaEast = endEast - startEast;
+  const deltaNorth = endNorth - startNorth;
+  const totalDistance = Math.sqrt(
+    deltaEast * deltaEast + deltaNorth * deltaNorth
+  );
 
   // Generate sample points
-  const profile: TerrainProfilePoint[] = []
+  const profile: TerrainProfilePoint[] = [];
 
   for (let i = 0; i <= numSamples; i++) {
-    const t = i / numSamples
+    const t = i / numSamples;
 
     // Interpolate position
-    const east = startEast + deltaEast * t
-    const north = startNorth + deltaNorth * t
-    const distance = totalDistance * t
+    const east = startEast + deltaEast * t;
+    const north = startNorth + deltaNorth * t;
+    const distance = totalDistance * t;
 
     // Get height at this position using interpolation for smoother results
-    const height = getTerrainHeightInterpolated(mapId, east, north)
+    const height = getTerrainHeightInterpolated(mapId, east, north);
 
     if (height !== null) {
       profile.push({
         distance,
         height,
         east,
-        north
-      })
+        north,
+      });
     } else {
       // Fallback to nearest neighbor
-      const row = Math.round(east / heightData.resolution)
-      const col = heightData.height - 1 - Math.round(north / heightData.resolution)
+      const row = Math.round(east / heightData.resolution);
+      const col =
+        heightData.height - 1 - Math.round(north / heightData.resolution);
 
       if (
-        row >= 0 && row < heightData.width &&
-        col >= 0 && col < heightData.height
+        row >= 0 &&
+        row < heightData.width &&
+        col >= 0 &&
+        col < heightData.height
       ) {
-        const h = heightData.data[row]?.[col] ?? 0
+        const h = heightData.data[row]?.[col] ?? 0;
         profile.push({
           distance,
           height: h,
           east,
-          north
-        })
+          north,
+        });
       }
     }
   }
 
-  return profile.length > 0 ? profile : null
+  return profile.length > 0 ? profile : null;
 }
 
 /**
  * Check if height data is loaded and ready (synchronous check)
  */
 export function isHeightDataLoaded(mapId: string): boolean {
-  const cached = heightCache.get(mapId)
-  return cached?.data !== null && cached?.data !== undefined
+  const cached = heightCache.get(mapId);
+  return cached?.data !== null && cached?.data !== undefined;
 }

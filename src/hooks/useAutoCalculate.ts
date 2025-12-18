@@ -9,48 +9,50 @@
  * - Only calculates when both positions are set
  */
 
-import { useEffect, useRef } from 'react'
-import { useAppStore } from '@/stores/useAppStore'
+import { useEffect, useRef } from 'react';
+import { useAppStore } from '@/stores/useAppStore';
 
 /**
  * Debounce time for calculation (ms)
  * Allows height data to load before calculating
  */
-const DEBOUNCE_MS = 150
+const DEBOUNCE_MS = 150;
 
 /**
  * Hook that automatically calculates fire solution when data changes
  * Call this hook once in your app root (App.tsx)
  */
 export function useAutoCalculate() {
-  const mortarPosition = useAppStore(state => state.mortarPosition)
-  const targetPosition = useAppStore(state => state.targetPosition)
-  const mortarConfig = useAppStore(state => state.mortarConfig)
-  const manualChargeOverride = useAppStore(state => state.manualChargeOverride)
-  const windData = useAppStore(state => state.windData)
-  const calculateSolution = useAppStore(state => state.calculateSolution)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const manualChargeOverride = useAppStore(
+    (state) => state.manualChargeOverride
+  );
+  const windData = useAppStore((state) => state.windData);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
   // Track if we're currently calculating to prevent re-entry
-  const isCalculatingRef = useRef(false)
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const isCalculatingRef = useRef(false);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Track last calculated state to prevent unnecessary recalculations
-  const lastCalculatedRef = useRef<string | null>(null)
+  const lastCalculatedRef = useRef<string | null>(null);
 
   useEffect(() => {
     // Clear existing timer
     if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
+      clearTimeout(debounceTimerRef.current);
     }
 
     // Skip if positions not set
     if (!mortarPosition || !targetPosition) {
-      return
+      return;
     }
 
     // Skip if already calculating
     if (isCalculatingRef.current) {
-      return
+      return;
     }
 
     // Create state signature to detect changes
@@ -64,34 +66,34 @@ export function useAutoCalculate() {
       // Only include charge in manual mode
       charge: manualChargeOverride !== null ? manualChargeOverride : 'auto',
       manualCharge: manualChargeOverride,
-      wind: windData
-    })
+      wind: windData,
+    });
 
     // Skip if this exact state was already calculated
     if (lastCalculatedRef.current === stateSignature) {
-      return
+      return;
     }
 
     // Debounce: Wait for data to settle (height loading, etc.)
     debounceTimerRef.current = setTimeout(() => {
-      isCalculatingRef.current = true
-      lastCalculatedRef.current = stateSignature
+      isCalculatingRef.current = true;
+      lastCalculatedRef.current = stateSignature;
 
       try {
-        calculateSolution()
+        calculateSolution();
       } finally {
         // Reset flag after a short delay to allow state updates to complete
         setTimeout(() => {
-          isCalculatingRef.current = false
-        }, 50)
+          isCalculatingRef.current = false;
+        }, 50);
       }
-    }, DEBOUNCE_MS)
+    }, DEBOUNCE_MS);
 
     return () => {
       if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
+        clearTimeout(debounceTimerRef.current);
       }
-    }
+    };
   }, [
     mortarPosition?.east,
     mortarPosition?.north,
@@ -107,6 +109,6 @@ export function useAutoCalculate() {
     manualChargeOverride,
     windData?.speed,
     windData?.direction,
-    calculateSolution
-  ])
+    calculateSolution,
+  ]);
 }

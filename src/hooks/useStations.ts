@@ -4,21 +4,21 @@
  * Vereinfacht das Arbeiten mit Stations Store und Integration mit App.
  */
 
-import { useEffect, useCallback } from 'react'
-import { useStationsStore, useAppStore, useUserStore } from '../stores'
-import type { Coordinate, MortarStation } from '../types'
+import { useEffect, useCallback } from 'react';
+import { useStationsStore, useAppStore, useUserStore } from '../stores';
+import type { Coordinate, MortarStation } from '../types';
 
 interface UseStationsOptions {
   /**
    * Auto-load stations on mount
    * @default true
    */
-  autoLoad?: boolean
+  autoLoad?: boolean;
 
   /**
    * Filter by map ID
    */
-  mapId?: string
+  mapId?: string;
 }
 
 /**
@@ -46,55 +46,52 @@ interface UseStationsOptions {
  * ```
  */
 export const useStations = (options: UseStationsOptions = {}) => {
-  const { autoLoad = true, mapId } = options
+  const { autoLoad = true, mapId } = options;
 
   // Store State
-  const allStations = useStationsStore((state) => state.stations)
-  const selectedStation = useStationsStore((state) => state.selectedStation)
-  const isLoading = useStationsStore((state) => state.isLoading)
-  const error = useStationsStore((state) => state.error)
+  const allStations = useStationsStore((state) => state.stations);
+  const selectedStation = useStationsStore((state) => state.selectedStation);
+  const isLoading = useStationsStore((state) => state.isLoading);
+  const error = useStationsStore((state) => state.error);
 
   // Store Actions
-  const loadStations = useStationsStore((state) => state.loadStations)
-  const saveStation = useStationsStore((state) => state.saveStation)
-  const deleteStation = useStationsStore((state) => state.deleteStation)
-  const selectStation = useStationsStore((state) => state.selectStation)
-  const clearSelection = useStationsStore((state) => state.clearSelection)
+  const loadStations = useStationsStore((state) => state.loadStations);
+  const saveStation = useStationsStore((state) => state.saveStation);
+  const deleteStation = useStationsStore((state) => state.deleteStation);
+  const selectStation = useStationsStore((state) => state.selectStation);
+  const clearSelection = useStationsStore((state) => state.clearSelection);
 
   // App State
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const selectedMap = useAppStore((state) => state.selectedMap)
-  const setMortarPosition = useAppStore((state) => state.setMortarPosition)
-  const setMortarConfig = useAppStore((state) => state.setMortarConfig)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const selectedMap = useAppStore((state) => state.selectedMap);
+  const setMortarPosition = useAppStore((state) => state.setMortarPosition);
+  const setMortarConfig = useAppStore((state) => state.setMortarConfig);
 
   // User stats
-  const incrementStations = useUserStore((state) => state.incrementStations)
+  const incrementStations = useUserStore((state) => state.incrementStations);
 
   // Auto-load on mount
   useEffect(() => {
     if (autoLoad) {
-      loadStations()
+      loadStations();
     }
-  }, [autoLoad, loadStations])
+  }, [autoLoad, loadStations]);
 
   /**
    * Filter stations by map
    */
   const stations = mapId
     ? allStations.filter((s) => s.mapId === mapId)
-    : allStations
+    : allStations;
 
   /**
    * Save current mortar position as station
    */
   const saveCurrentAsStation = useCallback(
-    async (
-      name: string,
-      includeConfig: boolean = true
-    ) => {
+    async (name: string, includeConfig: boolean = true) => {
       if (!mortarPosition) {
-        throw new Error('Keine Mörser-Position gesetzt')
+        throw new Error('Keine Mörser-Position gesetzt');
       }
 
       await saveStation(
@@ -102,18 +99,12 @@ export const useStations = (options: UseStationsOptions = {}) => {
         selectedMap,
         mortarPosition,
         includeConfig ? mortarConfig : undefined
-      )
+      );
 
-      incrementStations()
+      incrementStations();
     },
-    [
-      mortarPosition,
-      selectedMap,
-      mortarConfig,
-      saveStation,
-      incrementStations
-    ]
-  )
+    [mortarPosition, selectedMap, mortarConfig, saveStation, incrementStations]
+  );
 
   /**
    * Load station into calculator (set mortar position + optional config)
@@ -121,43 +112,43 @@ export const useStations = (options: UseStationsOptions = {}) => {
   const loadStationIntoCalculator = useCallback(
     (station: MortarStation) => {
       // Set mortar position
-      setMortarPosition(station.position)
+      setMortarPosition(station.position);
 
       // Optionally set config
       if (station.defaultConfig) {
-        setMortarConfig(station.defaultConfig)
+        setMortarConfig(station.defaultConfig);
       }
 
       // Select station
-      selectStation(station.id)
+      selectStation(station.id);
     },
     [setMortarPosition, setMortarConfig, selectStation]
-  )
+  );
 
   /**
    * Delete station by ID
    */
   const deleteStationById = useCallback(
     async (id: string) => {
-      await deleteStation(id)
+      await deleteStation(id);
     },
     [deleteStation]
-  )
+  );
 
   /**
    * Get station by ID
    */
   const getStationById = useCallback(
     (id: string) => {
-      return allStations.find((s) => s.id === id)
+      return allStations.find((s) => s.id === id);
     },
     [allStations]
-  )
+  );
 
   /**
    * Check if current position can be saved as station
    */
-  const canSaveCurrentAsStation = Boolean(mortarPosition)
+  const canSaveCurrentAsStation = Boolean(mortarPosition);
 
   /**
    * Check if a position is already saved as station
@@ -169,33 +160,33 @@ export const useStations = (options: UseStationsOptions = {}) => {
           s.position.east === position.east &&
           s.position.north === position.north &&
           s.position.height === position.height
-      )
+      );
     },
     [stations]
-  )
+  );
 
   /**
    * Find nearest station to a coordinate
    */
   const findNearestStation = useCallback(
     (position: Coordinate) => {
-      if (stations.length === 0) return null
+      if (stations.length === 0) return null;
 
-      let nearest = stations[0]
-      let minDistance = calculateDistance(position, nearest.position)
+      let nearest = stations[0];
+      let minDistance = calculateDistance(position, nearest.position);
 
       for (const station of stations.slice(1)) {
-        const distance = calculateDistance(position, station.position)
+        const distance = calculateDistance(position, station.position);
         if (distance < minDistance) {
-          minDistance = distance
-          nearest = station
+          minDistance = distance;
+          nearest = station;
         }
       }
 
-      return { station: nearest, distance: minDistance }
+      return { station: nearest, distance: minDistance };
     },
     [stations]
-  )
+  );
 
   return {
     // State
@@ -216,17 +207,17 @@ export const useStations = (options: UseStationsOptions = {}) => {
 
     // Utilities
     isPositionSaved,
-    findNearestStation
-  }
-}
+    findNearestStation,
+  };
+};
 
 /**
  * Calculate distance between two coordinates (helper)
  */
 function calculateDistance(a: Coordinate, b: Coordinate): number {
-  const dx = (a.east - b.east) * 10 // Convert to meters
-  const dy = (a.north - b.north) * 10
-  const dz = a.height - b.height
+  const dx = (a.east - b.east) * 10; // Convert to meters
+  const dy = (a.north - b.north) * 10;
+  const dz = a.height - b.height;
 
-  return Math.sqrt(dx * dx + dy * dy + dz * dz)
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
 }

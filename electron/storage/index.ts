@@ -6,3 +6,4 @@ export * from './userProfile';
 export * from './missions';
 export * from './stations';
 export * from './history';
+export * from './windowState';

@@ -8,10 +8,10 @@ export {
   calculateAzimuth,
   calculateDistance,
   calculateHeightAngle,
-  createSpotterInputFromCoordinates
-} from './targetCalculator'
+  createSpotterInputFromCoordinates,
+} from './targetCalculator';
 
-export type { SpotterInput } from './targetCalculator'
+export type { SpotterInput } from './targetCalculator';
 
 // Correction
 export {
@@ -20,7 +20,7 @@ export {
   milToLateralCorrection,
   calculateCorrectionFromImpact,
   aggregateCorrections,
-  formatCorrectionCall
-} from './correction'
+  formatCorrectionCall,
+} from './correction';
 
-export type { CorrectionInput } from './correction'
+export type { CorrectionInput } from './correction';

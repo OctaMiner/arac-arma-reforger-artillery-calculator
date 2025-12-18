@@ -47,7 +47,7 @@ Height data is stored as 2D arrays on the CDN:
 ### Check Availability
 
 ```typescript
-import { hasHeightData } from '@/lib/maps'
+import { hasHeightData } from '@/lib/maps';
 
 if (hasHeightData('everon')) {
   // Map has height data
@@ -57,56 +57,56 @@ if (hasHeightData('everon')) {
 ### Load Data
 
 ```typescript
-import { loadHeightData } from '@/lib/maps'
+import { loadHeightData } from '@/lib/maps';
 
 // Load data (uses cache if available)
-const data = await loadHeightData('everon')
+const data = await loadHeightData('everon');
 
 if (data) {
-  console.log(`Loaded ${data.width}x${data.height} height points`)
-  console.log(`Resolution: ${data.resolution}m`)
+  console.log(`Loaded ${data.width}x${data.height} height points`);
+  console.log(`Resolution: ${data.resolution}m`);
 }
 ```
 
 ### Get Height (Async)
 
 ```typescript
-import { getTerrainHeight } from '@/lib/maps'
+import { getTerrainHeight } from '@/lib/maps';
 
 // Automatically loads data if needed
-const height = await getTerrainHeight('everon', 6400, 6400)
+const height = await getTerrainHeight('everon', 6400, 6400);
 
 if (height !== null) {
-  console.log(`Height: ${height}m`)
+  console.log(`Height: ${height}m`);
 }
 ```
 
 ### Get Height (Sync, Cache Only)
 
 ```typescript
-import { getTerrainHeightSync } from '@/lib/maps'
+import { getTerrainHeightSync } from '@/lib/maps';
 
 // Only works if data already loaded
-const height = getTerrainHeightSync('everon', 6400, 6400)
+const height = getTerrainHeightSync('everon', 6400, 6400);
 ```
 
 ### Get Interpolated Height
 
 ```typescript
-import { getTerrainHeightInterpolated } from '@/lib/maps'
+import { getTerrainHeightInterpolated } from '@/lib/maps';
 
 // More accurate (bilinear interpolation)
-const height = getTerrainHeightInterpolated('everon', 6432.7, 5891.3)
+const height = getTerrainHeightInterpolated('everon', 6432.7, 5891.3);
 ```
 
 ### Preload in Background
 
 ```typescript
-import { preloadHeightData } from '@/lib/maps'
+import { preloadHeightData } from '@/lib/maps';
 
 // Start loading without waiting
-preloadHeightData('everon')
-preloadHeightData('arland')
+preloadHeightData('everon');
+preloadHeightData('arland');
 
 // Data will be cached when ready
 ```
@@ -114,17 +114,17 @@ preloadHeightData('arland')
 ### Cache Management
 
 ```typescript
-import { clearHeightCache, getCacheStats } from '@/lib/maps'
+import { clearHeightCache, getCacheStats } from '@/lib/maps';
 
 // Get cache info
-const stats = getCacheStats()
-console.log(`Loaded: ${stats.loaded} maps, ${stats.totalSizeMB}MB`)
+const stats = getCacheStats();
+console.log(`Loaded: ${stats.loaded} maps, ${stats.totalSizeMB}MB`);
 
 // Clear specific map
-clearHeightCache('everon')
+clearHeightCache('everon');
 
 // Clear all
-clearHeightCache()
+clearHeightCache();
 ```
 
 ## React Hooks
@@ -152,11 +152,11 @@ With interpolation:
 
 ```typescript
 const { height, interpolated } = useTerrainHeight('everon', coord, {
-  interpolate: true
-})
+  interpolate: true,
+});
 
-console.log('Nearest:', height)
-console.log('Smooth:', interpolated)
+console.log('Nearest:', height);
+console.log('Smooth:', interpolated);
 ```
 
 ### usePreloadHeightData
@@ -262,22 +262,22 @@ Height lookups are very fast:
 
 ```typescript
 async function calculateElevation(mapId, mortar, target) {
-  await loadHeightData(mapId)
+  await loadHeightData(mapId);
 
-  const h1 = getTerrainHeightInterpolated(mapId, mortar.east, mortar.north)
-  const h2 = getTerrainHeightInterpolated(mapId, target.east, target.north)
+  const h1 = getTerrainHeightInterpolated(mapId, mortar.east, mortar.north);
+  const h2 = getTerrainHeightInterpolated(mapId, target.east, target.north);
 
-  if (h1 === null || h2 === null) return null
+  if (h1 === null || h2 === null) return null;
 
-  const dx = target.east - mortar.east
-  const dy = target.north - mortar.north
-  const distance = Math.sqrt(dx * dx + dy * dy)
-  const heightDiff = h2 - h1
+  const dx = target.east - mortar.east;
+  const dy = target.north - mortar.north;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  const heightDiff = h2 - h1;
 
-  const angleRad = Math.atan2(heightDiff, distance)
-  const angleDeg = angleRad * (180 / Math.PI)
+  const angleRad = Math.atan2(heightDiff, distance);
+  const angleDeg = angleRad * (180 / Math.PI);
 
-  return angleDeg
+  return angleDeg;
 }
 ```
 
@@ -285,28 +285,28 @@ async function calculateElevation(mapId, mortar, target) {
 
 ```typescript
 async function hasLineOfSight(mapId, mortar, target, samples = 20) {
-  await loadHeightData(mapId)
+  await loadHeightData(mapId);
 
-  const h1 = getTerrainHeightSync(mapId, mortar.east, mortar.north)
-  const h2 = getTerrainHeightSync(mapId, target.east, target.north)
+  const h1 = getTerrainHeightSync(mapId, mortar.east, mortar.north);
+  const h2 = getTerrainHeightSync(mapId, target.east, target.north);
 
-  if (h1 === null || h2 === null) return false
+  if (h1 === null || h2 === null) return false;
 
   // Sample points along line
   for (let i = 1; i < samples; i++) {
-    const t = i / samples
-    const east = mortar.east + t * (target.east - mortar.east)
-    const north = mortar.north + t * (target.north - mortar.north)
+    const t = i / samples;
+    const east = mortar.east + t * (target.east - mortar.east);
+    const north = mortar.north + t * (target.north - mortar.north);
 
-    const terrainHeight = getTerrainHeightSync(mapId, east, north)
-    const lineHeight = h1 + t * (h2 - h1)
+    const terrainHeight = getTerrainHeightSync(mapId, east, north);
+    const lineHeight = h1 + t * (h2 - h1);
 
     if (terrainHeight && terrainHeight > lineHeight) {
-      return false // Terrain blocks line
+      return false; // Terrain blocks line
     }
   }
 
-  return true
+  return true;
 }
 ```
 
@@ -316,25 +316,25 @@ The service handles errors gracefully:
 
 ```typescript
 try {
-  const height = await getTerrainHeight('everon', 6400, 6400)
+  const height = await getTerrainHeight('everon', 6400, 6400);
 
   if (height === null) {
     // No data available or out of bounds
   }
 } catch (error) {
   // Network error or invalid data
-  console.error('Failed to load height data:', error)
+  console.error('Failed to load height data:', error);
 }
 ```
 
 React hooks return errors in result:
 
 ```typescript
-const { height, error } = useTerrainHeight('everon', coord)
+const { height, error } = useTerrainHeight('everon', coord);
 
 if (error) {
   // Handle error in UI
-  console.error(error)
+  console.error(error);
 }
 ```
 
@@ -366,10 +366,10 @@ See `heightService.test.example.ts` for usage examples.
 Run examples:
 
 ```typescript
-import { runAllExamples } from '@/lib/maps/heightService.test.example'
+import { runAllExamples } from '@/lib/maps/heightService.test.example';
 
 // In browser console:
-runAllExamples()
+runAllExamples();
 ```
 
 ## License

@@ -8,40 +8,40 @@
  * - ESC to cancel
  */
 
-import { useEffect } from 'react'
-import type { FireMission } from '../../types'
-import { useMissionsStore } from '../../stores/useMissionsStore'
+import { useEffect } from 'react';
+import type { FireMission } from '../../types';
+import { useMissionsStore } from '../../stores/useMissionsStore';
 
 interface MissionDeleteConfirmProps {
-  mission: FireMission
-  onConfirm: () => void
-  onCancel: () => void
+  mission: FireMission;
+  onConfirm: () => void;
+  onCancel: () => void;
 }
 
 export function MissionDeleteConfirm({
   mission,
   onConfirm,
-  onCancel
+  onCancel,
 }: MissionDeleteConfirmProps) {
-  const deleteMission = useMissionsStore((state) => state.deleteMission)
-  const isLoading = useMissionsStore((state) => state.isLoading)
+  const deleteMission = useMissionsStore((state) => state.deleteMission);
+  const isLoading = useMissionsStore((state) => state.isLoading);
 
   const handleDelete = async () => {
-    await deleteMission(mission.id)
-    onConfirm()
-  }
+    await deleteMission(mission.id);
+    onConfirm();
+  };
 
   // Handle ESC key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onCancel()
+        onCancel();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onCancel])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -87,7 +87,7 @@ export function MissionDeleteConfirm({
                 month: '2-digit',
                 year: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
               })}
             </div>
           </div>
@@ -115,5 +115,5 @@ export function MissionDeleteConfirm({
         </div>
       </div>
     </div>
-  )
+  );
 }

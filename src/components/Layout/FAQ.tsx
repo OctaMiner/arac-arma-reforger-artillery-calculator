@@ -2,13 +2,13 @@
  * FAQ Component - Help section explaining how to use the app
  */
 
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react'
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 
 interface FAQItem {
-  questionKey: string
-  answerKey: string
+  questionKey: string;
+  answerKey: string;
 }
 
 const faqItems: FAQItem[] = [
@@ -18,14 +18,17 @@ const faqItems: FAQItem[] = [
   { questionKey: 'faq.q_circles', answerKey: 'faq.a_circles' },
   { questionKey: 'faq.q_deadzone', answerKey: 'faq.a_deadzone' },
   { questionKey: 'faq.q_autoRing', answerKey: 'faq.a_autoRing' },
-  { questionKey: 'faq.q_azimuthElevation', answerKey: 'faq.a_azimuthElevation' },
-  { questionKey: 'faq.q_savePositions', answerKey: 'faq.a_savePositions' }
-]
+  {
+    questionKey: 'faq.q_azimuthElevation',
+    answerKey: 'faq.a_azimuthElevation',
+  },
+  { questionKey: 'faq.q_savePositions', answerKey: 'faq.a_savePositions' },
+];
 
 export function FAQ() {
-  const { t } = useTranslation()
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [expandedItem, setExpandedItem] = useState<number | null>(null)
+  const { t } = useTranslation();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [expandedItem, setExpandedItem] = useState<number | null>(null);
 
   return (
     <div className="bg-[#1a1a2e] rounded-lg border border-gray-700">
@@ -51,9 +54,14 @@ export function FAQ() {
       {isExpanded && (
         <div className="px-4 pb-4 space-y-2">
           {faqItems.map((item, index) => (
-            <div key={index} className="border border-gray-700 rounded-lg overflow-hidden">
+            <div
+              key={index}
+              className="border border-gray-700 rounded-lg overflow-hidden"
+            >
               <button
-                onClick={() => setExpandedItem(expandedItem === index ? null : index)}
+                onClick={() =>
+                  setExpandedItem(expandedItem === index ? null : index)
+                }
                 className="w-full flex items-center justify-between p-3 text-left bg-gray-800/30 hover:bg-gray-800/50 transition-colors"
               >
                 <span className="text-sm text-gray-200 font-medium pr-2">
@@ -77,7 +85,9 @@ export function FAQ() {
 
           {/* Quick Reference */}
           <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg">
-            <p className="text-xs text-blue-300 font-medium mb-2">{t('faq.quickRef')}:</p>
+            <p className="text-xs text-blue-300 font-medium mb-2">
+              {t('faq.quickRef')}:
+            </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
@@ -92,5 +102,5 @@ export function FAQ() {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -22,17 +22,17 @@ ballistics/
 ### Fire Solution (Komplett-Berechnung)
 
 ```typescript
-import { calculateFireSolution } from '@/lib/ballistics'
+import { calculateFireSolution } from '@/lib/ballistics';
 
 const solution = calculateFireSolution({
   mortar: { east: 481, north: 473, height: 95 },
   target: { east: 707, north: 428, height: 145 },
   mortarType: 'US',
   ammoType: 'HE',
-  ringCount: 4
-})
+  ringCount: 4,
+});
 
-console.log(solution)
+console.log(solution);
 // {
 //   azimuthDeg: 101.26,
 //   azimuthMil: 1800,
@@ -49,15 +49,15 @@ console.log(solution)
 ### Automatische Ladungsauswahl
 
 ```typescript
-import { calculateFireSolutionAuto } from '@/lib/ballistics'
+import { calculateFireSolutionAuto } from '@/lib/ballistics';
 
 const solution = calculateFireSolutionAuto({
   mortar: { east: 481, north: 473, height: 95 },
   target: { east: 707, north: 428, height: 145 },
   mortarType: 'US',
-  ammoType: 'HE'
+  ammoType: 'HE',
   // ringCount wird automatisch gewählt
-})
+});
 ```
 
 ## Einzelne Berechnungen
@@ -65,34 +65,34 @@ const solution = calculateFireSolutionAuto({
 ### Entfernung
 
 ```typescript
-import { calculateDistance } from '@/lib/ballistics'
+import { calculateDistance } from '@/lib/ballistics';
 
 const distance = calculateDistance(
   { east: 481, north: 473, height: 95 },
   { east: 707, north: 428, height: 145 }
-)
+);
 // 2304 (Meter)
 ```
 
 ### Azimut (Richtung)
 
 ```typescript
-import { calculateAzimuth } from '@/lib/ballistics'
+import { calculateAzimuth } from '@/lib/ballistics';
 
 const azimuth = calculateAzimuth(
   { east: 481, north: 473, height: 95 },
   { east: 707, north: 428, height: 145 }
-)
+);
 // { degrees: 101.26, mils: 1800 }
 ```
 
 ### Elevation (Höhenwinkel)
 
 ```typescript
-import { loadBallisticTable, interpolateElevation } from '@/lib/ballistics'
+import { loadBallisticTable, interpolateElevation } from '@/lib/ballistics';
 
-const table = loadBallisticTable('US', 'HE', 4)
-const elevation = interpolateElevation(2304, table.entries)
+const table = loadBallisticTable('US', 'HE', 4);
+const elevation = interpolateElevation(2304, table.entries);
 // 1133 MIL
 ```
 
@@ -102,45 +102,45 @@ const elevation = interpolateElevation(2304, table.entries)
 import {
   interpolateDeltaElev,
   calculateDeltaElevationFromTable,
-  applyHeightCorrection
-} from '@/lib/ballistics'
+  applyHeightCorrection,
+} from '@/lib/ballistics';
 
 // Höhendifferenz: Ziel 145m - Mörser 95m = 50m
-const heightDiff = 50
+const heightDiff = 50;
 
 // Delta ELEV aus Tabelle holen
-const dElevPer100m = interpolateDeltaElev(2304, table.entries)
+const dElevPer100m = interpolateDeltaElev(2304, table.entries);
 
 // Korrekturwert berechnen
-const deltaElev = calculateDeltaElevationFromTable(heightDiff, dElevPer100m)
+const deltaElev = calculateDeltaElevationFromTable(heightDiff, dElevPer100m);
 // 8 MIL
 
 // Korrektur anwenden
-const correctedElevation = applyHeightCorrection(1133, deltaElev)
+const correctedElevation = applyHeightCorrection(1133, deltaElev);
 // 1125 MIL
 ```
 
 ### Reichweiten-Check
 
 ```typescript
-import { checkRange, findOptimalRingCount } from '@/lib/ballistics'
+import { checkRange, findOptimalRingCount } from '@/lib/ballistics';
 
 // Prüfen ob in Reichweite
-const rangeCheck = checkRange(2304, 400, 2900)
+const rangeCheck = checkRange(2304, 400, 2900);
 // { inRange: true, minRange: 400, maxRange: 2900 }
 
 // Optimale Ladung finden
-const optimalRing = findOptimalRingCount(2304, 'US', 'HE')
+const optimalRing = findOptimalRingCount(2304, 'US', 'HE');
 // 4
 ```
 
 ## Unit Conversions
 
 ```typescript
-import { degToMil, milToDeg } from '@/lib/ballistics'
+import { degToMil, milToDeg } from '@/lib/ballistics';
 
-const mils = degToMil(90)    // 1600 MIL
-const deg = milToDeg(3200)   // 180°
+const mils = degToMil(90); // 1600 MIL
+const deg = milToDeg(3200); // 180°
 ```
 
 ## Ballistic Tables
@@ -165,12 +165,14 @@ result = value_lower - (g × ratio)
 ## Höhenkorrektur
 
 **Formel:**
+
 ```
 deltaElev = heightDiff × (dElevPer100m / 100)
 elevationFinal = elevationBase - deltaElev
 ```
 
 **Regeln:**
+
 - Ziel HÖHER als Mörser: Elevation verringern (- deltaElev)
 - Ziel TIEFER als Mörser: Elevation erhöhen (+ deltaElev)
 
@@ -181,6 +183,7 @@ npx tsx src/lib/ballistics/test.ts
 ```
 
 Validiert gegen Referenzwerte aus `docs/FORMULAS.md`:
+
 - Entfernung: ~2304m
 - Azimut: ~101.26° / ~1800 MIL
 - Elevation: ~1134 MIL (Ring 4, vor Höhenkorrektur)

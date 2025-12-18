@@ -41,9 +41,9 @@ export function gameToLeaflet(
 ): [number, number] {
   // Direct mapping - no inversion needed!
   // Leaflet CRS.Simple origin is bottom-left, same as Arma
-  const lat = north
-  const lng = east
-  return [lat, lng]
+  const lat = north;
+  const lng = east;
+  return [lat, lng];
 }
 
 /**
@@ -60,9 +60,9 @@ export function leafletToGame(
   _mapHeight: number
 ): { east: number; north: number } {
   // Direct mapping - no inversion needed!
-  const north = lat
-  const east = lng
-  return { east: Math.round(east), north: Math.round(north) }
+  const north = lat;
+  const east = lng;
+  return { east: Math.round(east), north: Math.round(north) };
 }
 
 /**
@@ -73,7 +73,7 @@ export function getLeafletLatLng(
   position: { east: number; north: number },
   mapHeight: number
 ): [number, number] {
-  return gameToLeaflet(position.east, position.north, mapHeight)
+  return gameToLeaflet(position.east, position.north, mapHeight);
 }
 
 /**
@@ -99,16 +99,19 @@ export function formatGrid3(meters: number): string {
   // Standard 3-digit military grid reference with 10m precision
   // floor(meters / 10) gives which 10m field we're in
   // % 1000 handles rollover for maps > 10km
-  const gridValue = Math.floor(Math.abs(meters) / 10) % 1000
-  return gridValue.toString().padStart(3, '0')
+  const gridValue = Math.floor(Math.abs(meters) / 10) % 1000;
+  return gridValue.toString().padStart(3, '0');
 }
 
 /**
  * Format position as Arma Reforger grid string
  * Example: { east: 8113, north: 2700 } → "811 270"
  */
-export function formatGridPosition(position: { east: number; north: number }): string {
-  return `${formatGrid3(position.east)} ${formatGrid3(position.north)}`
+export function formatGridPosition(position: {
+  east: number;
+  north: number;
+}): string {
+  return `${formatGrid3(position.east)} ${formatGrid3(position.north)}`;
 }
 
 /**
@@ -124,11 +127,11 @@ export function formatGridPosition(position: { east: number; north: number }): s
  */
 export function formatGridIngame(meters: number): string {
   // Convert to 100m units with 1 decimal (10m precision)
-  const gridValue = Math.abs(meters) / 100
+  const gridValue = Math.abs(meters) / 100;
   // Handle rollover at 10000m (100 × 100m units)
-  const wrapped = gridValue % 1000
+  const wrapped = gridValue % 1000;
   // Format: 3 digits, comma, 1 decimal
-  const intPart = Math.floor(wrapped)
-  const decPart = Math.floor((wrapped - intPart) * 10)
-  return `${intPart.toString().padStart(3, '0')},${decPart}`
+  const intPart = Math.floor(wrapped);
+  const decPart = Math.floor((wrapped - intPart) * 10);
+  return `${intPart.toString().padStart(3, '0')},${decPart}`;
 }

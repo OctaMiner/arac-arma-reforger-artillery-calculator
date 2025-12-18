@@ -27,7 +27,6 @@ import usIllumination from '../../src/lib/ballistics/data/us-illumination.json';
 import usSmoke from '../../src/lib/ballistics/data/us-smoke.json';
 
 describe('Ballistische Tabellen Validierung', () => {
-
   describe('Russische HE Tabellen', () => {
     test('RUS HE Ring 0: Struktur und Referenzwerte', () => {
       expect(rusHeRing0.mortarType).toBe('RUS');
@@ -36,7 +35,7 @@ describe('Ballistische Tabellen Validierung', () => {
       expect(rusHeRing0.entries).toHaveLength(10);
 
       // Referenzwert: 50m
-      const entry50m = rusHeRing0.entries.find(e => e.range === 50);
+      const entry50m = rusHeRing0.entries.find((e) => e.range === 50);
       expect(entry50m).toBeDefined();
       expect(entry50m?.elevation).toBe(1455);
       expect(entry50m?.tof).toBe(15.0);
@@ -79,7 +78,7 @@ describe('Ballistische Tabellen Validierung', () => {
     test('US HE Ring 4: Referenzwert 2304m (Marcel Test)', () => {
       // Dies ist der kritische Referenzwert aus Marcel's Berechnung
       // dElev aus Gene's Excel: 15 mils/100m (NICHT 36!)
-      const entry2300m = usHeRing4.entries.find(e => e.range === 2300);
+      const entry2300m = usHeRing4.entries.find((e) => e.range === 2300);
       expect(entry2300m).toBeDefined();
       expect(entry2300m?.elevation).toBe(1134);
       expect(entry2300m?.tof).toBe(32.7);
@@ -136,12 +135,20 @@ describe('Ballistische Tabellen Validierung', () => {
   describe('Datenintegrität', () => {
     test('Alle Einträge haben erforderliche Felder', () => {
       const allTables = [
-        rusHeRing0, rusHeRing1, rusHeRing2, rusHeRing3, rusHeRing4,
-        usHeRing0, usHeRing1, usHeRing2, usHeRing3, usHeRing4
+        rusHeRing0,
+        rusHeRing1,
+        rusHeRing2,
+        rusHeRing3,
+        rusHeRing4,
+        usHeRing0,
+        usHeRing1,
+        usHeRing2,
+        usHeRing3,
+        usHeRing4,
       ];
 
-      allTables.forEach(table => {
-        table.entries.forEach(entry => {
+      allTables.forEach((table) => {
+        table.entries.forEach((entry) => {
           expect(entry.range).toBeGreaterThan(0);
           expect(entry.elevation).toBeGreaterThan(0);
           expect(entry.tof).toBeGreaterThan(0);
@@ -152,25 +159,43 @@ describe('Ballistische Tabellen Validierung', () => {
 
     test('Entfernungen sind aufsteigend sortiert', () => {
       const allTables = [
-        rusHeRing0, rusHeRing1, rusHeRing2, rusHeRing3, rusHeRing4,
-        usHeRing0, usHeRing1, usHeRing2, usHeRing3, usHeRing4
+        rusHeRing0,
+        rusHeRing1,
+        rusHeRing2,
+        rusHeRing3,
+        rusHeRing4,
+        usHeRing0,
+        usHeRing1,
+        usHeRing2,
+        usHeRing3,
+        usHeRing4,
       ];
 
-      allTables.forEach(table => {
+      allTables.forEach((table) => {
         for (let i = 1; i < table.entries.length; i++) {
-          expect(table.entries[i].range).toBeGreaterThan(table.entries[i - 1].range);
+          expect(table.entries[i].range).toBeGreaterThan(
+            table.entries[i - 1].range
+          );
         }
       });
     });
 
     test('Min/Max Range stimmen mit Einträgen überein', () => {
       const allTables = [
-        rusHeRing0, rusHeRing1, rusHeRing2, rusHeRing3, rusHeRing4,
-        usHeRing0, usHeRing1, usHeRing2, usHeRing3, usHeRing4
+        rusHeRing0,
+        rusHeRing1,
+        rusHeRing2,
+        rusHeRing3,
+        rusHeRing4,
+        usHeRing0,
+        usHeRing1,
+        usHeRing2,
+        usHeRing3,
+        usHeRing4,
       ];
 
-      allTables.forEach(table => {
-        const ranges = table.entries.map(e => e.range);
+      allTables.forEach((table) => {
+        const ranges = table.entries.map((e) => e.range);
         const minRange = Math.min(...ranges);
         const maxRange = Math.max(...ranges);
 
@@ -191,13 +216,23 @@ describe('Ballistische Tabellen Validierung', () => {
 
       // Prüfe, dass alle erwarteten Tabellen validiert wurden
       const expectedTables = [
-        'rus-he-ring0', 'rus-he-ring1', 'rus-he-ring2', 'rus-he-ring3', 'rus-he-ring4',
-        'rus-illumination', 'rus-smoke',
-        'us-he-ring0', 'us-he-ring1', 'us-he-ring2', 'us-he-ring3', 'us-he-ring4',
-        'us-illumination', 'us-smoke'
+        'rus-he-ring0',
+        'rus-he-ring1',
+        'rus-he-ring2',
+        'rus-he-ring3',
+        'rus-he-ring4',
+        'rus-illumination',
+        'rus-smoke',
+        'us-he-ring0',
+        'us-he-ring1',
+        'us-he-ring2',
+        'us-he-ring3',
+        'us-he-ring4',
+        'us-illumination',
+        'us-smoke',
       ];
 
-      expectedTables.forEach(table => {
+      expectedTables.forEach((table) => {
         expect(report.validated_tables).toContain(table);
       });
     });

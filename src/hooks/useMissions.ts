@@ -4,21 +4,21 @@
  * Vereinfacht das Arbeiten mit Missions Store.
  */
 
-import { useEffect, useCallback } from 'react'
-import { useMissionsStore, useAppStore, useUserStore } from '../stores'
-import type { FireMission } from '../types'
+import { useEffect, useCallback } from 'react';
+import { useMissionsStore, useAppStore, useUserStore } from '../stores';
+import type { FireMission } from '../types';
 
 interface UseMissionsOptions {
   /**
    * Auto-load missions on mount
    * @default true
    */
-  autoLoad?: boolean
+  autoLoad?: boolean;
 
   /**
    * Map ID filter
    */
-  mapId?: string
+  mapId?: string;
 }
 
 /**
@@ -43,45 +43,45 @@ interface UseMissionsOptions {
  * ```
  */
 export const useMissions = (options: UseMissionsOptions = {}) => {
-  const { autoLoad = true, mapId } = options
+  const { autoLoad = true, mapId } = options;
 
   // Store State
-  const allMissions = useMissionsStore((state) => state.missions)
-  const selectedMission = useMissionsStore((state) => state.selectedMission)
-  const isLoading = useMissionsStore((state) => state.isLoading)
-  const error = useMissionsStore((state) => state.error)
+  const allMissions = useMissionsStore((state) => state.missions);
+  const selectedMission = useMissionsStore((state) => state.selectedMission);
+  const isLoading = useMissionsStore((state) => state.isLoading);
+  const error = useMissionsStore((state) => state.error);
 
   // Store Actions
-  const loadMissions = useMissionsStore((state) => state.loadMissions)
-  const saveMission = useMissionsStore((state) => state.saveMission)
-  const updateMission = useMissionsStore((state) => state.updateMission)
-  const deleteMission = useMissionsStore((state) => state.deleteMission)
-  const selectMission = useMissionsStore((state) => state.selectMission)
-  const clearSelection = useMissionsStore((state) => state.clearSelection)
+  const loadMissions = useMissionsStore((state) => state.loadMissions);
+  const saveMission = useMissionsStore((state) => state.saveMission);
+  const updateMission = useMissionsStore((state) => state.updateMission);
+  const deleteMission = useMissionsStore((state) => state.deleteMission);
+  const selectMission = useMissionsStore((state) => state.selectMission);
+  const clearSelection = useMissionsStore((state) => state.clearSelection);
 
   // App State for saving current
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const mortarConfig = useAppStore((state) => state.mortarConfig)
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const selectedMap = useAppStore((state) => state.selectedMap)
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const mortarConfig = useAppStore((state) => state.mortarConfig);
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const selectedMap = useAppStore((state) => state.selectedMap);
 
   // User stats
-  const incrementMissions = useUserStore((state) => state.incrementMissions)
+  const incrementMissions = useUserStore((state) => state.incrementMissions);
 
   // Auto-load on mount
   useEffect(() => {
     if (autoLoad) {
-      loadMissions()
+      loadMissions();
     }
-  }, [autoLoad, loadMissions])
+  }, [autoLoad, loadMissions]);
 
   /**
    * Filter missions by map
    */
   const missions = mapId
     ? allMissions.filter((m) => m.mapId === mapId)
-    : allMissions
+    : allMissions;
 
   /**
    * Save current calculation as mission
@@ -89,7 +89,7 @@ export const useMissions = (options: UseMissionsOptions = {}) => {
   const saveCurrent = useCallback(
     async (name: string) => {
       if (!mortarPosition || !targetPosition || !fireSolution) {
-        throw new Error('Keine vollständige Berechnung vorhanden')
+        throw new Error('Keine vollständige Berechnung vorhanden');
       }
 
       await saveMission({
@@ -98,10 +98,10 @@ export const useMissions = (options: UseMissionsOptions = {}) => {
         mortarConfig,
         mortarPos: mortarPosition,
         targetPos: targetPosition,
-        fireSolution
-      })
+        fireSolution,
+      });
 
-      incrementMissions()
+      incrementMissions();
     },
     [
       mortarPosition,
@@ -110,32 +110,32 @@ export const useMissions = (options: UseMissionsOptions = {}) => {
       selectedMap,
       mortarConfig,
       saveMission,
-      incrementMissions
+      incrementMissions,
     ]
-  )
+  );
 
   /**
    * Load mission into calculator
    */
   const loadIntoCalculator = useCallback(
     (mission: FireMission) => {
-      const appStore = useAppStore.getState()
+      const appStore = useAppStore.getState();
 
       // Set configuration
-      appStore.setMortarConfig(mission.mortarConfig)
+      appStore.setMortarConfig(mission.mortarConfig);
 
       // Set positions
-      appStore.setMortarPosition(mission.mortarPos)
-      appStore.setTargetPosition(mission.targetPos)
+      appStore.setMortarPosition(mission.mortarPos);
+      appStore.setTargetPosition(mission.targetPos);
 
       // Trigger calculation
-      appStore.calculateSolution()
+      appStore.calculateSolution();
 
       // Select mission
-      selectMission(mission.id)
+      selectMission(mission.id);
     },
     [selectMission]
-  )
+  );
 
   /**
    * Update currently selected mission
@@ -143,33 +143,33 @@ export const useMissions = (options: UseMissionsOptions = {}) => {
   const updateCurrent = useCallback(
     async (updates: Partial<FireMission>) => {
       if (!selectedMission) {
-        throw new Error('Keine Mission ausgewählt')
+        throw new Error('Keine Mission ausgewählt');
       }
 
       await updateMission({
         ...selectedMission,
-        ...updates
-      })
+        ...updates,
+      });
     },
     [selectedMission, updateMission]
-  )
+  );
 
   /**
    * Delete mission by ID
    */
   const deleteMissionById = useCallback(
     async (id: string) => {
-      await deleteMission(id)
+      await deleteMission(id);
     },
     [deleteMission]
-  )
+  );
 
   /**
    * Check if current calculation can be saved
    */
   const canSaveCurrent = Boolean(
     mortarPosition && targetPosition && fireSolution
-  )
+  );
 
   return {
     // State
@@ -186,6 +186,6 @@ export const useMissions = (options: UseMissionsOptions = {}) => {
     updateCurrent,
     deleteMissionById,
     selectMission,
-    clearSelection
-  }
-}
+    clearSelection,
+  };
+};

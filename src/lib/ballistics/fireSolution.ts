@@ -8,27 +8,27 @@ import type {
   MortarType,
   AmmoType,
   RingCount,
-  FireSolution
-} from '../../types/index.js'
-import { calculateDistance, calculateAzimuth } from './calculator.js'
+  FireSolution,
+} from '../../types/index.js';
+import { calculateDistance, calculateAzimuth } from './calculator.js';
 import {
   interpolateElevation,
   interpolateFlightTime,
-  interpolateDeltaElev
-} from './interpolation.js'
+  interpolateDeltaElev,
+} from './interpolation.js';
 import {
   calculateDeltaElevationFromTable,
-  applyHeightCorrection
-} from './elevation.js'
-import { checkRange, findOptimalRingCount } from './range.js'
-import { loadBallisticTable } from './tableLoader.js'
+  applyHeightCorrection,
+} from './elevation.js';
+import { checkRange, findOptimalRingCount } from './range.js';
+import { loadBallisticTable } from './tableLoader.js';
 
 export interface FireSolutionParams {
-  mortar: Coordinate
-  target: Coordinate
-  mortarType: MortarType
-  ammoType: AmmoType
-  ringCount: RingCount
+  mortar: Coordinate;
+  target: Coordinate;
+  mortarType: MortarType;
+  ammoType: AmmoType;
+  ringCount: RingCount;
 }
 
 /**
@@ -48,19 +48,19 @@ export interface FireSolutionParams {
 export function calculateFireSolution(
   params: FireSolutionParams
 ): FireSolution {
-  const { mortar, target, mortarType, ammoType, ringCount } = params
+  const { mortar, target, mortarType, ammoType, ringCount } = params;
 
   // 1. Calculate distance (in meters)
-  const distance = calculateDistance(mortar, target)
+  const distance = calculateDistance(mortar, target);
 
   // 2. Calculate azimuth (direction)
-  const azimuth = calculateAzimuth(mortar, target)
+  const azimuth = calculateAzimuth(mortar, target);
 
   // 3. Load ballistic table for this configuration
-  const table = loadBallisticTable(mortarType, ammoType, ringCount)
+  const table = loadBallisticTable(mortarType, ammoType, ringCount);
 
   // 4. Check if target is in range
-  const rangeCheck = checkRange(distance, table.minRange, table.maxRange)
+  const rangeCheck = checkRange(distance, table.minRange, table.maxRange);
 
   // If out of range, return early with warning
   if (!rangeCheck.inRange) {
@@ -78,30 +78,34 @@ export function calculateFireSolution(
         distance,
         mortarType,
         ammoType
-      ) as RingCount
-    }
+      ) as RingCount,
+    };
   }
 
   // 5. Interpolate base elevation (without height correction)
-  const elevationBase = interpolateElevation(distance, table.entries)
+  const elevationBase = interpolateElevation(distance, table.entries);
 
   // 6. Interpolate flight time
-  const flightTime = interpolateFlightTime(distance, table.entries)
+  const flightTime = interpolateFlightTime(distance, table.entries);
 
   // 7. Calculate height correction
-  const heightDiff = target.height - mortar.height // positive = target higher
+  const heightDiff = target.height - mortar.height; // positive = target higher
 
   // Interpolate dElev for accurate correction
-  const dElevPer100m = interpolateDeltaElev(distance, table.entries)
+  const dElevPer100m = interpolateDeltaElev(distance, table.entries);
 
   // Calculate total elevation correction
-  const deltaElev = calculateDeltaElevationFromTable(heightDiff, dElevPer100m)
+  const deltaElev = calculateDeltaElevationFromTable(heightDiff, dElevPer100m);
 
   // 8. Apply height correction to get final elevation
-  const elevationAdj = applyHeightCorrection(elevationBase, deltaElev)
+  const elevationAdj = applyHeightCorrection(elevationBase, deltaElev);
 
   // 9. Find optimal charge for this distance
-  const recommendedCharge = findOptimalRingCount(distance, mortarType, ammoType)
+  const recommendedCharge = findOptimalRingCount(
+    distance,
+    mortarType,
+    ammoType
+  );
 
   // 10. Return complete fire solution
   return {
@@ -114,9 +118,8 @@ export function calculateFireSolution(
     flightTime: Math.round(flightTime * 10) / 10, // Round to 1 decimal
     ringCount: ringCount,
     inRange: true,
-    recommendedCharge:
-      recommendedCharge !== -1 ? recommendedCharge : undefined
-  }
+    recommendedCharge: recommendedCharge !== -1 ? recommendedCharge : undefined,
+  };
 }
 
 /**
@@ -130,16 +133,16 @@ export function calculateFireSolution(
 export function calculateFireSolutionAuto(
   params: Omit<FireSolutionParams, 'ringCount'>
 ): FireSolution {
-  const { mortar, target, mortarType, ammoType } = params
+  const { mortar, target, mortarType, ammoType } = params;
 
   // Calculate distance to determine optimal charge
-  const distance = calculateDistance(mortar, target)
+  const distance = calculateDistance(mortar, target);
 
   // Find optimal charge
-  const optimalCharge = findOptimalRingCount(distance, mortarType, ammoType)
+  const optimalCharge = findOptimalRingCount(distance, mortarType, ammoType);
 
   // If no valid charge found, use ring 4 (maximum) to show error
-  const ringCount: RingCount = optimalCharge !== -1 ? optimalCharge : 4
+  const ringCount: RingCount = optimalCharge !== -1 ? optimalCharge : 4;
 
   // Calculate with selected charge
   return calculateFireSolution({
@@ -147,6 +150,6 @@ export function calculateFireSolutionAuto(
     target,
     mortarType,
     ammoType,
-    ringCount
-  })
+    ringCount,
+  });
 }

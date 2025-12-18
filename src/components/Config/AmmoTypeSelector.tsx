@@ -3,44 +3,44 @@
  * Select ammunition type (HE, Smoke, Illumination)
  */
 
-import type { AmmoType } from '../../types'
+import type { AmmoType } from '../../types';
 
 interface AmmoTypeSelectorProps {
-  value: AmmoType
-  onChange: (ammo: AmmoType) => void
-  disabled?: boolean
+  value: AmmoType;
+  onChange: (ammo: AmmoType) => void;
+  disabled?: boolean;
 }
 
 export function AmmoTypeSelector({
   value,
   onChange,
-  disabled = false
+  disabled = false,
 }: AmmoTypeSelectorProps) {
   const ammoOptions: Array<{
-    type: AmmoType
-    label: string
-    color: string
-    activeColor: string
+    type: AmmoType;
+    label: string;
+    color: string;
+    activeColor: string;
   }> = [
     {
       type: 'HE',
       label: 'HE',
       color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-red-600 text-white shadow-lg shadow-red-900/50'
+      activeColor: 'bg-red-600 text-white shadow-lg shadow-red-900/50',
     },
     {
       type: 'Smoke',
       label: 'Smoke',
       color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-gray-500 text-white shadow-lg shadow-gray-800/50'
+      activeColor: 'bg-gray-500 text-white shadow-lg shadow-gray-800/50',
     },
     {
       type: 'Illumination',
       label: 'Illum',
       color: 'bg-gray-700 text-gray-300 hover:bg-gray-600',
-      activeColor: 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50'
-    }
-  ]
+      activeColor: 'bg-yellow-600 text-white shadow-lg shadow-yellow-900/50',
+    },
+  ];
 
   return (
     <div>
@@ -66,5 +66,5 @@ export function AmmoTypeSelector({
         ))}
       </div>
     </div>
-  )
+  );
 }

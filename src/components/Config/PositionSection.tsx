@@ -8,18 +8,18 @@
  * - Hint for map click to set position
  */
 
-import { useTranslation } from 'react-i18next'
-import type { Coordinate } from '../../types'
-import { CoordinateInput } from './CoordinateInput'
-import { HeightInput } from './HeightInput'
+import { useTranslation } from 'react-i18next';
+import type { Coordinate } from '../../types';
+import { CoordinateInput } from './CoordinateInput';
+import { HeightInput } from './HeightInput';
 
 interface PositionSectionProps {
-  title: string
-  position: Coordinate | null
-  onChange: (position: Coordinate) => void
-  disabled?: boolean
+  title: string;
+  position: Coordinate | null;
+  onChange: (position: Coordinate) => void;
+  disabled?: boolean;
   /** Show hint for target position (right-click or shift-click) */
-  isTarget?: boolean
+  isTarget?: boolean;
 }
 
 export function PositionSection({
@@ -27,17 +27,17 @@ export function PositionSection({
   position,
   onChange,
   disabled = false,
-  isTarget = false
+  isTarget = false,
 }: PositionSectionProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const handleHeightChange = (height: number) => {
     onChange({
       east: position?.east ?? 0,
       north: position?.north ?? 0,
-      height
-    })
-  }
+      height,
+    });
+  };
 
   return (
     <div className="space-y-3">
@@ -60,11 +60,13 @@ export function PositionSection({
 
       {/* Hint for setting position on map */}
       {!position && (
-        <div className={`p-2 rounded border text-xs ${
-          isTarget
-            ? 'bg-red-950/30 border-red-800 text-red-300'
-            : 'bg-blue-950/30 border-blue-800 text-blue-300'
-        }`}>
+        <div
+          className={`p-2 rounded border text-xs ${
+            isTarget
+              ? 'bg-red-950/30 border-red-800 text-red-300'
+              : 'bg-blue-950/30 border-blue-800 text-blue-300'
+          }`}
+        >
           <div className="flex items-center gap-2">
             <span className="text-lg">{isTarget ? '🎯' : '📍'}</span>
             <div>
@@ -96,5 +98,5 @@ export function PositionSection({
         showAutoIndicator={true}
       />
     </div>
-  )
+  );
 }

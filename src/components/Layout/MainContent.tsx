@@ -8,7 +8,7 @@
  */
 
 interface MainContentProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function MainContent({ children }: MainContentProps) {
@@ -16,5 +16,5 @@ export function MainContent({ children }: MainContentProps) {
     <main className="flex-1 bg-[#1a1a2e] flex flex-col overflow-hidden">
       {children}
     </main>
-  )
+  );
 }

@@ -8,26 +8,26 @@
  * - Compact card layout
  */
 
-import { useState } from 'react'
-import type { FireMission } from '../../types'
-import { useMissionsStore } from '../../stores/useMissionsStore'
-import { useAppStore } from '../../stores/useAppStore'
-import { MissionDeleteConfirm } from './MissionDeleteConfirm'
+import { useState } from 'react';
+import type { FireMission } from '../../types';
+import { useMissionsStore } from '../../stores/useMissionsStore';
+import { useAppStore } from '../../stores/useAppStore';
+import { MissionDeleteConfirm } from './MissionDeleteConfirm';
 
 interface MissionCardProps {
-  mission: FireMission
-  isSelected?: boolean
+  mission: FireMission;
+  isSelected?: boolean;
 }
 
 export function MissionCard({ mission, isSelected = false }: MissionCardProps) {
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Store actions
-  const selectMission = useMissionsStore((state) => state.selectMission)
-  const setMortarPosition = useAppStore((state) => state.setMortarPosition)
-  const setTargetPosition = useAppStore((state) => state.setTargetPosition)
-  const setMortarConfig = useAppStore((state) => state.setMortarConfig)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
+  const selectMission = useMissionsStore((state) => state.selectMission);
+  const setMortarPosition = useAppStore((state) => state.setMortarPosition);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
+  const setMortarConfig = useAppStore((state) => state.setMortarConfig);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
   // Format date for display
   const formatDate = (isoDate: string) => {
@@ -36,26 +36,26 @@ export function MissionCard({ mission, isSelected = false }: MissionCardProps) {
       month: '2-digit',
       year: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
+      minute: '2-digit',
+    });
+  };
 
   // Load mission into current configuration
   const handleLoadMission = () => {
     // Select mission in store
-    selectMission(mission.id)
+    selectMission(mission.id);
 
     // Load positions and config into app state
-    setMortarPosition(mission.mortarPos)
-    setTargetPosition(mission.targetPos)
-    setMortarConfig(mission.mortarConfig)
+    setMortarPosition(mission.mortarPos);
+    setTargetPosition(mission.targetPos);
+    setMortarConfig(mission.mortarConfig);
 
     // Recalculate solution
     // Use setTimeout to ensure state updates have propagated
     setTimeout(() => {
-      calculateSolution()
-    }, 0)
-  }
+      calculateSolution();
+    }, 0);
+  };
 
   return (
     <>
@@ -148,5 +148,5 @@ export function MissionCard({ mission, isSelected = false }: MissionCardProps) {
         />
       )}
     </>
-  )
+  );
 }

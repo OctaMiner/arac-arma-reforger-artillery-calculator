@@ -9,33 +9,27 @@ const DEFAULT_SETTINGS: AppSettings = {
   showGrid: true,
   defaultMortarType: 'US',
   defaultAmmo: 'HE',
-  defaultCharge: 4
+  defaultCharge: 4,
 };
 
 export async function saveSettings(settings: AppSettings): Promise<void> {
-  return withErrorHandling(
-    async () => {
-      await saveToFile(SETTINGS_FILE, settings);
-    },
-    'Failed to save settings'
-  );
+  return withErrorHandling(async () => {
+    await saveToFile(SETTINGS_FILE, settings);
+  }, 'Failed to save settings');
 }
 
 export async function loadSettings(): Promise<AppSettings> {
-  return withErrorHandling(
-    async () => {
-      const settings = await loadFromFile<AppSettings>(SETTINGS_FILE);
+  return withErrorHandling(async () => {
+    const settings = await loadFromFile<AppSettings>(SETTINGS_FILE);
 
-      // Return loaded settings or defaults
-      if (settings) {
-        // Merge with defaults to ensure all fields exist (for backwards compatibility)
-        return { ...DEFAULT_SETTINGS, ...settings };
-      }
+    // Return loaded settings or defaults
+    if (settings) {
+      // Merge with defaults to ensure all fields exist (for backwards compatibility)
+      return { ...DEFAULT_SETTINGS, ...settings };
+    }
 
-      // First time - save defaults
-      await saveSettings(DEFAULT_SETTINGS);
-      return DEFAULT_SETTINGS;
-    },
-    'Failed to load settings'
-  );
+    // First time - save defaults
+    await saveSettings(DEFAULT_SETTINGS);
+    return DEFAULT_SETTINGS;
+  }, 'Failed to load settings');
 }

@@ -3,24 +3,37 @@
  * Arma Reforger Artillery Calculator
  */
 
-import { Sidebar, MainContent, ResultsBar, FAQ, LanguageSelector } from './components/Layout'
-import { ConfigPanel, WindInput } from './components/Config'
-import { MissionPanel } from './components/Mission'
-import { StationPanel } from './components/Station'
-import { SpotterPanel } from './components/Spotter'
-import { HistoryPanel } from './components/History'
-import { ProfilePanel } from './components/Profile'
-import { TrajectoryGraph } from './components/Results'
-import { MapView } from './components/Map'
-import { useAutoHeight } from './hooks/useAutoHeight'
-import { useAutoCalculate } from './hooks/useAutoCalculate'
+import {
+  Sidebar,
+  MainContent,
+  ResultsBar,
+  FAQ,
+  LanguageSelector,
+} from './components/Layout';
+import { ConfigPanel, WindInput } from './components/Config';
+import { MissionPanel } from './components/Mission';
+import { StationPanel } from './components/Station';
+import { SpotterPanel } from './components/Spotter';
+import { HistoryPanel } from './components/History';
+import { ProfilePanel } from './components/Profile';
+import { TrajectoryGraph } from './components/Results';
+import { MapView } from './components/Map';
+import { useAutoHeight } from './hooks/useAutoHeight';
+import { useAutoCalculate } from './hooks/useAutoCalculate';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 function App() {
   // Enable automatic height loading when positions change
-  useAutoHeight()
+  useAutoHeight();
 
   // Enable automatic calculation when data changes
-  useAutoCalculate()
+  useAutoCalculate();
+
+  // Global keyboard shortcuts
+  useKeyboardShortcuts({
+    enabled: true,
+    // Note: Ring count shortcuts (1-5) work automatically
+  });
 
   return (
     <div className="h-screen flex overflow-hidden bg-background">
@@ -49,7 +62,7 @@ function App() {
         <ResultsBar />
       </MainContent>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

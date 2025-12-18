@@ -8,15 +8,21 @@
  * 2. Meter format (with 'm'): "8245m" = 8245m
  */
 
-import { useState, useEffect, type ChangeEvent, type KeyboardEvent, type FocusEvent } from 'react'
-import type { Coordinate } from '../../types'
-import { formatGrid3 } from '../../lib/coordinates/transform'
+import {
+  useState,
+  useEffect,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type FocusEvent,
+} from 'react';
+import type { Coordinate } from '../../types';
+import { formatGrid3 } from '../../lib/coordinates/transform';
 
 interface CoordinateInputProps {
-  label: string
-  position: Coordinate | null
-  onChange: (position: Coordinate) => void
-  disabled?: boolean
+  label: string;
+  position: Coordinate | null;
+  onChange: (position: Coordinate) => void;
+  disabled?: boolean;
 }
 
 /**
@@ -25,11 +31,11 @@ interface CoordinateInputProps {
  * "824" → 8240m
  */
 function gridToMeters(grid: string): number {
-  if (!grid || grid.length === 0) return 0
+  if (!grid || grid.length === 0) return 0;
   // Parse as a number and multiply by 10
-  const gridNum = parseInt(grid, 10)
-  if (isNaN(gridNum)) return 0
-  return gridNum * 10
+  const gridNum = parseInt(grid, 10);
+  if (isNaN(gridNum)) return 0;
+  return gridNum * 10;
 }
 
 /**
@@ -39,115 +45,115 @@ function gridToMeters(grid: string): number {
  * "8245m" → 8245m (explicit meter format)
  */
 function parseInput(value: string): number {
-  const trimmed = value.trim()
-  if (!trimmed) return 0
+  const trimmed = value.trim();
+  if (!trimmed) return 0;
 
   // Check for explicit meter format (ends with 'm')
   if (trimmed.toLowerCase().endsWith('m')) {
-    const meters = parseInt(trimmed.slice(0, -1), 10)
-    return isNaN(meters) ? 0 : meters
+    const meters = parseInt(trimmed.slice(0, -1), 10);
+    return isNaN(meters) ? 0 : meters;
   }
 
   // If 3 or fewer digits, treat as grid
   if (/^\d{1,3}$/.test(trimmed)) {
-    return gridToMeters(trimmed)
+    return gridToMeters(trimmed);
   }
 
   // If more than 3 digits, treat as meters
   if (/^\d+$/.test(trimmed)) {
-    return parseInt(trimmed, 10)
+    return parseInt(trimmed, 10);
   }
 
-  return 0
+  return 0;
 }
 
 export function CoordinateInput({
   label,
   position,
   onChange,
-  disabled = false
+  disabled = false,
 }: CoordinateInputProps) {
   // Local state for input values (allows free editing)
-  const [eastInput, setEastInput] = useState('')
-  const [northInput, setNorthInput] = useState('')
-  const [isEditingEast, setIsEditingEast] = useState(false)
-  const [isEditingNorth, setIsEditingNorth] = useState(false)
+  const [eastInput, setEastInput] = useState('');
+  const [northInput, setNorthInput] = useState('');
+  const [isEditingEast, setIsEditingEast] = useState(false);
+  const [isEditingNorth, setIsEditingNorth] = useState(false);
 
   // Sync local state with position prop when not editing
   useEffect(() => {
     if (!isEditingEast) {
-      setEastInput(position ? formatGrid3(position.east) : '')
+      setEastInput(position ? formatGrid3(position.east) : '');
     }
-  }, [position?.east, isEditingEast])
+  }, [position?.east, isEditingEast]);
 
   useEffect(() => {
     if (!isEditingNorth) {
-      setNorthInput(position ? formatGrid3(position.north) : '')
+      setNorthInput(position ? formatGrid3(position.north) : '');
     }
-  }, [position?.north, isEditingNorth])
+  }, [position?.north, isEditingNorth]);
 
   // Handle East input
   const handleEastChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     // Allow digits and optional 'm' suffix
     if (value === '' || /^\d*m?$/i.test(value)) {
-      setEastInput(value)
+      setEastInput(value);
     }
-  }
+  };
 
   const handleEastFocus = () => {
-    setIsEditingEast(true)
-  }
+    setIsEditingEast(true);
+  };
 
   const handleEastBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setIsEditingEast(false)
-    const east = parseInput(e.target.value)
-    const oldEast = position?.east ?? 0
+    setIsEditingEast(false);
+    const east = parseInput(e.target.value);
+    const oldEast = position?.east ?? 0;
     // Reset height to 0 if coordinates changed, so auto-height can reload
-    const heightChanged = east !== oldEast
+    const heightChanged = east !== oldEast;
     onChange({
       east,
       north: position?.north ?? 0,
-      height: heightChanged ? 0 : (position?.height ?? 0)
-    })
-  }
+      height: heightChanged ? 0 : (position?.height ?? 0),
+    });
+  };
 
   const handleEastKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.currentTarget.blur()
+      e.currentTarget.blur();
     }
-  }
+  };
 
   // Handle North input
   const handleNorthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^\d*m?$/i.test(value)) {
-      setNorthInput(value)
+      setNorthInput(value);
     }
-  }
+  };
 
   const handleNorthFocus = () => {
-    setIsEditingNorth(true)
-  }
+    setIsEditingNorth(true);
+  };
 
   const handleNorthBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setIsEditingNorth(false)
-    const north = parseInput(e.target.value)
-    const oldNorth = position?.north ?? 0
+    setIsEditingNorth(false);
+    const north = parseInput(e.target.value);
+    const oldNorth = position?.north ?? 0;
     // Reset height to 0 if coordinates changed, so auto-height can reload
-    const coordChanged = north !== oldNorth
+    const coordChanged = north !== oldNorth;
     onChange({
       east: position?.east ?? 0,
       north,
-      height: coordChanged ? 0 : (position?.height ?? 0)
-    })
-  }
+      height: coordChanged ? 0 : (position?.height ?? 0),
+    });
+  };
 
   const handleNorthKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      e.currentTarget.blur()
+      e.currentTarget.blur();
     }
-  }
+  };
 
   return (
     <div>
@@ -203,5 +209,5 @@ export function CoordinateInput({
         Eingabe: 3-stellig (Grid) oder mit "m" (z.B. 8245m)
       </div>
     </div>
-  )
+  );
 }

@@ -11,8 +11,8 @@ export {
   selectTargetPosition,
   selectFireSolution,
   selectIsCalculating,
-  selectError
-} from './useAppStore'
+  selectError,
+} from './useAppStore';
 
 // Missions Store
 export {
@@ -20,8 +20,8 @@ export {
   selectMissions,
   selectSelectedMission,
   selectMissionsLoading,
-  selectMissionsError
-} from './useMissionsStore'
+  selectMissionsError,
+} from './useMissionsStore';
 
 // Stations Store
 export {
@@ -30,8 +30,8 @@ export {
   selectSelectedStation,
   selectStationsLoading,
   selectStationsError,
-  selectStationsByMap
-} from './useStationsStore'
+  selectStationsByMap,
+} from './useStationsStore';
 
 // History Store
 export {
@@ -41,8 +41,8 @@ export {
   selectHistoryError,
   selectHasMoreHistory,
   selectHistoryByMission,
-  selectRecentHistory
-} from './useHistoryStore'
+  selectRecentHistory,
+} from './useHistoryStore';
 
 // Spotter Store
 export {
@@ -55,8 +55,8 @@ export {
   selectTotalCorrection,
   selectHasCorrections,
   selectCorrectionCount,
-  calculateCorrectedTarget
-} from './useSpotterStore'
+  calculateCorrectedTarget,
+} from './useSpotterStore';
 
 // User Store
 export {
@@ -71,5 +71,5 @@ export {
   selectDefaultAmmo,
   selectDefaultCharge,
   selectUserLoading,
-  selectUserError
-} from './useUserStore'
+  selectUserError,
+} from './useUserStore';

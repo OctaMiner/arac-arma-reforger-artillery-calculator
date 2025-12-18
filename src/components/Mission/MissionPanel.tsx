@@ -9,8 +9,8 @@
  * - Optional collapsible functionality (future)
  */
 
-import { MissionSaveButton } from './MissionSaveButton'
-import { MissionList } from './MissionList'
+import { MissionSaveButton } from './MissionSaveButton';
+import { MissionList } from './MissionList';
 
 export function MissionPanel() {
   return (
@@ -49,5 +49,5 @@ export function MissionPanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,7 +1,13 @@
 import { ipcMain, app } from 'electron';
 import { getStoragePath } from './storage';
 import * as storage from './storage/index';
-import type { AppSettings, UserProfile, FireMission, MortarStation, HistoryEntry } from '../src/types';
+import type {
+  AppSettings,
+  UserProfile,
+  FireMission,
+  MortarStation,
+  HistoryEntry,
+} from '../src/types';
 
 /**
  * IPC Handler Setup
@@ -34,7 +40,9 @@ function validateSettings(settings: unknown): settings is AppSettings {
     (s.language === 'de' || s.language === 'en') &&
     typeof s.showGrid === 'boolean' &&
     (s.defaultMortarType === 'US' || s.defaultMortarType === 'RUS') &&
-    (s.defaultAmmo === 'HE' || s.defaultAmmo === 'Smoke' || s.defaultAmmo === 'Illumination') &&
+    (s.defaultAmmo === 'HE' ||
+      s.defaultAmmo === 'Smoke' ||
+      s.defaultAmmo === 'Illumination') &&
     [0, 1, 2, 3, 4].includes(s.defaultCharge as number)
   );
 }
@@ -79,7 +87,9 @@ function validateStation(station: unknown): station is MortarStation {
   );
 }
 
-function validateHistoryEntry(entry: unknown): entry is Omit<HistoryEntry, 'id' | 'timestamp'> {
+function validateHistoryEntry(
+  entry: unknown
+): entry is Omit<HistoryEntry, 'id' | 'timestamp'> {
   if (!isValidObject(entry)) return false;
 
   const e = entry as Record<string, unknown>;
@@ -247,11 +257,16 @@ export function setupIpcHandlers(): void {
 
   ipcMain.handle('get-history', async (_, params: unknown) => {
     try {
-      const { limit, offset } = (params || {}) as { limit?: number; offset?: number };
+      const { limit, offset } = (params || {}) as {
+        limit?: number;
+        offset?: number;
+      };
 
       // Validate pagination parameters
-      const validLimit = typeof limit === 'number' && limit > 0 ? limit : undefined;
-      const validOffset = typeof offset === 'number' && offset >= 0 ? offset : 0;
+      const validLimit =
+        typeof limit === 'number' && limit > 0 ? limit : undefined;
+      const validOffset =
+        typeof offset === 'number' && offset >= 0 ? offset : 0;
 
       return await storage.getHistory(validLimit, validOffset);
     } catch (error) {
@@ -307,6 +322,6 @@ export function setupIpcHandlers(): void {
     'get-history',
     'clear-history',
     'get-app-path',
-    'get-app-version'
+    'get-app-version',
   ]);
 }

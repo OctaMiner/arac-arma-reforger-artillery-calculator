@@ -4,10 +4,10 @@
  * Handhabt Spotter-Logik und Target-Korrekturen.
  */
 
-import { useCallback, useMemo } from 'react'
-import { useSpotterStore, useAppStore } from '../stores'
-import { calculateCorrectedTarget } from '../stores/useSpotterStore'
-import type { Coordinate, CorrectionData } from '../types'
+import { useCallback, useMemo } from 'react';
+import { useSpotterStore, useAppStore } from '../stores';
+import { calculateCorrectedTarget } from '../stores/useSpotterStore';
+import type { Coordinate, CorrectionData } from '../types';
 
 /**
  * Hook für Spotter Mode Management
@@ -37,40 +37,40 @@ import type { Coordinate, CorrectionData } from '../types'
  */
 export const useSpotter = () => {
   // Spotter Store
-  const spotterMode = useSpotterStore((state) => state.spotterMode)
-  const spotterPosition = useSpotterStore((state) => state.spotterPosition)
+  const spotterMode = useSpotterStore((state) => state.spotterMode);
+  const spotterPosition = useSpotterStore((state) => state.spotterPosition);
   const spotterMeasurements = useSpotterStore(
     (state) => state.spotterMeasurements
-  )
-  const corrections = useSpotterStore((state) => state.corrections)
+  );
+  const corrections = useSpotterStore((state) => state.corrections);
   const showCorrectionPanel = useSpotterStore(
     (state) => state.showCorrectionPanel
-  )
+  );
 
   // Spotter Actions
-  const toggleSpotterMode = useSpotterStore((state) => state.toggleSpotterMode)
-  const setSpotterMode = useSpotterStore((state) => state.setSpotterMode)
+  const toggleSpotterMode = useSpotterStore((state) => state.toggleSpotterMode);
+  const setSpotterMode = useSpotterStore((state) => state.setSpotterMode);
   const setSpotterPosition = useSpotterStore(
     (state) => state.setSpotterPosition
-  )
+  );
   const setSpotterMeasurements = useSpotterStore(
     (state) => state.setSpotterMeasurements
-  )
-  const applyCorrection = useSpotterStore((state) => state.applyCorrection)
-  const clearCorrections = useSpotterStore((state) => state.clearCorrections)
+  );
+  const applyCorrection = useSpotterStore((state) => state.applyCorrection);
+  const clearCorrections = useSpotterStore((state) => state.clearCorrections);
   const removeLastCorrection = useSpotterStore(
     (state) => state.removeLastCorrection
-  )
+  );
   const setShowCorrectionPanel = useSpotterStore(
     (state) => state.setShowCorrectionPanel
-  )
-  const resetSpotter = useSpotterStore((state) => state.reset)
+  );
+  const resetSpotter = useSpotterStore((state) => state.reset);
 
   // App Store
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const targetPosition = useAppStore((state) => state.targetPosition)
-  const setTargetPosition = useAppStore((state) => state.setTargetPosition)
-  const calculateSolution = useAppStore((state) => state.calculateSolution)
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const targetPosition = useAppStore((state) => state.targetPosition);
+  const setTargetPosition = useAppStore((state) => state.setTargetPosition);
+  const calculateSolution = useAppStore((state) => state.calculateSolution);
 
   /**
    * Calculate total correction from all corrections
@@ -80,45 +80,45 @@ export const useSpotter = () => {
       corrections.reduce(
         (total, correction) => ({
           leftRight: total.leftRight + correction.leftRight,
-          addDrop: total.addDrop + correction.addDrop
+          addDrop: total.addDrop + correction.addDrop,
         }),
         { leftRight: 0, addDrop: 0 }
       ),
     [corrections]
-  )
+  );
 
   /**
    * Calculate corrected target position
    */
   const correctedTarget = useMemo(() => {
     if (!targetPosition || !fireSolution || corrections.length === 0) {
-      return null
+      return null;
     }
 
     return calculateCorrectedTarget(
       targetPosition,
       fireSolution.azimuthDeg,
       totalCorrection
-    )
-  }, [targetPosition, fireSolution, totalCorrection, corrections.length])
+    );
+  }, [targetPosition, fireSolution, totalCorrection, corrections.length]);
 
   /**
    * Apply corrected target to calculator and recalculate
    */
   const applyCorrectedTarget = useCallback(() => {
     if (!correctedTarget) {
-      throw new Error('Keine Korrektur vorhanden')
+      throw new Error('Keine Korrektur vorhanden');
     }
 
     // Set new target position
-    setTargetPosition(correctedTarget)
+    setTargetPosition(correctedTarget);
 
     // Trigger recalculation
-    calculateSolution()
+    calculateSolution();
 
     // Clear corrections after applying
-    clearCorrections()
-  }, [correctedTarget, setTargetPosition, calculateSolution, clearCorrections])
+    clearCorrections();
+  }, [correctedTarget, setTargetPosition, calculateSolution, clearCorrections]);
 
   /**
    * Calculate target from spotter measurements
@@ -126,39 +126,39 @@ export const useSpotter = () => {
    */
   const calculateTargetFromSpotter = useCallback((): Coordinate | null => {
     if (!spotterPosition || !spotterMeasurements) {
-      return null
+      return null;
     }
 
-    const { distance, azimuth } = spotterMeasurements
+    const { distance, azimuth } = spotterMeasurements;
 
     // Convert azimuth to radians
-    const azimuthRad = (azimuth * Math.PI) / 180
+    const azimuthRad = (azimuth * Math.PI) / 180;
 
     // Calculate target position
     // Grid coordinates are in 10m units
-    const deltaEast = (distance * Math.sin(azimuthRad)) / 10
-    const deltaNorth = (distance * Math.cos(azimuthRad)) / 10
+    const deltaEast = (distance * Math.sin(azimuthRad)) / 10;
+    const deltaNorth = (distance * Math.cos(azimuthRad)) / 10;
 
     return {
       east: spotterPosition.east + deltaEast,
       north: spotterPosition.north + deltaNorth,
-      height: spotterPosition.height // Assume same height for now
-    }
-  }, [spotterPosition, spotterMeasurements])
+      height: spotterPosition.height, // Assume same height for now
+    };
+  }, [spotterPosition, spotterMeasurements]);
 
   /**
    * Set target from spotter measurements
    */
   const setTargetFromSpotter = useCallback(() => {
-    const target = calculateTargetFromSpotter()
+    const target = calculateTargetFromSpotter();
 
     if (!target) {
-      throw new Error('Keine Spotter-Messungen vorhanden')
+      throw new Error('Keine Spotter-Messungen vorhanden');
     }
 
-    setTargetPosition(target)
-    calculateSolution()
-  }, [calculateTargetFromSpotter, setTargetPosition, calculateSolution])
+    setTargetPosition(target);
+    calculateSolution();
+  }, [calculateTargetFromSpotter, setTargetPosition, calculateSolution]);
 
   /**
    * Quick correction shortcuts
@@ -172,12 +172,12 @@ export const useSpotter = () => {
             ? { leftRight: meters, addDrop: 0 }
             : type === 'add'
               ? { leftRight: 0, addDrop: meters }
-              : { leftRight: 0, addDrop: -meters }
+              : { leftRight: 0, addDrop: -meters };
 
-      applyCorrection(correction)
+      applyCorrection(correction);
     },
     [applyCorrection]
-  )
+  );
 
   return {
     // State
@@ -208,6 +208,6 @@ export const useSpotter = () => {
 
     // Utilities
     calculateTargetFromSpotter,
-    quickCorrection
-  }
-}
+    quickCorrection,
+  };
+};

@@ -11,30 +11,33 @@
  * - Height data badge for maps with elevation data
  */
 
-import { useTranslation } from 'react-i18next'
-import { useAppStore } from '../../stores/useAppStore'
-import { getMapsByCategory, type MapId } from '../../lib/maps'
-import { Map, Mountain } from 'lucide-react'
+import { useTranslation } from 'react-i18next';
+import { useAppStore } from '../../stores/useAppStore';
+import { getMapsByCategory, type MapId } from '../../lib/maps';
+import { Map, Mountain } from 'lucide-react';
 
 export function MapSelector() {
-  const { t } = useTranslation()
-  const selectedMap = useAppStore((state) => state.selectedMap)
-  const setSelectedMap = useAppStore((state) => state.setSelectedMap)
-  const { vanilla, mods } = getMapsByCategory() // Grouped by category
+  const { t } = useTranslation();
+  const selectedMap = useAppStore((state) => state.selectedMap);
+  const setSelectedMap = useAppStore((state) => state.setSelectedMap);
+  const { vanilla, mods } = getMapsByCategory(); // Grouped by category
 
   const handleMapChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const mapId = event.target.value as MapId
-    setSelectedMap(mapId)
-  }
+    const mapId = event.target.value as MapId;
+    setSelectedMap(mapId);
+  };
 
   // Get selected map config to show height data badge
-  const allMaps = [...vanilla, ...mods]
-  const selectedMapConfig = allMaps.find(m => m.id === selectedMap)
+  const allMaps = [...vanilla, ...mods];
+  const selectedMapConfig = allMaps.find((m) => m.id === selectedMap);
 
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label htmlFor="map-select" className="block text-gray-400 text-xs uppercase font-medium">
+        <label
+          htmlFor="map-select"
+          className="block text-gray-400 text-xs uppercase font-medium"
+        >
           {t('sidebar.map')}
         </label>
         {selectedMapConfig?.hasHeightData && (
@@ -88,11 +91,21 @@ export function MapSelector() {
           </optgroup>
         </select>
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </div>
       </div>
     </div>
-  )
+  );
 }

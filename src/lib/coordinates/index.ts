@@ -3,5 +3,5 @@
  * Barrel exports for transform functions
  */
 
-export * from './transform'
-export * from './types'
+export * from './transform';
+export * from './types';

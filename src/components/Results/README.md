@@ -11,14 +11,18 @@ This directory contains modular, reusable components for displaying fire solutio
 ### Core Display Components
 
 #### `AzimuthDisplay`
+
 Large, prominent azimuth direction display.
+
 - Shows azimuth in MIL (0-6400)
 - Optional degree display
 - Wind correction indicator
 - Accent color: Blue
 
 #### `ElevationDisplay`
+
 Large, prominent elevation angle display.
+
 - Shows adjusted elevation in MIL
 - Height correction indicator
 - Wind adjustment indicator
@@ -26,17 +30,23 @@ Large, prominent elevation angle display.
 - Accent color: Green
 
 #### `FlightTimeDisplay`
+
 Time of flight display.
+
 - Shows flight time in seconds (1 decimal)
 - Accent color: Yellow
 
 #### `DistanceDisplay`
+
 Distance to target display.
+
 - Shows distance in meters
 - Accent color: White/Primary
 
 #### `RingCountDisplay`
+
 Charge/ring count display.
+
 - Current ring count (0-4)
 - Shows AUTO vs MANUAL mode
 - Recommended charge indicator
@@ -44,7 +54,9 @@ Charge/ring count display.
 - Accent color: Blue (optimal) / Yellow (suboptimal)
 
 #### `RangeWarning`
+
 Out of range warning display.
+
 - Shows when target is out of range (too far or too close)
 - Displays current distance vs max/min range
 - Provides helpful guidance
@@ -53,7 +65,9 @@ Out of range warning display.
 ### Container Component
 
 #### `FireSolutionPanel`
+
 Complete fire solution panel with all components.
+
 - Grid layout: 2 columns
 - Handles null/loading states
 - Shows placeholder when no solution
@@ -66,28 +80,29 @@ Complete fire solution panel with all components.
 ### Using Individual Components
 
 ```tsx
-import { AzimuthDisplay } from './components/Results'
+import { AzimuthDisplay } from './components/Results';
 
 <AzimuthDisplay
   azimuthMil={fireSolution.azimuthMil}
   azimuthDeg={fireSolution.azimuthDeg}
   azimuthWithWind={fireSolution.azimuthWithWind}
   windCorrection={fireSolution.windCorrection?.azimuthCorrection}
-/>
+/>;
 ```
 
 ### Using FireSolutionPanel (Complete Solution)
 
 ```tsx
-import { FireSolutionPanel } from './components/Results'
+import { FireSolutionPanel } from './components/Results';
 
 // Automatically pulls data from useAppStore
-<FireSolutionPanel />
+<FireSolutionPanel />;
 ```
 
 ## Design Philosophy
 
 ### Military Tactical Aesthetic
+
 - Monospace fonts for all numbers
 - Large, readable values
 - Color-coded by type (Direction=Blue, Elevation=Green, Time=Yellow)
@@ -95,12 +110,15 @@ import { FireSolutionPanel } from './components/Results'
 - Dark theme optimized
 
 ### Modular Architecture
+
 Each component is self-contained and can be used:
+
 - Standalone for custom layouts
 - In the FireSolutionPanel for complete display
 - In other contexts (modals, overlays, etc.)
 
 ### Responsive Behavior
+
 - Scales well at different sizes
 - Grid layout adapts to available space
 - Clear visual hierarchy
@@ -116,6 +134,7 @@ Each component is self-contained and can be used:
 ## State Handling
 
 All components gracefully handle:
+
 - Null/undefined values (show placeholders)
 - Loading states (FireSolutionPanel shows spinner)
 - Error states (RangeWarning for out of range)
@@ -124,10 +143,13 @@ All components gracefully handle:
 ## Integration with App
 
 ### Current Usage
+
 The app currently uses `ResultsBar` for compact, inline display at the bottom of the map.
 
 ### FireSolutionPanel Usage
+
 FireSolutionPanel is designed for:
+
 - Expanded view (modal or dedicated panel)
 - Print/export views
 - Detailed fire mission planning
@@ -137,15 +159,19 @@ FireSolutionPanel is designed for:
 ### Example Integration Options
 
 #### As a Modal
+
 ```tsx
-{showDetailedView && (
-  <Modal>
-    <FireSolutionPanel />
-  </Modal>
-)}
+{
+  showDetailedView && (
+    <Modal>
+      <FireSolutionPanel />
+    </Modal>
+  );
+}
 ```
 
 #### As a Split View
+
 ```tsx
 <div className="grid grid-cols-2">
   <MapView />
@@ -154,6 +180,7 @@ FireSolutionPanel is designed for:
 ```
 
 #### As a Popup/Overlay
+
 ```tsx
 <Popover>
   <FireSolutionPanel />
@@ -163,6 +190,7 @@ FireSolutionPanel is designed for:
 ## Future Enhancements
 
 Potential additions:
+
 - Print stylesheet for fire mission cards
 - Copy-to-clipboard for values
 - Historical comparison view

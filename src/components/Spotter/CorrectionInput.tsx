@@ -3,58 +3,58 @@
  * Input for fire correction (Left/Right, Add/Drop)
  */
 
-import { type ChangeEvent, useState } from 'react'
-import type { CorrectionData } from '../../types'
+import { type ChangeEvent, useState } from 'react';
+import type { CorrectionData } from '../../types';
 
 interface CorrectionInputProps {
-  onApply: (correction: CorrectionData) => void
-  disabled?: boolean
+  onApply: (correction: CorrectionData) => void;
+  disabled?: boolean;
 }
 
 export function CorrectionInput({
   onApply,
-  disabled = false
+  disabled = false,
 }: CorrectionInputProps) {
-  const [leftRight, setLeftRight] = useState<string>('0')
-  const [addDrop, setAddDrop] = useState<string>('0')
+  const [leftRight, setLeftRight] = useState<string>('0');
+  const [addDrop, setAddDrop] = useState<string>('0');
 
   const handleLeftRightChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || value === '-' || /^-?\d+$/.test(value)) {
-      setLeftRight(value)
+      setLeftRight(value);
     }
-  }
+  };
 
   const handleAddDropChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || value === '-' || /^-?\d+$/.test(value)) {
-      setAddDrop(value)
+      setAddDrop(value);
     }
-  }
+  };
 
   const handlePresetLeftRight = (value: number) => {
-    setLeftRight(value.toString())
-  }
+    setLeftRight(value.toString());
+  };
 
   const handlePresetAddDrop = (value: number) => {
-    setAddDrop(value.toString())
-  }
+    setAddDrop(value.toString());
+  };
 
   const handleApply = () => {
-    const lr = parseInt(leftRight) || 0
-    const ad = parseInt(addDrop) || 0
+    const lr = parseInt(leftRight) || 0;
+    const ad = parseInt(addDrop) || 0;
 
     onApply({
       leftRight: lr,
-      addDrop: ad
-    })
+      addDrop: ad,
+    });
 
     // Reset to 0 after applying
-    setLeftRight('0')
-    setAddDrop('0')
-  }
+    setLeftRight('0');
+    setAddDrop('0');
+  };
 
-  const isValid = leftRight !== '' && addDrop !== ''
+  const isValid = leftRight !== '' && addDrop !== '';
 
   return (
     <div className="space-y-3">
@@ -62,7 +62,9 @@ export function CorrectionInput({
       <div>
         <label className="block text-gray-400 text-xs mb-2 flex items-center justify-between">
           <span>Seitenabweichung</span>
-          <span className="text-[10px] text-gray-500">L (negativ) / R (positiv)</span>
+          <span className="text-[10px] text-gray-500">
+            L (negativ) / R (positiv)
+          </span>
         </label>
 
         {/* Preset Buttons */}
@@ -116,7 +118,9 @@ export function CorrectionInput({
       <div>
         <label className="block text-gray-400 text-xs mb-2 flex items-center justify-between">
           <span>Längenabweichung</span>
-          <span className="text-[10px] text-gray-500">D (negativ) / A (positiv)</span>
+          <span className="text-[10px] text-gray-500">
+            D (negativ) / A (positiv)
+          </span>
         </label>
 
         {/* Preset Buttons */}
@@ -196,5 +200,5 @@ export function CorrectionInput({
         Korrektur anwenden
       </button>
     </div>
-  )
+  );
 }

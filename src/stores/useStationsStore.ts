@@ -7,28 +7,28 @@
  * - Selecting stations to set mortar position
  */
 
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
-import type { MortarStation, Coordinate, MortarConfig } from '../types'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import type { MortarStation, Coordinate, MortarConfig } from '../types';
 
 interface StationsState {
   // State
-  stations: MortarStation[]
-  selectedStation: MortarStation | null
-  isLoading: boolean
-  error: string | null
+  stations: MortarStation[];
+  selectedStation: MortarStation | null;
+  isLoading: boolean;
+  error: string | null;
 
   // Actions
-  loadStations: () => Promise<void>
+  loadStations: () => Promise<void>;
   saveStation: (
     name: string,
     mapId: string,
     position: Coordinate,
     defaultConfig?: MortarConfig
-  ) => Promise<void>
-  deleteStation: (id: string) => Promise<void>
-  selectStation: (id: string | null) => void
-  clearSelection: () => void
+  ) => Promise<void>;
+  deleteStation: (id: string) => Promise<void>;
+  selectStation: (id: string | null) => void;
+  clearSelection: () => void;
 }
 
 export const useStationsStore = create<StationsState>()(
@@ -42,44 +42,44 @@ export const useStationsStore = create<StationsState>()(
 
       // Load all stations from Electron
       loadStations: async () => {
-        set({ isLoading: true, error: null }, false, 'loadStations/start')
+        set({ isLoading: true, error: null }, false, 'loadStations/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
-          const stations = await window.api.loadStations()
+          const stations = await window.api.loadStations();
 
           set(
             {
               stations,
               isLoading: false,
-              error: null
+              error: null,
             },
             false,
             'loadStations/success'
-          )
+          );
         } catch (err) {
           set(
             {
               stations: [],
               isLoading: false,
-              error: err instanceof Error ? err.message : 'Fehler beim Laden'
+              error: err instanceof Error ? err.message : 'Fehler beim Laden',
             },
             false,
             'loadStations/error'
-          )
+          );
         }
       },
 
       // Save new station
       saveStation: async (name, mapId, position, defaultConfig) => {
-        set({ isLoading: true, error: null }, false, 'saveStation/start')
+        set({ isLoading: true, error: null }, false, 'saveStation/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
           // Create station object
@@ -89,11 +89,11 @@ export const useStationsStore = create<StationsState>()(
             mapId,
             position,
             defaultConfig,
-            createdAt: new Date().toISOString()
-          }
+            createdAt: new Date().toISOString(),
+          };
 
           // Save via Electron API
-          await window.api.saveStation(station)
+          await window.api.saveStation(station);
 
           // Update local state
           set(
@@ -101,35 +101,35 @@ export const useStationsStore = create<StationsState>()(
               stations: [...state.stations, station],
               selectedStation: station,
               isLoading: false,
-              error: null
+              error: null,
             }),
             false,
             'saveStation/success'
-          )
+          );
         } catch (err) {
           set(
             {
               isLoading: false,
               error:
-                err instanceof Error ? err.message : 'Fehler beim Speichern'
+                err instanceof Error ? err.message : 'Fehler beim Speichern',
             },
             false,
             'saveStation/error'
-          )
+          );
         }
       },
 
       // Delete station
       deleteStation: async (id) => {
-        set({ isLoading: true, error: null }, false, 'deleteStation/start')
+        set({ isLoading: true, error: null }, false, 'deleteStation/start');
 
         try {
           if (!window.api) {
-            throw new Error('Electron API nicht verfügbar')
+            throw new Error('Electron API nicht verfügbar');
           }
 
           // Delete via Electron API
-          await window.api.deleteStation(id)
+          await window.api.deleteStation(id);
 
           // Update local state
           set(
@@ -138,55 +138,55 @@ export const useStationsStore = create<StationsState>()(
               selectedStation:
                 state.selectedStation?.id === id ? null : state.selectedStation,
               isLoading: false,
-              error: null
+              error: null,
             }),
             false,
             'deleteStation/success'
-          )
+          );
         } catch (err) {
           set(
             {
               isLoading: false,
-              error: err instanceof Error ? err.message : 'Fehler beim Löschen'
+              error: err instanceof Error ? err.message : 'Fehler beim Löschen',
             },
             false,
             'deleteStation/error'
-          )
+          );
         }
       },
 
       // Select station by ID
       selectStation: (id) => {
-        const state = get()
-        const station = state.stations.find((s) => s.id === id)
+        const state = get();
+        const station = state.stations.find((s) => s.id === id);
 
         set(
           {
-            selectedStation: station || null
+            selectedStation: station || null,
           },
           false,
           'selectStation'
-        )
+        );
       },
 
       // Clear selection
       clearSelection: () =>
-        set({ selectedStation: null }, false, 'clearSelection')
+        set({ selectedStation: null }, false, 'clearSelection'),
     }),
     {
       name: 'stations-store',
-      enabled: process.env.NODE_ENV === 'development'
+      enabled: process.env.NODE_ENV === 'development',
     }
   )
-)
+);
 
 // Selectors
-export const selectStations = (state: StationsState) => state.stations
+export const selectStations = (state: StationsState) => state.stations;
 export const selectSelectedStation = (state: StationsState) =>
-  state.selectedStation
-export const selectStationsLoading = (state: StationsState) => state.isLoading
-export const selectStationsError = (state: StationsState) => state.error
+  state.selectedStation;
+export const selectStationsLoading = (state: StationsState) => state.isLoading;
+export const selectStationsError = (state: StationsState) => state.error;
 
 // Helper to filter stations by map
 export const selectStationsByMap = (mapId: string) => (state: StationsState) =>
-  state.stations.filter((s) => s.mapId === mapId)
+  state.stations.filter((s) => s.mapId === mapId);

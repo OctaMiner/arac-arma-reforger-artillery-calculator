@@ -7,17 +7,17 @@
  * - Clean card layout with icons
  */
 
-import { useTranslation } from 'react-i18next'
-import { Target, Crosshair, MapPin } from 'lucide-react'
-import { useUserStore } from '../../stores/useUserStore'
-import { useMissionsStore } from '../../stores/useMissionsStore'
-import { useStationsStore } from '../../stores/useStationsStore'
+import { useTranslation } from 'react-i18next';
+import { Target, Crosshair, MapPin } from 'lucide-react';
+import { useUserStore } from '../../stores/useUserStore';
+import { useMissionsStore } from '../../stores/useMissionsStore';
+import { useStationsStore } from '../../stores/useStationsStore';
 
 interface StatCardProps {
-  icon: React.ReactNode
-  label: string
-  value: number
-  color: string
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  color: string;
 }
 
 function StatCard({ icon, label, value, color }: StatCardProps) {
@@ -33,20 +33,20 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export function ProfileStats() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const userProfile = useUserStore((state) => state.userProfile)
-  const missions = useMissionsStore((state) => state.missions)
-  const stations = useStationsStore((state) => state.stations)
+  const userProfile = useUserStore((state) => state.userProfile);
+  const missions = useMissionsStore((state) => state.missions);
+  const stations = useStationsStore((state) => state.stations);
 
   // Get statistics
-  const totalShots = userProfile?.statistics.totalShots || 0
-  const totalMissions = missions.length
-  const totalStations = stations.length
+  const totalShots = userProfile?.statistics.totalShots || 0;
+  const totalMissions = missions.length;
+  const totalStations = stations.length;
 
   return (
     <div className="space-y-3">
@@ -79,5 +79,5 @@ export function ProfileStats() {
         />
       </div>
     </div>
-  )
+  );
 }

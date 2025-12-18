@@ -10,17 +10,18 @@
  * - Fire correction panel
  */
 
-import { useTranslation } from 'react-i18next'
-import { useSpotterStore } from '../../stores/useSpotterStore'
-import { SpotterToggle } from './SpotterToggle'
-import { SpotterPositionInput } from './SpotterPositionInput'
-import { VectorMeasurementInput } from './VectorMeasurementInput'
-import { CalculateTargetButton } from './CalculateTargetButton'
-import { CorrectionPanel } from './CorrectionPanel'
+import { useTranslation } from 'react-i18next';
+import { useSpotterStore } from '../../stores/useSpotterStore';
+import { SpotterToggle } from './SpotterToggle';
+import { SpotterPositionInput } from './SpotterPositionInput';
+import { VectorMeasurementInput } from './VectorMeasurementInput';
+import { HeightDiffInput } from './HeightDiffInput';
+import { CalculateTargetButton } from './CalculateTargetButton';
+import { CorrectionPanel } from './CorrectionPanel';
 
 export function SpotterPanel() {
-  const { t } = useTranslation()
-  const spotterMode = useSpotterStore((state) => state.spotterMode)
+  const { t } = useTranslation();
+  const spotterMode = useSpotterStore((state) => state.spotterMode);
 
   return (
     <div
@@ -78,6 +79,11 @@ export function SpotterPanel() {
             <VectorMeasurementInput />
           </div>
 
+          {/* Height Difference (Optional) */}
+          <div className="pb-4 border-b border-gray-700">
+            <HeightDiffInput />
+          </div>
+
           {/* Calculate Target Button */}
           <div className="pb-4 border-b border-gray-700">
             <CalculateTargetButton />
@@ -95,5 +101,5 @@ export function SpotterPanel() {
         </div>
       )}
     </div>
-  )
+  );
 }

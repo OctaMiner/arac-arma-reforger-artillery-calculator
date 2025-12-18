@@ -4,65 +4,67 @@
  * Uses Arma Reforger 3-digit grid format
  */
 
-import { type ChangeEvent } from 'react'
-import { useSpotterStore } from '../../stores/useSpotterStore'
-import { formatGrid3 } from '../../lib/coordinates/transform'
+import { type ChangeEvent } from 'react';
+import { useSpotterStore } from '../../stores/useSpotterStore';
+import { formatGrid3 } from '../../lib/coordinates/transform';
 
 /**
  * Convert 3-digit grid to meters
  * "811" → 8110m (81 * 100 + 1 * 10)
  */
 function gridToMeters(grid: string): number {
-  if (!grid || grid.length === 0) return 0
-  const paddedGrid = grid.padStart(3, '0')
-  const grid100m = parseInt(paddedGrid.slice(0, 2), 10) || 0
-  const grid10m = parseInt(paddedGrid.slice(2, 3), 10) || 0
-  return grid100m * 100 + grid10m * 10
+  if (!grid || grid.length === 0) return 0;
+  const paddedGrid = grid.padStart(3, '0');
+  const grid100m = parseInt(paddedGrid.slice(0, 2), 10) || 0;
+  const grid10m = parseInt(paddedGrid.slice(2, 3), 10) || 0;
+  return grid100m * 100 + grid10m * 10;
 }
 
 export function SpotterPositionInput() {
-  const spotterPosition = useSpotterStore((state) => state.spotterPosition)
-  const setSpotterPosition = useSpotterStore((state) => state.setSpotterPosition)
+  const spotterPosition = useSpotterStore((state) => state.spotterPosition);
+  const setSpotterPosition = useSpotterStore(
+    (state) => state.setSpotterPosition
+  );
 
   // Display value as 3-digit grid
-  const eastGrid = spotterPosition ? formatGrid3(spotterPosition.east) : ''
-  const northGrid = spotterPosition ? formatGrid3(spotterPosition.north) : ''
+  const eastGrid = spotterPosition ? formatGrid3(spotterPosition.east) : '';
+  const northGrid = spotterPosition ? formatGrid3(spotterPosition.north) : '';
 
   const handleEastChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^\d{0,3}$/.test(value)) {
-      const east = gridToMeters(value)
+      const east = gridToMeters(value);
       setSpotterPosition({
         east,
         north: spotterPosition?.north ?? 0,
-        height: spotterPosition?.height ?? 0
-      })
+        height: spotterPosition?.height ?? 0,
+      });
     }
-  }
+  };
 
   const handleNorthChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^\d{0,3}$/.test(value)) {
-      const north = gridToMeters(value)
+      const north = gridToMeters(value);
       setSpotterPosition({
         east: spotterPosition?.east ?? 0,
         north,
-        height: spotterPosition?.height ?? 0
-      })
+        height: spotterPosition?.height ?? 0,
+      });
     }
-  }
+  };
 
   const handleHeightChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
+    const value = e.target.value;
     if (value === '' || /^-?\d+$/.test(value)) {
-      const height = value === '' ? 0 : parseInt(value, 10)
+      const height = value === '' ? 0 : parseInt(value, 10);
       setSpotterPosition({
         east: spotterPosition?.east ?? 0,
         north: spotterPosition?.north ?? 0,
-        height: Math.min(9999, Math.max(-999, height))
-      })
+        height: Math.min(9999, Math.max(-999, height)),
+      });
     }
-  }
+  };
 
   return (
     <div className="space-y-3">
@@ -124,5 +126,5 @@ export function SpotterPositionInput() {
         />
       </div>
     </div>
-  )
+  );
 }

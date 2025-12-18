@@ -8,19 +8,19 @@
  * - Prominent CTA styling
  */
 
-import { useState } from 'react'
-import { useAppStore } from '../../stores/useAppStore'
-import { MissionSaveDialog } from './MissionSaveDialog'
+import { useState } from 'react';
+import { useAppStore } from '../../stores/useAppStore';
+import { MissionSaveDialog } from './MissionSaveDialog';
 
 export function MissionSaveButton() {
-  const [showDialog, setShowDialog] = useState(false)
+  const [showDialog, setShowDialog] = useState(false);
 
   // Check if we have a valid fire solution
-  const fireSolution = useAppStore((state) => state.fireSolution)
-  const mortarPosition = useAppStore((state) => state.mortarPosition)
-  const targetPosition = useAppStore((state) => state.targetPosition)
+  const fireSolution = useAppStore((state) => state.fireSolution);
+  const mortarPosition = useAppStore((state) => state.mortarPosition);
+  const targetPosition = useAppStore((state) => state.targetPosition);
 
-  const canSave = !!(fireSolution && mortarPosition && targetPosition)
+  const canSave = !!(fireSolution && mortarPosition && targetPosition);
 
   return (
     <>
@@ -29,9 +29,7 @@ export function MissionSaveButton() {
         disabled={!canSave}
         className="w-full px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:text-gray-500 text-white font-semibold rounded-lg transition-colors shadow-lg disabled:shadow-none disabled:cursor-not-allowed group"
         title={
-          canSave
-            ? 'Mission speichern'
-            : 'Berechne zuerst eine Feuerlösung'
+          canSave ? 'Mission speichern' : 'Berechne zuerst eine Feuerlösung'
         }
       >
         <div className="flex items-center justify-center gap-2">
@@ -55,5 +53,5 @@ export function MissionSaveButton() {
       {/* Save Dialog */}
       {showDialog && <MissionSaveDialog onClose={() => setShowDialog(false)} />}
     </>
-  )
+  );
 }

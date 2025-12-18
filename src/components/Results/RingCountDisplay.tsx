@@ -6,32 +6,53 @@
  * - Recommended charge indicator
  * - Manual vs Auto mode indicator
  * - Military tactical styling
+ * - Animated value changes
  */
 
-import { Circle } from 'lucide-react'
-import type { RingCount } from '../../types'
+import { useEffect, useRef } from 'react';
+import { Circle } from 'lucide-react';
+import type { RingCount } from '../../types';
 
 interface RingCountDisplayProps {
-  ringCount: RingCount
-  recommendedCharge?: RingCount
-  isManualMode?: boolean
-  className?: string
+  ringCount: RingCount;
+  recommendedCharge?: RingCount;
+  isManualMode?: boolean;
+  className?: string;
 }
 
 export function RingCountDisplay({
   ringCount,
   recommendedCharge,
   isManualMode = false,
-  className = ''
+  className = '',
 }: RingCountDisplayProps) {
+  // Track previous value to detect changes
+  const prevValueRef = useRef<RingCount | null>(null);
+  const valueElementRef = useRef<HTMLSpanElement>(null);
   // Determine if current charge is optimal
-  const isOptimal = recommendedCharge === undefined || ringCount === recommendedCharge
+  const isOptimal =
+    recommendedCharge === undefined || ringCount === recommendedCharge;
+
+  // Trigger animation when value changes
+  useEffect(() => {
+    if (prevValueRef.current !== null && prevValueRef.current !== ringCount) {
+      const element = valueElementRef.current;
+      if (element) {
+        element.classList.remove('animate-value-change');
+        void element.offsetWidth;
+        element.classList.add('animate-value-change');
+      }
+    }
+    prevValueRef.current = ringCount;
+  }, [ringCount]);
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
       {/* Label */}
       <div className="flex items-center gap-2 mb-2">
-        <Circle className={`w-4 h-4 ${isOptimal ? 'text-accent-blue' : 'text-accent-yellow'}`} />
+        <Circle
+          className={`w-4 h-4 ${isOptimal ? 'text-accent-blue' : 'text-accent-yellow'}`}
+        />
         <span className="text-xs font-mono text-text-secondary uppercase tracking-wider">
           Charge
         </span>
@@ -39,9 +60,12 @@ export function RingCountDisplay({
 
       {/* Main Value */}
       <div className="flex items-baseline gap-2">
-        <span className={`text-4xl font-mono font-bold tabular-nums ${
-          isOptimal ? 'text-accent-blue' : 'text-accent-yellow'
-        }`}>
+        <span
+          ref={valueElementRef}
+          className={`text-4xl font-mono font-bold tabular-nums transition-all duration-300 ${
+            isOptimal ? 'text-accent-blue' : 'text-accent-yellow'
+          }`}
+        >
           {ringCount}
         </span>
         <span className="text-xl text-text-secondary font-mono">RNG</span>
@@ -50,21 +74,26 @@ export function RingCountDisplay({
       {/* Mode Indicator & Recommendation */}
       <div className="mt-2 flex flex-col items-center gap-1">
         {/* Mode Badge */}
-        <div className={`px-2 py-0.5 rounded text-xs font-mono ${
-          isManualMode
-            ? 'bg-accent-yellow/10 border border-accent-yellow/30 text-accent-yellow'
-            : 'bg-accent-green/10 border border-accent-green/30 text-accent-green'
-        }`}>
+        <div
+          className={`px-2 py-0.5 rounded text-xs font-mono ${
+            isManualMode
+              ? 'bg-accent-yellow/10 border border-accent-yellow/30 text-accent-yellow'
+              : 'bg-accent-green/10 border border-accent-green/30 text-accent-green'
+          }`}
+        >
           {isManualMode ? 'MANUAL' : 'AUTO'}
         </div>
 
         {/* Recommendation if not optimal */}
         {!isOptimal && recommendedCharge !== undefined && (
           <div className="text-xs text-text-secondary font-mono mt-1">
-            Recommended: <span className="text-accent-blue font-bold">{recommendedCharge}</span>
+            Recommended:{' '}
+            <span className="text-accent-blue font-bold">
+              {recommendedCharge}
+            </span>
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

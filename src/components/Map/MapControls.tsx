@@ -3,11 +3,11 @@
  * Provides toggles for grid, range circles, and other map features
  */
 
-import { useAppStore } from '../../stores/useAppStore'
+import { useAppStore } from '../../stores/useAppStore';
 
 const MapControls = () => {
-  const showGrid = useAppStore((state) => state.showGrid)
-  const toggleGrid = useAppStore((state) => state.toggleGrid)
+  const showGrid = useAppStore((state) => state.showGrid);
+  const toggleGrid = useAppStore((state) => state.toggleGrid);
 
   return (
     <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
@@ -43,7 +43,7 @@ const MapControls = () => {
         </div>
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default MapControls
+export default MapControls;
