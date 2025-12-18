@@ -46,8 +46,8 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6, // Downgraded from z7 for faster loading (~180MB vs ~600MB)
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/kolguev_sat_z6_full.png",
-      // CDN height data (too large for GitHub: 134MB)
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/kolguev_height.json"
+      // Local height data (stored via Git LFS)
+      height_data: "/height_data/kolguev_height.json"
     }
   },
   {
