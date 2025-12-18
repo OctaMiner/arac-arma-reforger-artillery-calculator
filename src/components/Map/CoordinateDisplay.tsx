@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { useMapEvents } from 'react-leaflet'
 import { useAppStore } from '../../stores/useAppStore'
 import { getMapConfig } from '../../lib/maps/configs'
-import { leafletToGame, formatGrid3 } from '../../lib/coordinates/transform'
+import { leafletToGame, formatGridIngame } from '../../lib/coordinates/transform'
 import { findOptimalRingCount, getMinimumRange, getMaximumRange } from '../../lib/ballistics/range'
 
 // Colors for each ring level (matching RangeCircle)
@@ -44,9 +44,9 @@ const CoordinateDisplay = () => {
 
   if (!coords) return null
 
-  // Grid format: 000/000 (3-digit Arma Reforger style)
-  const gridE = formatGrid3(coords.east)
-  const gridN = formatGrid3(coords.north)
+  // Grid format: 000,0 / 000,0 (Ingame style with decimal precision)
+  const gridE = formatGridIngame(coords.east)
+  const gridN = formatGridIngame(coords.north)
 
   // Exact meters (rounded to 1m)
   const meterE = Math.round(coords.east)
@@ -101,9 +101,9 @@ const CoordinateDisplay = () => {
         minWidth: '180px'
       }}
     >
-      {/* Grid Reference (Arma Reforger 3-digit style) */}
+      {/* Grid Reference (Ingame style with decimal) */}
       <div style={{ color: '#86efac', fontWeight: 600, marginBottom: '4px' }}>
-        {gridE} {gridN}
+        {gridE} / {gridN}
       </div>
 
       {/* Exact Meters */}

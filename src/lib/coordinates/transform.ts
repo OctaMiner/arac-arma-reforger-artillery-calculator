@@ -110,3 +110,25 @@ export function formatGrid3(meters: number): string {
 export function formatGridPosition(position: { east: number; north: number }): string {
   return `${formatGrid3(position.east)} ${formatGrid3(position.north)}`
 }
+
+/**
+ * Format coordinate as Ingame-style grid with decimal precision
+ *
+ * Ingame shows 3-digit grid (100m precision), we add decimal for 10m precision
+ * Example: 4980m → "049,8" (49.8 × 100m = 4980m)
+ * Example: 3850m → "038,5" (38.5 × 100m = 3850m)
+ * Example: 12345m → "123,4"
+ *
+ * @param meters - Coordinate value in meters
+ * @returns Grid string in format "XXX,X" (German decimal notation)
+ */
+export function formatGridIngame(meters: number): string {
+  // Convert to 100m units with 1 decimal (10m precision)
+  const gridValue = Math.abs(meters) / 100
+  // Handle rollover at 10000m (100 × 100m units)
+  const wrapped = gridValue % 1000
+  // Format: 3 digits, comma, 1 decimal
+  const intPart = Math.floor(wrapped)
+  const decPart = Math.floor((wrapped - intPart) * 10)
+  return `${intPart.toString().padStart(3, '0')},${decPart}`
+}
