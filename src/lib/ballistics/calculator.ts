@@ -8,11 +8,18 @@ import type { Coordinate } from '../../types/index.js';
 /**
  * Calculate distance between two coordinates
  *
- * Coordinates are in meters (matching the game map)
+ * NOTE: In this application, coordinates are stored in METERS directly.
+ * The Leaflet map uses a CRS where lat/lng correspond to meters on the map.
+ *
  * Formula: Distance = √((Ost₁ - Ost₂)² + (Nord₁ - Nord₂)²)
  *
- * @param mortar - Mortar position
- * @param target - Target position
+ * Example:
+ * - mortar: { east: 4810, north: 4730 }
+ * - target: { east: 7070, north: 4280 }
+ * - result: 2304.3 meters
+ *
+ * @param mortar - Mortar position (in meters)
+ * @param target - Target position (in meters)
  * @returns Distance in meters
  */
 export function calculateDistance(
@@ -22,6 +29,22 @@ export function calculateDistance(
   const dE = mortar.east - target.east;
   const dN = mortar.north - target.north;
   return Math.sqrt(dE * dE + dN * dN);
+}
+
+/**
+ * Calculate distance in meters (convenience function)
+ *
+ * Converts grid units to meters automatically.
+ *
+ * @param mortar - Mortar position (in grid units)
+ * @param target - Target position (in grid units)
+ * @returns Distance in meters
+ */
+export function calculateDistanceMeters(
+  mortar: Coordinate,
+  target: Coordinate
+): number {
+  return calculateDistance(mortar, target) * 10;
 }
 
 /**

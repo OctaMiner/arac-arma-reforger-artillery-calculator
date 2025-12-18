@@ -6,6 +6,7 @@
 // Core calculations
 export {
   calculateDistance,
+  calculateDistanceMeters,
   calculateAzimuth,
   degToMil,
   milToDeg,
@@ -31,9 +32,17 @@ export {
 export {
   checkRange,
   findOptimalRingCount,
+  findOptimalRingForHeight,
   getValidRingCounts,
   getMaximumRange,
   getMinimumRange,
+  calculateTrajectoryApex,
+  checkTerrainCollision,
+  findBestRing,
+  type OptimalRingResult,
+  type BestRingResult,
+  type TerrainPoint,
+  type RingIssue,
 } from './range.js';
 
 // Fire solution calculator

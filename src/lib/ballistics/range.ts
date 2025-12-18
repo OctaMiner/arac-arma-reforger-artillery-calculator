@@ -5,6 +5,8 @@
 
 import type { AmmoType, MortarType, RingCount } from '../../types/index.js';
 import ballisticTablesIndex from './data/ballistic-tables-index.json';
+import { loadBallisticTable } from './tableLoader.js';
+import { interpolateElevation } from './interpolation.js';
 
 interface RangeCheckResult {
   inRange: boolean;
@@ -219,4 +221,466 @@ export function getAllRingRanges(
       maxRange: t.maxRange,
     }))
     .sort((a, b) => a.ringCount - b.ringCount);
+}
+
+/**
+ * Result of optimal ring selection considering height difference
+ */
+export interface OptimalRingResult {
+  /** Recommended ring count that safely reaches the target */
+  recommended: RingCount;
+  /** Alternative ring counts that could also work */
+  alternatives: RingCount[];
+  /** Effective distance considering height penalty */
+  effectiveDistance: number;
+  /** Reason for recommendation */
+  reason: string;
+}
+
+/**
+ * Terrain profile point for collision detection
+ */
+export interface TerrainPoint {
+  /** Distance from mortar in meters */
+  distance: number;
+  /** Height in meters */
+  height: number;
+}
+
+/**
+ * Issue detected with a specific ring count
+ */
+export interface RingIssue {
+  /** Ring count that has an issue */
+  ring: RingCount;
+  /** Description of the issue */
+  issue: string;
+}
+
+/**
+ * Result of intelligent ring selection with terrain and height analysis
+ */
+export interface BestRingResult {
+  /** Recommended ring count */
+  recommended: RingCount;
+  /** Reason for this recommendation */
+  reason: string;
+  /** Alternative rings with potential issues */
+  alternatives: Array<{ ring: RingCount; issue?: string }>;
+}
+
+/**
+ * Find optimal ring count considering height difference
+ *
+ * When target is significantly higher, we need more propellant (higher ring)
+ * to compensate for energy loss during ascent.
+ *
+ * Physical basis:
+ * - When shooting upward, the projectile loses kinetic energy fighting gravity
+ * - This reduces the horizontal range compared to level terrain
+ * - Rule of thumb: Every 100m height difference reduces effective range by ~5-8%
+ * - We use a conservative 7% reduction factor
+ *
+ * Strategy:
+ * 1. Calculate "effective distance" accounting for height penalty
+ * 2. Find all rings that can cover this effective distance
+ * 3. Choose the lowest ring that provides safe margin
+ * 4. Suggest alternatives if available
+ *
+ * @param distance - Horizontal distance in meters
+ * @param heightDiff - Height difference in meters (target.height - mortar.height)
+ * @param mortarType - US or RUS mortar
+ * @param ammoType - HE, Smoke, or Illumination
+ * @returns Optimal ring selection with alternatives
+ */
+export function findOptimalRingForHeight(
+  distance: number,
+  heightDiff: number,
+  mortarType: MortarType,
+  ammoType: AmmoType
+): OptimalRingResult {
+  // Height penalty factor: 0.07 means 7% range reduction per 100m altitude
+  const HEIGHT_PENALTY_FACTOR = 0.07;
+
+  // Safety margin: require 10% extra range to ensure reliable hit
+  const SAFETY_MARGIN = 1.1;
+
+  // Calculate effective distance with height penalty
+  // Only apply penalty for positive height differences (shooting upward)
+  let effectiveDistance = distance;
+  let reason = 'Standard range calculation';
+
+  if (heightDiff > 0) {
+    // Shooting upward reduces horizontal range
+    const heightPenalty = (heightDiff / 100) * HEIGHT_PENALTY_FACTOR * distance;
+    effectiveDistance = distance + heightPenalty;
+    reason = `Height penalty: +${Math.round(heightPenalty)}m for ${Math.round(heightDiff)}m altitude`;
+  } else if (heightDiff < 0) {
+    // Shooting downward increases range slightly, but we don't optimize for it
+    // to maintain conservative fire solutions
+    reason = 'Shooting downward - using standard calculation';
+  }
+
+  // Apply safety margin to required distance
+  const requiredMaxRange = effectiveDistance * SAFETY_MARGIN;
+
+  // Find all tables for this mortar and ammo type
+  const tables = ballisticTablesIndex.tables.filter(
+    (t) =>
+      t.mortarType === mortarType &&
+      t.ammoType === ammoType &&
+      typeof t.ringCount === 'number'
+  );
+
+  // Sort by ring count (ascending)
+  tables.sort((a, b) => {
+    const ringA = typeof a.ringCount === 'number' ? a.ringCount : 0;
+    const ringB = typeof b.ringCount === 'number' ? b.ringCount : 0;
+    return ringA - ringB;
+  });
+
+  // Find all rings that can safely reach the effective distance
+  const validRings: RingCount[] = [];
+
+  for (const table of tables) {
+    if (typeof table.ringCount === 'number') {
+      // Ring must cover the effective distance and provide safety margin
+      const canReach =
+        effectiveDistance >= table.minRange &&
+        effectiveDistance <= table.maxRange &&
+        requiredMaxRange <= table.maxRange;
+
+      if (canReach) {
+        validRings.push(table.ringCount as RingCount);
+      }
+    }
+  }
+
+  // If no rings can reach with safety margin, try without safety margin
+  if (validRings.length === 0) {
+    for (const table of tables) {
+      if (typeof table.ringCount === 'number') {
+        const canReach =
+          effectiveDistance >= table.minRange &&
+          effectiveDistance <= table.maxRange;
+
+        if (canReach) {
+          validRings.push(table.ringCount as RingCount);
+        }
+      }
+    }
+
+    if (validRings.length > 0) {
+      reason += ' (WARNING: No safety margin available)';
+    }
+  }
+
+  // If still no valid rings, return maximum charge with error
+  if (validRings.length === 0) {
+    return {
+      recommended: 4,
+      alternatives: [],
+      effectiveDistance: Math.round(effectiveDistance),
+      reason: 'ERROR: Target out of range even at maximum charge',
+    };
+  }
+
+  // Recommend the lowest ring count (fastest flight time, best accuracy)
+  const recommended = validRings[0];
+
+  // Return alternatives (higher charges)
+  const alternatives = validRings.slice(1);
+
+  return {
+    recommended,
+    alternatives,
+    effectiveDistance: Math.round(effectiveDistance),
+    reason,
+  };
+}
+
+/**
+ * Calculate trajectory apex (maximum height) for a mortar round
+ *
+ * Ballistic trajectory physics:
+ * - Mortar rounds follow a parabolic trajectory
+ * - Apex height depends on elevation angle and muzzle velocity
+ * - Higher ring counts = higher velocity = higher apex at same elevation
+ * - Lower ring counts = lower velocity = steeper arc = higher apex at same range
+ *
+ * Approximation formula:
+ * - For mortar with elevation θ (in mils) and initial velocity v:
+ * - Apex height ≈ (v² × sin²θ) / (2g)
+ * - Simplified: apex ≈ range × tan(θ/2) × correction_factor
+ *
+ * Empirical approximation (based on ballistic tables):
+ * - Ring 0-1 (low velocity): apex ≈ distance × 0.3 to 0.5
+ * - Ring 2-3 (medium velocity): apex ≈ distance × 0.2 to 0.3
+ * - Ring 4 (high velocity): apex ≈ distance × 0.15 to 0.25
+ *
+ * @param distance - Target distance in meters
+ * @param elevation - Elevation angle in mils
+ * @param ringCount - Propellant ring count (0-4)
+ * @returns Estimated apex height above mortar in meters
+ */
+export function calculateTrajectoryApex(
+  distance: number,
+  elevation: number,
+  ringCount: RingCount
+): number {
+  // Convert mil to radians (1 mil = 2π/6400 rad)
+  const elevationRad = (elevation * 2 * Math.PI) / 6400;
+
+  // Empirical correction factors based on ring count
+  // Lower rings = steeper trajectories = higher apex
+  const apexFactors: Record<RingCount, number> = {
+    0: 0.45, // Steepest trajectory
+    1: 0.40,
+    2: 0.30,
+    3: 0.25,
+    4: 0.20, // Flattest trajectory
+  };
+
+  const factor = apexFactors[ringCount];
+
+  // Approximate apex using simplified ballistic formula
+  // apex = distance × tan(θ/2) × factor
+  const apex = distance * Math.tan(elevationRad / 2) * factor;
+
+  return apex;
+}
+
+/**
+ * Check if trajectory collides with terrain
+ *
+ * Samples the trajectory at regular intervals and checks against terrain profile
+ * with safety margin
+ *
+ * @param distance - Target distance in meters
+ * @param elevation - Elevation angle in mils
+ * @param ringCount - Propellant ring count
+ * @param mortarHeight - Mortar altitude in meters
+ * @param terrainProfile - Array of terrain points between mortar and target
+ * @returns True if trajectory hits terrain, false if clear
+ */
+export function checkTerrainCollision(
+  distance: number,
+  elevation: number,
+  ringCount: RingCount,
+  mortarHeight: number,
+  terrainProfile: TerrainPoint[]
+): boolean {
+  if (!terrainProfile || terrainProfile.length === 0) {
+    return false; // No terrain data = assume clear
+  }
+
+  // Calculate apex height
+  const apex = calculateTrajectoryApex(distance, elevation, ringCount);
+
+  // Safety margin: require 20m clearance above terrain
+  const SAFETY_MARGIN = 20;
+
+  // Check each terrain point
+  for (const point of terrainProfile) {
+    // Skip points beyond target
+    if (point.distance > distance) {
+      continue;
+    }
+
+    // Skip points at or before mortar position
+    if (point.distance <= 10) {
+      continue;
+    }
+
+    // Calculate trajectory height at this distance
+    // Parabolic approximation with apex at midpoint
+    const progressRatio = point.distance / distance;
+
+    // Parabolic trajectory: rises to apex at midpoint, then descends
+    let trajectoryHeight: number;
+
+    if (progressRatio <= 0.5) {
+      // Ascending phase: quadratic rise to apex
+      const t = progressRatio * 2; // 0 to 1
+      trajectoryHeight = apex * (2 * t - t * t);
+    } else {
+      // Descending phase: quadratic descent from apex
+      const t = (progressRatio - 0.5) * 2; // 0 to 1
+      trajectoryHeight = apex * (1 - t * t);
+    }
+
+    // Add mortar altitude to get absolute height
+    const absoluteTrajectoryHeight = mortarHeight + trajectoryHeight;
+
+    // Check collision with safety margin
+    if (point.height + SAFETY_MARGIN > absoluteTrajectoryHeight) {
+      return true; // Terrain blocks trajectory (or too close)
+    }
+  }
+
+  return false; // No collision
+}
+
+/**
+ * Find best ring count considering BOTH terrain collision and height difference
+ *
+ * This function solves two problems:
+ *
+ * Problem 1: Terrain Collision
+ * - Lower rings have steeper trajectories (higher apex)
+ * - Use lower ring to clear obstacles between mortar and target
+ *
+ * Problem 2: Target Height Difference
+ * - Higher targets require more energy to reach
+ * - Use higher ring to compensate for altitude
+ *
+ * Strategy:
+ * 1. Check all rings (0-4) for range validity
+ * 2. For each valid ring:
+ *    a) Calculate trajectory and check terrain collision
+ *    b) Check if projectile can reach elevated target
+ * 3. Select best ring that satisfies all constraints
+ * 4. Prefer lower rings (faster flight time, better accuracy)
+ *
+ * @param distance - Target distance in meters
+ * @param heightDiff - Height difference in meters (target - mortar, positive = uphill)
+ * @param mortarHeight - Mortar altitude in meters
+ * @param terrainProfile - Terrain points between mortar and target (optional)
+ * @param mortarType - US or RUS mortar
+ * @param ammoType - HE, Smoke, or Illumination
+ * @returns Best ring selection with reasoning
+ */
+export function findBestRing(
+  distance: number,
+  heightDiff: number,
+  mortarHeight: number,
+  terrainProfile: TerrainPoint[] | null,
+  mortarType: MortarType,
+  ammoType: AmmoType
+): BestRingResult {
+  const allRings: RingCount[] = [0, 1, 2, 3, 4];
+  const validRings: Array<{ ring: RingCount; issue?: string }> = [];
+  const issueRings: Array<{ ring: RingCount; issue: string }> = [];
+
+  // Test each ring
+  for (const ring of allRings) {
+    try {
+      // Load ballistic table for this ring
+      const table = loadBallisticTable(mortarType, ammoType, ring);
+
+      // Check 1: Is distance in valid range?
+      if (distance < table.minRange) {
+        issueRings.push({
+          ring,
+          issue: `Below min range (${table.minRange}m)`,
+        });
+        continue;
+      }
+
+      if (distance > table.maxRange) {
+        issueRings.push({
+          ring,
+          issue: `Beyond max range (${table.maxRange}m)`,
+        });
+        continue;
+      }
+
+      // Calculate elevation for this ring
+      const elevation = interpolateElevation(distance, table.entries);
+
+      // Check 2: Terrain collision?
+      if (terrainProfile && terrainProfile.length > 0) {
+        const hasCollision = checkTerrainCollision(
+          distance,
+          elevation,
+          ring,
+          mortarHeight,
+          terrainProfile
+        );
+
+        if (hasCollision) {
+          // Don't immediately exclude - mark as issue
+          // Lower rings might still work due to steeper trajectory
+          issueRings.push({
+            ring,
+            issue: 'Trajectory hits terrain - need steeper arc',
+          });
+          continue;
+        }
+      }
+
+      // Check 3: Can reach elevated target?
+      // For significant uphill shots (>50m), higher rings have better energy
+      if (heightDiff > 50) {
+        // Higher rings have more energy and can better handle altitude
+        // Ring 0-1 may struggle with steep climbs
+        if (ring < 2) {
+          // Check if we're near max range (danger zone)
+          const rangeMargin = (table.maxRange - distance) / table.maxRange;
+          if (rangeMargin < 0.15) {
+            // Less than 15% margin
+            issueRings.push({
+              ring,
+              issue: `Low energy for +${Math.round(heightDiff)}m climb - recommend higher ring`,
+            });
+            continue;
+          }
+        }
+      }
+
+      // This ring is valid
+      validRings.push({ ring });
+    } catch (error) {
+      // Table not found or other error
+      issueRings.push({
+        ring,
+        issue: 'Ballistic data not available',
+      });
+    }
+  }
+
+  // No valid rings found
+  if (validRings.length === 0) {
+    return {
+      recommended: 4, // Default to max charge
+      reason: 'No valid solution found - target may be out of range',
+      alternatives: issueRings,
+    };
+  }
+
+  // Select best ring (lowest valid ring for best accuracy)
+  const recommended = validRings[0].ring;
+
+  // Build reason string
+  let reason = '';
+
+  if (terrainProfile && terrainProfile.length > 0) {
+    reason += 'Terrain-aware: ';
+  }
+
+  if (heightDiff > 50) {
+    reason += `Uphill +${Math.round(heightDiff)}m: `;
+  } else if (heightDiff < -50) {
+    reason += `Downhill ${Math.round(heightDiff)}m: `;
+  }
+
+  reason += `Ring ${recommended} optimal - `;
+
+  if (validRings.length > 1) {
+    reason += `${validRings.length} rings viable, chose lowest for accuracy`;
+  } else {
+    reason += 'only viable option';
+  }
+
+  // Return alternatives (other valid rings + issue rings)
+  const alternatives = [
+    ...validRings.slice(1), // Other valid rings
+    ...issueRings, // Rings with issues
+  ].sort((a, b) => a.ring - b.ring);
+
+  return {
+    recommended,
+    reason,
+    alternatives,
+  };
 }

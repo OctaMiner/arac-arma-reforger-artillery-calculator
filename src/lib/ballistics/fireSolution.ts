@@ -20,7 +20,11 @@ import {
   calculateDeltaElevationFromTable,
   applyHeightCorrection,
 } from './elevation.js';
-import { checkRange, findOptimalRingCount } from './range.js';
+import {
+  checkRange,
+  findOptimalRingCount,
+  findOptimalRingForHeight,
+} from './range.js';
 import { loadBallisticTable } from './tableLoader.js';
 
 export interface FireSolutionParams {
@@ -50,7 +54,7 @@ export function calculateFireSolution(
 ): FireSolution {
   const { mortar, target, mortarType, ammoType, ringCount } = params;
 
-  // 1. Calculate distance (in meters)
+  // 1. Calculate distance (in meters) - coordinates are already in meters
   const distance = calculateDistance(mortar, target);
 
   // 2. Calculate azimuth (direction)
@@ -125,7 +129,14 @@ export function calculateFireSolution(
 /**
  * Calculate fire solution with automatic charge selection
  *
- * Automatically selects the optimal charge for the given distance
+ * Automatically selects the optimal charge for the given distance,
+ * taking height difference into account.
+ *
+ * Height optimization:
+ * - When shooting upward, energy is lost fighting gravity
+ * - This reduces horizontal range compared to level terrain
+ * - Function automatically selects higher charge when needed
+ * - Provides safety margin to ensure reliable hits
  *
  * @param params - Fire solution parameters (without ringCount)
  * @returns Complete fire solution
@@ -135,21 +146,35 @@ export function calculateFireSolutionAuto(
 ): FireSolution {
   const { mortar, target, mortarType, ammoType } = params;
 
-  // Calculate distance to determine optimal charge
+  // Calculate distance to determine optimal charge (coordinates are already in meters)
   const distance = calculateDistance(mortar, target);
 
-  // Find optimal charge
-  const optimalCharge = findOptimalRingCount(distance, mortarType, ammoType);
+  // Calculate height difference
+  const heightDiff = target.height - mortar.height;
 
-  // If no valid charge found, use ring 4 (maximum) to show error
-  const ringCount: RingCount = optimalCharge !== -1 ? optimalCharge : 4;
+  // Find optimal charge considering height difference
+  const optimalRingResult = findOptimalRingForHeight(
+    distance,
+    heightDiff,
+    mortarType,
+    ammoType
+  );
+
+  // Use the recommended charge
+  const ringCount: RingCount = optimalRingResult.recommended;
 
   // Calculate with selected charge
-  return calculateFireSolution({
+  const solution = calculateFireSolution({
     mortar,
     target,
     mortarType,
     ammoType,
     ringCount,
   });
+
+  // Add height optimization info to solution (if we extend FireSolution interface)
+  // For now, the optimized ring is already selected
+  // Future enhancement: Add optimalRingResult.reason to FireSolution interface
+
+  return solution;
 }
