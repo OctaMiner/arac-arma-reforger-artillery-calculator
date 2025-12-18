@@ -8,8 +8,13 @@
  * - Shows range warning when out of range
  * - Responsive grid layout
  * - Military tactical styling
+ *
+ * Performance optimizations:
+ * - Memoized to prevent unnecessary re-renders
+ * - Range calculations are memoized
  */
 
+import { memo, useMemo } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
 import { getMaximumRange, getMinimumRange } from '../../lib/ballistics/range';
 import { AzimuthDisplay } from './AzimuthDisplay';
@@ -20,7 +25,7 @@ import { RingCountDisplay } from './RingCountDisplay';
 import { RangeWarning } from './RangeWarning';
 import { Target, Crosshair } from 'lucide-react';
 
-export function FireSolutionPanel() {
+export const FireSolutionPanel = memo(() => {
   const fireSolution = useAppStore((state) => state.fireSolution);
   const mortarConfig = useAppStore((state) => state.mortarConfig);
   const mortarPosition = useAppStore((state) => state.mortarPosition);
@@ -28,9 +33,15 @@ export function FireSolutionPanel() {
   const windData = useAppStore((state) => state.windData);
   const isCalculating = useAppStore((state) => state.isCalculating);
 
-  // Calculate range limits
-  const maxRange = getMaximumRange(mortarConfig.type, mortarConfig.ammo);
-  const minRange = getMinimumRange(mortarConfig.type, mortarConfig.ammo);
+  // Calculate range limits - memoized to prevent recalculation
+  const maxRange = useMemo(
+    () => getMaximumRange(mortarConfig.type, mortarConfig.ammo),
+    [mortarConfig.type, mortarConfig.ammo]
+  );
+  const minRange = useMemo(
+    () => getMinimumRange(mortarConfig.type, mortarConfig.ammo),
+    [mortarConfig.type, mortarConfig.ammo]
+  );
 
   // Loading state
   if (isCalculating) {
@@ -158,4 +169,6 @@ export function FireSolutionPanel() {
       )}
     </div>
   );
-}
+});
+
+FireSolutionPanel.displayName = 'FireSolutionPanel';

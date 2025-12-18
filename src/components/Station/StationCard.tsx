@@ -6,8 +6,14 @@
  * - "Anfahren" button to load station (green)
  * - Delete button (red)
  * - Compact card layout
+ *
+ * Performance optimizations:
+ * - Memoized to prevent unnecessary re-renders
+ * - Event handlers memoized with useCallback
+ * - Grid position formatting memoized
  */
 
+import { memo, useCallback, useMemo } from 'react';
 import { MapPin, Trash2, Settings } from 'lucide-react';
 import type { MortarStation } from '../../types';
 import { useAppStore } from '../../stores/useAppStore';
@@ -18,7 +24,7 @@ interface StationCardProps {
   station: MortarStation;
 }
 
-export function StationCard({ station }: StationCardProps) {
+export const StationCard = memo(({ station }: StationCardProps) => {
   // App store actions
   const setMortarPosition = useAppStore((state) => state.setMortarPosition);
   const setMortarType = useAppStore((state) => state.setMortarType);
@@ -29,7 +35,14 @@ export function StationCard({ station }: StationCardProps) {
   // Station store actions
   const deleteStation = useStationsStore((state) => state.deleteStation);
 
-  const handleLoadStation = () => {
+  // Memoize formatted grid position
+  const gridPosition = useMemo(
+    () => formatGridPosition(station.position),
+    [station.position]
+  );
+
+  // Memoized load handler
+  const handleLoadStation = useCallback(() => {
     // Set mortar position
     setMortarPosition(station.position);
 
@@ -42,13 +55,21 @@ export function StationCard({ station }: StationCardProps) {
 
     // Recalculate solution
     calculateSolution();
-  };
+  }, [
+    station,
+    setMortarPosition,
+    setMortarType,
+    setAmmoType,
+    setCharge,
+    calculateSolution,
+  ]);
 
-  const handleDelete = async () => {
+  // Memoized delete handler
+  const handleDelete = useCallback(async () => {
     if (confirm(`Stellung "${station.name}" wirklich löschen?`)) {
       await deleteStation(station.id);
     }
-  };
+  }, [station.id, station.name, deleteStation]);
 
   return (
     <div className="panel hover:border-primary/40 hover:shadow-lg hover:shadow-primary/10 transition-all">
@@ -67,9 +88,7 @@ export function StationCard({ station }: StationCardProps) {
       {/* Coordinates */}
       <div className="space-y-1 mb-3">
         <div className="flex items-center gap-2 text-xs">
-          <span className="text-foreground font-mono">
-            {formatGridPosition(station.position)}
-          </span>
+          <span className="text-foreground font-mono">{gridPosition}</span>
           <span className="text-muted-foreground">|</span>
           <span className="text-muted-foreground">H:</span>
           <span className="text-foreground font-mono">
@@ -101,4 +120,6 @@ export function StationCard({ station }: StationCardProps) {
       </button>
     </div>
   );
-}
+});
+
+StationCard.displayName = 'StationCard';

@@ -16,6 +16,16 @@ export { useMissions } from './useMissions';
 export { useStations } from './useStations';
 export { useSpotter } from './useSpotter';
 
+// Performance Hooks
+export {
+  useThrottledCallback,
+  useDebouncedCallback,
+} from './useThrottledCallback';
+export {
+  useBallisticCalculations,
+  useRangeLimits,
+} from './useBallisticCalculations';
+
 // Keyboard Shortcuts
 export { useKeyboardShortcuts, getShortcutHint } from './useKeyboardShortcuts';
 

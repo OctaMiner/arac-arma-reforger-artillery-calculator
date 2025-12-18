@@ -6,13 +6,17 @@
  * - Shows empty state when no missions exist
  * - Scrollable list of MissionCard components
  * - Tracks selected mission
+ *
+ * Performance optimizations:
+ * - Memoized to prevent unnecessary re-renders
+ * - Memoized loadMissions callback
  */
 
-import { useEffect } from 'react';
+import { useEffect, memo, useCallback } from 'react';
 import { useMissionsStore } from '../../stores/useMissionsStore';
 import { MissionCard } from './MissionCard';
 
-export function MissionList() {
+export const MissionList = memo(() => {
   // Store state
   const missions = useMissionsStore((state) => state.missions);
   const selectedMission = useMissionsStore((state) => state.selectedMission);
@@ -20,10 +24,15 @@ export function MissionList() {
   const error = useMissionsStore((state) => state.error);
   const loadMissions = useMissionsStore((state) => state.loadMissions);
 
-  // Load missions on mount
-  useEffect(() => {
+  // Memoized load callback
+  const handleLoadMissions = useCallback(() => {
     loadMissions();
   }, [loadMissions]);
+
+  // Load missions on mount
+  useEffect(() => {
+    handleLoadMissions();
+  }, [handleLoadMissions]);
 
   // Loading state
   if (isLoading && missions.length === 0) {
@@ -82,4 +91,6 @@ export function MissionList() {
       ))}
     </div>
   );
-}
+});
+
+MissionList.displayName = 'MissionList';

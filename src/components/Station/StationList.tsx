@@ -6,21 +6,30 @@
  * - Displays stations as StationCards
  * - Shows "Keine Stellungen" message when empty
  * - Loading state
+ *
+ * Performance optimizations:
+ * - Memoized to prevent unnecessary re-renders
+ * - Memoized loadStations callback
  */
 
-import { useEffect } from 'react';
+import { useEffect, memo, useCallback } from 'react';
 import { useStationsStore } from '../../stores/useStationsStore';
 import { StationCard } from './StationCard';
 
-export function StationList() {
+export const StationList = memo(() => {
   const stations = useStationsStore((state) => state.stations);
   const isLoading = useStationsStore((state) => state.isLoading);
   const loadStations = useStationsStore((state) => state.loadStations);
 
-  // Load stations on mount
-  useEffect(() => {
+  // Memoized load callback
+  const handleLoadStations = useCallback(() => {
     loadStations();
   }, [loadStations]);
+
+  // Load stations on mount
+  useEffect(() => {
+    handleLoadStations();
+  }, [handleLoadStations]);
 
   // Loading state
   if (isLoading) {
@@ -87,4 +96,6 @@ export function StationList() {
       ))}
     </div>
   );
-}
+});
+
+StationList.displayName = 'StationList';

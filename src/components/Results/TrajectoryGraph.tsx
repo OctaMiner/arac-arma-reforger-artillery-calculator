@@ -320,10 +320,10 @@ export function TrajectoryGraph() {
     maxTerrainHeight = Math.max(...terrainHeights);
   }
 
-  // Fixed height range - always show up to 1000m for consistent trajectory visualization
+  // Fixed height range - always show up to 600m for consistent trajectory visualization
   // This ensures high trajectories (Ring 0) are always fully visible
   const minHeight = Math.min(minTerrainHeight - 20, 0);
-  const maxHeight = Math.max(1000, apexHeight + 50, maxTerrainHeight + 100);
+  const maxHeight = Math.max(600, apexHeight + 50, maxTerrainHeight + 100);
   const heightRange = maxHeight - minHeight;
 
   // Scale factors - use displayDistance so target is always visible

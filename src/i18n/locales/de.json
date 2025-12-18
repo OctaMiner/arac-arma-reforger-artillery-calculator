@@ -142,7 +142,12 @@
     "q_azimuthElevation": "Was bedeuten Azimut und Elevation?",
     "a_azimuthElevation": "Azimut = Richtung in MIL (0-6400). Elevation = Höhenwinkel in MIL. Diese Werte am Mörser einstellen.",
     "q_savePositions": "Wie speichere ich Positionen?",
-    "a_savePositions": "Nutze die \"Stationen\" und \"Missionen\" Panels um häufig verwendete Positionen zu speichern und schnell wieder aufzurufen."
+    "a_savePositions": "Nutze die \"Stationen\" und \"Missionen\" Panels um häufig verwendete Positionen zu speichern und schnell wieder aufzurufen.",
+    "shortcuts": "Tastenkürzel",
+    "shortcut_save": "Mission speichern",
+    "shortcut_new": "Neue Mission",
+    "shortcut_escape": "Dialog schließen",
+    "shortcut_charge": "Ladung wählen"
   },
   "rangeWarning": {
     "outOfRange": "AUSSER REICHWEITE",

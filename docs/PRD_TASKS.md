@@ -457,8 +457,8 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | Alle Components mit Stores verbinden | `/frontend` | 1 | Phase 5 komplett |
 | [x] | Electron IPC in Hooks integrieren | `/frontend` | 1 | Phase 3 komplett |
 | [x] | Initiales Laden aller Daten beim App-Start | `/frontend` | 1 | 6.1.1-3 |
-| [ ] | Error Boundaries für alle Hauptbereiche | `/frontend` | 2 | 6.1.2 |
-| [ ] | Loading States für async Operationen | `/frontend` | 2 | 6.1.3 |
+| [x] | Error Boundaries für alle Hauptbereiche | `/frontend` | 2 | 6.1.2 |
+| [x] | Loading States für async Operationen | `/frontend` | 2 | 6.1.3 |
 
 ## 6.2 UI/UX Polish
 
@@ -468,19 +468,19 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 | [x] | Hover States für alle interaktiven Elemente | `/design` | 1 | 6.2.1 |
 | [x] | Focus States für Accessibility | `/design` | 2 | 6.2.2 |
 | [x] | Transitions/Animationen für State-Änderungen | `/design` | 2 | 6.2.1 |
-| [ ] | Toast Notifications für Aktionen | `/design` | 2 | 6.1.2 |
+| [x] | Toast Notifications für Aktionen | `/design` | 2 | 6.1.2 |
 | [ ] | Tooltips für komplexe UI-Elemente | `/design` | 3 | 6.2.1 |
 | [x] | Icons für alle Buttons (Lucide/Heroicons) | `/design` | 2 | Phase 5 komplett |
-| [ ] | App Icon für Electron (ICO, PNG) | `/design` | 2 | 3.1.2 |
+| [x] | App Icon für Electron (ICO, PNG) | `/design` | 2 | 3.1.2 |
 
 ## 6.3 Performance Optimierung
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | React.memo für teure Components | `/frontend` | 2 | 6.1.2 |
-| [ ] | useMemo für Berechnungen | `/frontend` | 2 | 6.1.1 |
-| [ ] | useCallback für Event Handlers | `/frontend` | 2 | 6.1.2 |
-| [ ] | Debounced Berechnung beim Drag (< 16ms) | `/frontend` | 1 | 4.2.2 |
+| [x] | React.memo für teure Components | `/frontend` | 2 | 6.1.2 |
+| [x] | useMemo für Berechnungen | `/frontend` | 2 | 6.1.1 |
+| [x] | useCallback für Event Handlers | `/frontend` | 2 | 6.1.2 |
+| [x] | Debounced Berechnung beim Drag (< 16ms) | `/frontend` | 1 | 4.2.2 |
 | [ ] | Lazy Loading für Map Tiles | `/map` | 2 | 5.2.1 |
 | [ ] | Bundle Size Analyse | `/electron` | 3 | 6.3.1-5 |
 
@@ -488,11 +488,11 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | `Ctrl+S`: Aktuelle Mission speichern | `/frontend` | 2 | 4.2.8 |
-| [ ] | `Ctrl+N`: Neue Mission (Reset) | `/frontend` | 3 | 4.2.8 |
-| [ ] | `Escape`: Dialoge schließen | `/frontend` | 2 | 4.2.8 |
-| [ ] | `Tab`: Durch Eingabefelder navigieren | `/frontend` | 2 | 4.2.8 |
-| [ ] | `1-5`: Ring Count schnell wählen | `/frontend` | 3 | 4.2.8 |
+| [x] | `Ctrl+S`: Aktuelle Mission speichern | `/frontend` | 2 | 4.2.8 |
+| [x] | `Ctrl+N`: Neue Mission (Reset) | `/frontend` | 3 | 4.2.8 |
+| [x] | `Escape`: Dialoge schließen | `/frontend` | 2 | 4.2.8 |
+| [x] | `Tab`: Durch Eingabefelder navigieren | `/frontend` | 2 | 4.2.8 |
+| [x] | `1-5`: Ring Count schnell wählen | `/frontend` | 3 | 4.2.8 |
 
 ---
 

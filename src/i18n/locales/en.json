@@ -142,7 +142,12 @@
     "q_azimuthElevation": "What do azimuth and elevation mean?",
     "a_azimuthElevation": "Azimuth = direction in MIL (0-6400). Elevation = angle in MIL. Set these values on the mortar.",
     "q_savePositions": "How do I save positions?",
-    "a_savePositions": "Use the \"Stations\" and \"Missions\" panels to save frequently used positions and quickly recall them."
+    "a_savePositions": "Use the \"Stations\" and \"Missions\" panels to save frequently used positions and quickly recall them.",
+    "shortcuts": "Keyboard Shortcuts",
+    "shortcut_save": "Save mission",
+    "shortcut_new": "New mission",
+    "shortcut_escape": "Close dialog",
+    "shortcut_charge": "Select charge"
   },
   "rangeWarning": {
     "outOfRange": "OUT OF RANGE",

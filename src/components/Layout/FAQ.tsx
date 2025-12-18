@@ -83,7 +83,7 @@ export function FAQ() {
             </div>
           ))}
 
-          {/* Quick Reference */}
+          {/* Quick Reference - Mouse */}
           <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg">
             <p className="text-xs text-blue-300 font-medium mb-2">
               {t('faq.quickRef')}:
@@ -96,6 +96,31 @@ export function FAQ() {
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-red-500 rounded-full"></span>
                 <span className="text-gray-400">{t('map.rightClick')}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Keyboard Shortcuts */}
+          <div className="mt-2 p-3 bg-gray-800/50 border border-gray-700 rounded-lg">
+            <p className="text-xs text-gray-300 font-medium mb-2">
+              {t('faq.shortcuts', 'Tastenkürzel')}:
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-gray-300 font-mono text-[10px]">Ctrl+S</kbd>
+                <span className="text-gray-400">{t('faq.shortcut_save', 'Mission speichern')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-gray-300 font-mono text-[10px]">Ctrl+N</kbd>
+                <span className="text-gray-400">{t('faq.shortcut_new', 'Neue Mission')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-gray-300 font-mono text-[10px]">Esc</kbd>
+                <span className="text-gray-400">{t('faq.shortcut_escape', 'Dialog schließen')}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-gray-300 font-mono text-[10px]">1-5</kbd>
+                <span className="text-gray-400">{t('faq.shortcut_charge', 'Ladung wählen')}</span>
               </div>
             </div>
           </div>

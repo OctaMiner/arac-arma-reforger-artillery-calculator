@@ -2,9 +2,14 @@
  * MapView - Main Leaflet map container for ARAC
  * Uses Simple CRS for Arma Reforger coordinates (meters)
  * Maps loaded from Gene's CDN - no local files needed
+ *
+ * Performance optimizations:
+ * - Memoized to prevent unnecessary re-renders
+ * - Preloads map images with smooth progress
+ * - Uses throttled marker updates (60fps)
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, memo, useMemo } from 'react';
 import { MapContainer, ImageOverlay, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -206,10 +211,12 @@ const MapUpdater = ({ mapId }: { mapId: string }) => {
   return null;
 };
 
-const MapView = () => {
+const MapView = memo(() => {
   const selectedMap = useAppStore((state) => state.selectedMap);
   const showGrid = useAppStore((state) => state.showGrid);
-  const mapConfig = getMapConfig(selectedMap as any);
+
+  // Memoize map config to prevent recalculation
+  const mapConfig = useMemo(() => getMapConfig(selectedMap as any), [selectedMap]);
 
   // Preload map image with progress tracking
   const { isLoading, progress, loadedUrl } = useMapImageLoader(mapConfig.imageUrl);
@@ -283,6 +290,8 @@ const MapView = () => {
       )}
     </div>
   );
-};
+});
+
+MapView.displayName = 'MapView';
 
 export default MapView;

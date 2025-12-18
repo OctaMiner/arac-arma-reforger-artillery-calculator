@@ -3,6 +3,7 @@
  * Arma Reforger Artillery Calculator
  */
 
+import { useState } from 'react';
 import {
   Sidebar,
   MainContent,
@@ -11,13 +12,15 @@ import {
   LanguageSelector,
 } from './components/Layout';
 import { ConfigPanel, WindInput } from './components/Config';
-import { MissionPanel } from './components/Mission';
+import { MissionPanel, MissionSaveDialog } from './components/Mission';
 import { StationPanel } from './components/Station';
 import { SpotterPanel } from './components/Spotter';
 import { HistoryPanel } from './components/History';
 import { ProfilePanel } from './components/Profile';
 import { TrajectoryGraph } from './components/Results';
 import { MapView } from './components/Map';
+import { ToastContainer } from './components/UI/Toast';
+import { SectionErrorBoundary } from './components/ErrorBoundary';
 import { useAutoHeight } from './hooks/useAutoHeight';
 import { useAutoCalculate } from './hooks/useAutoCalculate';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -66,6 +69,9 @@ function App() {
   // Initialize app - load all persisted data
   const { isInitialized, isLoading, error } = useInitialize();
 
+  // State for Save Mission Dialog
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+
   // Enable automatic height loading when positions change
   useAutoHeight();
 
@@ -75,6 +81,8 @@ function App() {
   // Global keyboard shortcuts
   useKeyboardShortcuts({
     enabled: true,
+    onEscape: () => setShowSaveDialog(false),
+    onSaveShortcut: () => setShowSaveDialog(true),
     // Note: Ring count shortcuts (1-5) work automatically
   });
 
@@ -84,32 +92,60 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex overflow-hidden bg-background">
-      {/* Sidebar - Full Height, Contains Header + Panels */}
-      <Sidebar>
-        <LanguageSelector />
-        <ConfigPanel />
-        <SpotterPanel />
-        <WindInput />
-        <TrajectoryGraph />
-        <MissionPanel />
-        <StationPanel />
-        <HistoryPanel />
-        <ProfilePanel />
-        <FAQ />
-      </Sidebar>
+    <>
+      <div className="h-screen flex overflow-hidden bg-background">
+        {/* Sidebar - Full Height, Contains Header + Panels */}
+        <Sidebar>
+          <LanguageSelector />
 
-      {/* Main Content - Map Area + Results Bar */}
-      <MainContent>
-        {/* Map - Takes remaining space */}
-        <div className="flex-1 relative overflow-hidden">
-          <MapView />
-        </div>
+          <SectionErrorBoundary section="config">
+            <ConfigPanel />
+          </SectionErrorBoundary>
 
-        {/* Results Bar - At bottom of map area */}
-        <ResultsBar />
-      </MainContent>
-    </div>
+          <SectionErrorBoundary section="spotter">
+            <SpotterPanel />
+          </SectionErrorBoundary>
+
+          <WindInput />
+          <TrajectoryGraph />
+
+          <SectionErrorBoundary section="mission">
+            <MissionPanel />
+          </SectionErrorBoundary>
+
+          <SectionErrorBoundary section="station">
+            <StationPanel />
+          </SectionErrorBoundary>
+
+          <HistoryPanel />
+          <ProfilePanel />
+          <FAQ />
+        </Sidebar>
+
+        {/* Main Content - Map Area + Results Bar */}
+        <MainContent>
+          {/* Map - Takes remaining space */}
+          <div className="flex-1 relative overflow-hidden">
+            <SectionErrorBoundary section="map">
+              <MapView />
+            </SectionErrorBoundary>
+          </div>
+
+          {/* Results Bar - At bottom of map area */}
+          <SectionErrorBoundary section="results">
+            <ResultsBar />
+          </SectionErrorBoundary>
+        </MainContent>
+      </div>
+
+      {/* Mission Save Dialog - Triggered by Ctrl+S */}
+      {showSaveDialog && (
+        <MissionSaveDialog onClose={() => setShowSaveDialog(false)} />
+      )}
+
+      {/* Toast Notifications */}
+      <ToastContainer />
+    </>
   );
 }
 

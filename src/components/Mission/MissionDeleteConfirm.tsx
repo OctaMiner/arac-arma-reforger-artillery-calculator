@@ -11,6 +11,7 @@
 import { useEffect } from 'react';
 import type { FireMission } from '../../types';
 import { useMissionsStore } from '../../stores/useMissionsStore';
+import { useToast } from '../UI/Toast';
 
 interface MissionDeleteConfirmProps {
   mission: FireMission;
@@ -25,10 +26,16 @@ export function MissionDeleteConfirm({
 }: MissionDeleteConfirmProps) {
   const deleteMission = useMissionsStore((state) => state.deleteMission);
   const isLoading = useMissionsStore((state) => state.isLoading);
+  const toast = useToast();
 
   const handleDelete = async () => {
-    await deleteMission(mission.id);
-    onConfirm();
+    try {
+      await deleteMission(mission.id);
+      toast.success(`Mission "${mission.name}" gelöscht`);
+      onConfirm();
+    } catch (error) {
+      toast.error('Fehler beim Löschen der Mission');
+    }
   };
 
   // Handle ESC key

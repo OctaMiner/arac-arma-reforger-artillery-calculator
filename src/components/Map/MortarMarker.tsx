@@ -1,7 +1,9 @@
 /**
  * MortarMarker - Draggable marker for mortar position
+ * Optimized with throttled drag updates (60fps) for smooth performance
  */
 
+import { memo, useCallback, useMemo } from 'react';
 import { Marker, Tooltip } from 'react-leaflet';
 import { DivIcon, type DragEndEvent } from 'leaflet';
 import { useAppStore } from '../../stores/useAppStore';
@@ -11,6 +13,7 @@ import {
   leafletToGame,
   formatGridPosition,
 } from '../../lib/coordinates/transform';
+import { useThrottledCallback } from '../../hooks/useThrottledCallback';
 
 // Custom icon for mortar (blue circle with "M")
 const mortarIcon = new DivIcon({
@@ -35,14 +38,37 @@ const mortarIcon = new DivIcon({
   iconAnchor: [16, 16],
 });
 
-const MortarMarker = () => {
+const MortarMarker = memo(() => {
   const mortarPosition = useAppStore((state) => state.mortarPosition);
   const setMortarPosition = useAppStore((state) => state.setMortarPosition);
   const selectedMap = useAppStore((state) => state.selectedMap);
 
-  // Get map height for coordinate transformation
-  const mapConfig = getMapConfig(selectedMap as any);
+  // Get map height for coordinate transformation - memoized
+  const mapConfig = useMemo(() => getMapConfig(selectedMap as any), [selectedMap]);
   const mapHeight = mapConfig?.size[1] ?? 12800;
+
+  // Throttled position update - max 60fps (16ms)
+  // This prevents calculation spam during drag
+  const throttledSetPosition = useThrottledCallback(
+    (lat: number, lng: number) => {
+      const gameCoords = leafletToGame(lat, lng, mapHeight);
+      setMortarPosition({
+        ...gameCoords,
+        height: mortarPosition?.height ?? 0,
+      });
+    },
+    16 // 60fps
+  );
+
+  // Memoized drag handler
+  const handleDragEnd = useCallback(
+    (e: DragEndEvent) => {
+      const { lat, lng } = e.target.getLatLng();
+      throttledSetPosition(lat, lng);
+      // Note: Calculation is triggered automatically by useAutoCalculate hook
+    },
+    [throttledSetPosition]
+  );
 
   if (!mortarPosition) return null;
 
@@ -53,19 +79,6 @@ const MortarMarker = () => {
     mortarPosition.north,
     mapHeight
   );
-
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { lat, lng } = e.target.getLatLng();
-
-    // Convert back: Leaflet [lat, lng] → Arma [east, north]
-    const gameCoords = leafletToGame(lat, lng, mapHeight);
-    setMortarPosition({
-      ...gameCoords,
-      height: mortarPosition.height, // Keep existing height
-    });
-
-    // Note: Calculation is triggered automatically by useAutoCalculate hook
-  };
 
   return (
     <Marker
@@ -83,6 +96,8 @@ const MortarMarker = () => {
       </Tooltip>
     </Marker>
   );
-};
+});
+
+MortarMarker.displayName = 'MortarMarker';
 
 export default MortarMarker;

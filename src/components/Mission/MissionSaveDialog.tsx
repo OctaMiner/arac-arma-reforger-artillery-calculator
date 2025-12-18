@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react';
 import { useAppStore } from '../../stores/useAppStore';
 import { useMissionsStore } from '../../stores/useMissionsStore';
+import { useToast } from '../UI/Toast';
 
 interface MissionSaveDialogProps {
   onClose: () => void;
@@ -20,6 +21,7 @@ interface MissionSaveDialogProps {
 export function MissionSaveDialog({ onClose }: MissionSaveDialogProps) {
   const [missionName, setMissionName] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const toast = useToast();
 
   // App state for current configuration
   const mortarPosition = useAppStore((state) => state.mortarPosition);
@@ -71,24 +73,31 @@ export function MissionSaveDialog({ onClose }: MissionSaveDialogProps) {
         fireSolution,
       });
 
+      // Show success toast
+      toast.success(`Mission "${missionName.trim()}" gespeichert`);
+
       // Close dialog on success
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Fehler beim Speichern');
+      const errorMsg = err instanceof Error ? err.message : 'Fehler beim Speichern';
+      setError(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
-  // Handle ESC key to close
+  // Handle Enter key to save
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
+      // Enter key saves (if valid)
+      if (e.key === 'Enter' && missionName.trim() && !isLoading) {
+        e.preventDefault();
+        handleSave();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [missionName, isLoading]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
