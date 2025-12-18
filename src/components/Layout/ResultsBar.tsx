@@ -134,10 +134,10 @@ export function ResultsBar() {
           <div className="flex items-center justify-center gap-3 text-xs font-mono text-accent-red">
             <AlertCircle className="w-3 h-3" />
             <span className="font-bold">
-              {fireSolution.distance > rangeInfo.maxRange ? 'TARGET TOO FAR' : 'TARGET TOO CLOSE'}
+              {fireSolution.distance > rangeInfo.maxRange ? t('results.targetTooFar') : t('results.targetTooClose')}
             </span>
             <span className="opacity-80">
-              TGT: {fireSolution.distance}m | {fireSolution.distance > rangeInfo.maxRange ? `MAX: ${rangeInfo.maxRange}` : `MIN: ${rangeInfo.minRange}`}m
+              {t('results.tgt')}: {fireSolution.distance}m | {fireSolution.distance > rangeInfo.maxRange ? `${t('results.max')}: ${rangeInfo.maxRange}` : `${t('results.min')}: ${rangeInfo.minRange}`}m
             </span>
           </div>
         </div>
@@ -255,7 +255,7 @@ export function ResultsBar() {
             </div>
           )}
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-text-secondary uppercase tracking-wider">System:</span>
+            <span className="text-[10px] text-text-secondary uppercase tracking-wider">{t('results.system')}:</span>
             <span className="font-mono text-xs text-text-primary font-medium">
               {mortarConfig.type === 'US' ? 'M252' : 'M82'}
             </span>

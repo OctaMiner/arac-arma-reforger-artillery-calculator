@@ -8,6 +8,8 @@ import { ConfigPanel, WindInput } from './components/Config'
 import { MissionPanel } from './components/Mission'
 import { StationPanel } from './components/Station'
 import { SpotterPanel } from './components/Spotter'
+import { HistoryPanel } from './components/History'
+import { ProfilePanel } from './components/Profile'
 import { TrajectoryGraph } from './components/Results'
 import { MapView } from './components/Map'
 import { useAutoHeight } from './hooks/useAutoHeight'
@@ -26,11 +28,13 @@ function App() {
       <Sidebar>
         <LanguageSelector />
         <ConfigPanel />
-        <MissionPanel />
-        <StationPanel />
         <SpotterPanel />
         <WindInput />
         <TrajectoryGraph />
+        <MissionPanel />
+        <StationPanel />
+        <HistoryPanel />
+        <ProfilePanel />
         <FAQ />
       </Sidebar>
 

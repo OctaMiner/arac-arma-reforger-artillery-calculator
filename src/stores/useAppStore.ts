@@ -5,7 +5,7 @@
  * - Mortar configuration (type, ammo, charge)
  * - Mortar and target positions
  * - Fire solution calculation
- * - Selected map
+ * - Selected map (auto-resets positions on change)
  */
 
 import { create } from 'zustand'
@@ -131,7 +131,19 @@ export const useAppStore = create<AppState>()(
         set({ targetPosition: position }, false, 'setTargetPosition'),
 
       setSelectedMap: (mapId) =>
-        set({ selectedMap: mapId }, false, 'setSelectedMap'),
+        set(
+          {
+            selectedMap: mapId,
+            // Reset positions and solution when map changes
+            // Coordinates are not valid across different maps
+            mortarPosition: null,
+            targetPosition: null,
+            fireSolution: null,
+            error: null
+          },
+          false,
+          'setSelectedMap'
+        ),
 
       setShowGrid: (show) =>
         set({ showGrid: show }, false, 'setShowGrid'),

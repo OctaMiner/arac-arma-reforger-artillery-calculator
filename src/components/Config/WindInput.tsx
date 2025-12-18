@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Wind, Compass } from 'lucide-react'
 import { useAppStore } from '../../stores/useAppStore'
 import { getWindStrength, getWindDirectionName } from '../../lib/ballistics'
@@ -28,6 +29,7 @@ const CARDINAL_DIRECTIONS = [
 ]
 
 export function WindInput() {
+  const { t } = useTranslation()
   const windData = useAppStore((state) => state.windData)
   const setWindData = useAppStore((state) => state.setWindData)
 
@@ -88,7 +90,7 @@ export function WindInput() {
         <div className="flex items-center gap-2">
           <Wind className="w-5 h-5 text-blue-400" />
           <h2 className="text-lg font-semibold text-blue-400 uppercase tracking-wide">
-            Wind-Korrektur
+            {t('wind.title')}
           </h2>
         </div>
 
@@ -98,7 +100,7 @@ export function WindInput() {
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
             enabled ? 'bg-blue-600' : 'bg-gray-600'
           }`}
-          aria-label="Wind aktivieren/deaktivieren"
+          aria-label={t('wind.toggle')}
         >
           <span
             className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -110,7 +112,7 @@ export function WindInput() {
 
       {!enabled && (
         <div className="text-sm text-gray-400">
-          Wind-Korrektur deaktiviert. Aktiviere den Schalter oben, um Wind zu berücksichtigen.
+          {t('wind.disabled')}
         </div>
       )}
 
@@ -119,7 +121,7 @@ export function WindInput() {
           {/* Wind Speed Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide">
-              Windgeschwindigkeit
+              {t('wind.speed')}
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -167,7 +169,7 @@ export function WindInput() {
                   : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
               }`}
             >
-              Himmelsrichtung
+              {t('wind.cardinal')}
             </button>
             <button
               onClick={() => setUseCardinal(false)}
@@ -177,14 +179,14 @@ export function WindInput() {
                   : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
               }`}
             >
-              Grad
+              {t('wind.degrees')}
             </button>
           </div>
 
           {/* Wind Direction Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2 uppercase tracking-wide">
-              Windrichtung (woher der Wind kommt)
+              {t('wind.direction')}
             </label>
 
             {useCardinal ? (
@@ -233,7 +235,7 @@ export function WindInput() {
             <div className="mt-3 flex items-center gap-3">
               <Compass className="w-5 h-5 text-blue-400" />
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">Aktuelle Richtung:</span>
+                <span className="text-sm text-gray-400">{t('wind.currentDirection')}:</span>
                 <span className="font-mono text-lg font-bold text-blue-400">
                   {windDirName} ({direction}°)
                 </span>
@@ -247,10 +249,10 @@ export function WindInput() {
               <span className="text-blue-400 text-lg">ℹ️</span>
               <div>
                 <p className="text-blue-300 text-xs font-medium">
-                  Wind-Korrektur aktiv
+                  {t('wind.activeTitle')}
                 </p>
                 <p className="text-blue-200/70 text-xs mt-1">
-                  Azimut und Elevation werden automatisch korrigiert. Die korrigierten Werte werden in der Ergebnisanzeige angezeigt.
+                  {t('wind.activeDesc')}
                 </p>
               </div>
             </div>

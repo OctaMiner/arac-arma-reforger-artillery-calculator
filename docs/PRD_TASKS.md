@@ -415,35 +415,35 @@ Task: "US HE Ring 0 Tabelle aus Excel extrahieren" - Agent: /ballistics
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | `HistoryPanel.tsx` - Tab für Schuss-Historie | `/frontend` | 2 | 4.1.25 |
-| [ ] | `HistoryList.tsx` - Liste vergangener Schüsse | `/frontend` | 2 | 4.2.6 |
-| [ ] | `HistoryEntry.tsx` - Einzelner Eintrag mit Details | `/frontend` | 2 | 5.8.2 |
-| [ ] | Timestamp + Mission-Referenz | `/frontend` | 2 | 5.8.3 |
-| [ ] | "Erneut laden" Button pro Eintrag | `/frontend` | 2 | 5.8.3 |
-| [ ] | "Historie löschen" Button | `/frontend` | 3 | 4.1.27 |
-| [ ] | Pagination/Infinite Scroll | `/frontend` | 3 | 5.8.2 |
+| [x] | `HistoryPanel.tsx` - Tab für Schuss-Historie | `/frontend` | 2 | 4.1.25 |
+| [x] | `HistoryList.tsx` - Liste vergangener Schüsse | `/frontend` | 2 | 4.2.6 |
+| [x] | `HistoryEntry.tsx` - Einzelner Eintrag mit Details | `/frontend` | 2 | 5.8.2 |
+| [x] | Timestamp + Mission-Referenz | `/frontend` | 2 | 5.8.3 |
+| [x] | "Erneut laden" Button pro Eintrag | `/frontend` | 2 | 5.8.3 |
+| [x] | "Historie löschen" Button | `/frontend` | 3 | 4.1.27 |
+| [x] | Pagination/Infinite Scroll | `/frontend` | 3 | 5.8.2 |
 
 ## 5.9 Settings Components
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | `SettingsModal.tsx` - Einstellungen Dialog | `/frontend` | 2 | 4.1.36 |
-| [ ] | Theme Toggle (Dark/Light - vorerst nur Dark) | `/frontend` | 3 | 5.1.7 |
-| [ ] | Language Selector (DE/EN) | `/frontend` | 3 | 5.9.1 |
-| [ ] | Default Mörser-Typ Einstellung | `/frontend` | 2 | 5.9.1 |
-| [ ] | Default Munition Einstellung | `/frontend` | 2 | 5.9.1 |
-| [ ] | Grid Ein/Aus Toggle | `/frontend` | 2 | 5.2.7 |
-| [ ] | Reset to Defaults Button | `/frontend` | 3 | 5.9.1 |
+| [x] | `SettingsModal.tsx` - Einstellungen Dialog | `/frontend` | 2 | 4.1.36 |
+| [x] | Theme Toggle (Dark/Light - vorerst nur Dark) | `/frontend` | 3 | 5.1.7 |
+| [x] | Language Selector (DE/EN) | `/frontend` | 3 | 5.9.1 |
+| [x] | Default Mörser-Typ Einstellung | `/frontend` | 2 | 5.9.1 |
+| [x] | Default Munition Einstellung | `/frontend` | 2 | 5.9.1 |
+| [x] | Grid Ein/Aus Toggle | `/frontend` | 2 | 5.2.7 |
+| [x] | Reset to Defaults Button | `/frontend` | 3 | 5.9.1 |
 
 ## 5.10 User Profile Components
 
 | Status | Task | Agent | Prio | Abhängig von |
 |--------|------|-------|------|--------------|
-| [ ] | `ProfilePanel.tsx` - Benutzer-Bereich | `/frontend` | 2 | 4.1.36 |
-| [ ] | Benutzername Eingabe/Anzeige | `/frontend` | 2 | 5.10.1 |
-| [ ] | Statistik-Anzeige (Anzahl Missionen, Schüsse) | `/frontend` | 3 | 5.10.1 |
-| [ ] | Export Profil (JSON Download) | `/frontend` | 3 | 5.10.1 |
-| [ ] | Import Profil (JSON Upload) | `/frontend` | 3 | 5.10.1 |
+| [x] | `ProfilePanel.tsx` - Benutzer-Bereich | `/frontend` | 2 | 4.1.36 |
+| [x] | Benutzername Eingabe/Anzeige | `/frontend` | 2 | 5.10.1 |
+| [x] | Statistik-Anzeige (Anzahl Missionen, Schüsse) | `/frontend` | 3 | 5.10.1 |
+| [x] | Export Profil (JSON Download) | `/frontend` | 3 | 5.10.1 |
+| [x] | Import Profil (JSON Upload) | `/frontend` | 3 | 5.10.1 |
 
 ---
 

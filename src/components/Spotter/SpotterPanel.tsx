@@ -10,6 +10,7 @@
  * - Fire correction panel
  */
 
+import { useTranslation } from 'react-i18next'
 import { useSpotterStore } from '../../stores/useSpotterStore'
 import { SpotterToggle } from './SpotterToggle'
 import { SpotterPositionInput } from './SpotterPositionInput'
@@ -18,6 +19,7 @@ import { CalculateTargetButton } from './CalculateTargetButton'
 import { CorrectionPanel } from './CorrectionPanel'
 
 export function SpotterPanel() {
+  const { t } = useTranslation()
   const spotterMode = useSpotterStore((state) => state.spotterMode)
 
   return (
@@ -56,7 +58,7 @@ export function SpotterPanel() {
               d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
             />
           </svg>
-          <h2 className="text-lg font-bold text-white">Spotter</h2>
+          <h2 className="text-lg font-bold text-white">{t('spotter.title')}</h2>
         </div>
 
         {/* Toggle */}
@@ -89,7 +91,7 @@ export function SpotterPanel() {
       {/* Collapsed State Info */}
       {!spotterMode && (
         <div className="px-4 py-3 text-xs text-gray-500 text-center">
-          Aktiviere Spotter-Modus für Vector 21 Integration
+          {t('spotter.enableHint')}
         </div>
       )}
     </div>

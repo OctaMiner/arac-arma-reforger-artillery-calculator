@@ -11,7 +11,12 @@
     "success": "Success",
     "meters": "m",
     "mil": "MIL",
-    "seconds": "s"
+    "seconds": "s",
+    "calculating": "Calculating...",
+    "set": "Set",
+    "notSet": "Not set",
+    "setOnMap": "Set on map:",
+    "coordinates": "Coordinates"
   },
   "header": {
     "title": "ARAC",
@@ -32,7 +37,15 @@
     "he": "HE (Explosive)",
     "smoke": "Smoke",
     "illumination": "Illumination",
-    "ring": "Ring"
+    "ring": "Ring",
+    "mortarConfig": "Mortar Configuration",
+    "positions": "Positions",
+    "mortarPosition": "Mortar Position",
+    "targetPosition": "Target Position",
+    "autoChargeTitle": "Automatic Charge Calculation",
+    "autoChargeDesc": "The optimal ring is automatically determined based on distance",
+    "leftClickHint": "Left-click on the map",
+    "rightClickHint": "Right-click or Shift+click on the map"
   },
   "positions": {
     "mortar": "Mortar",
@@ -57,7 +70,13 @@
     "setPositions": "Set mortar and target",
     "ready": "READY",
     "suboptimal": "SUBOPTIMAL",
-    "awaiting": "AWAITING"
+    "awaiting": "AWAITING",
+    "targetTooFar": "TARGET TOO FAR",
+    "targetTooClose": "TARGET TOO CLOSE",
+    "tgt": "TGT",
+    "max": "MAX",
+    "min": "MIN",
+    "system": "System"
   },
   "map": {
     "leftClick": "Left-click = Mortar",
@@ -73,10 +92,11 @@
     "noMissions": "No missions saved"
   },
   "stations": {
-    "title": "Stations",
+    "title": "Mortar Positions",
     "save": "Save Station",
     "name": "Name",
-    "noStations": "No stations saved"
+    "noStations": "No stations saved",
+    "savedStations": "Saved Positions"
   },
   "spotter": {
     "title": "Spotter",
@@ -89,7 +109,20 @@
     "left": "Left",
     "right": "Right",
     "add": "Add",
-    "drop": "Drop"
+    "drop": "Drop",
+    "enableHint": "Enable Spotter Mode for Vector 21 Integration"
+  },
+  "wind": {
+    "title": "Wind Correction",
+    "toggle": "Enable/disable wind",
+    "disabled": "Wind correction disabled. Enable the switch above to consider wind.",
+    "speed": "Wind Speed",
+    "cardinal": "Cardinal Direction",
+    "degrees": "Degrees",
+    "direction": "Wind Direction (where wind comes from)",
+    "currentDirection": "Current Direction",
+    "activeTitle": "Wind Correction Active",
+    "activeDesc": "Azimuth and elevation are automatically corrected. The corrected values are shown in the results display."
   },
   "faq": {
     "title": "Help / FAQ",
@@ -114,5 +147,67 @@
   "rangeWarning": {
     "outOfRange": "OUT OF RANGE",
     "deadZone": "DEAD ZONE"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeDesc": "Choose between light and dark mode",
+    "dark": "Dark",
+    "light": "Light",
+    "lightComingSoon": "Light mode coming soon",
+    "language": "Language",
+    "languageDesc": "Select the display language",
+    "map": "Map",
+    "showGrid": "Show Coordinate Grid",
+    "showGridDesc": "Show or hide the coordinate grid on the map",
+    "defaults": "Defaults",
+    "defaultMortarType": "Default Mortar Type",
+    "defaultMortarTypeDesc": "Used when the app starts",
+    "defaultAmmo": "Default Ammo Type",
+    "defaultAmmoDesc": "Used when the app starts",
+    "resetToDefaults": "Reset to Defaults"
+  },
+  "history": {
+    "title": "Fire History",
+    "empty": "No shots in history",
+    "emptyDesc": "Every calculated fire solution will be automatically saved here",
+    "load": "Load",
+    "clearAll": "Clear History",
+    "confirmClear": "Really delete all entries?",
+    "confirmClearDesc": "This action cannot be undone.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "at": "at",
+    "savedHistory": "Saved Shots",
+    "missionRef": "Mission:",
+    "loadMore": "Load More",
+    "cleared": "History cleared",
+    "loadedFromHistory": "Loaded from history"
+  },
+  "profile": {
+    "title": "Profile",
+    "username": "Username",
+    "usernamePlaceholder": "Your name...",
+    "editUsername": "Edit name",
+    "statistics": "Statistics",
+    "missions": "Missions",
+    "shots": "Shots",
+    "stations": "Stations",
+    "totalMissions": "Saved Missions",
+    "totalShots": "Calculated Shots",
+    "totalStations": "Saved Stations",
+    "export": "Export Profile",
+    "import": "Import Profile",
+    "exportDesc": "Download all data as JSON",
+    "importDesc": "Load data from JSON file",
+    "importWarning": "Warning: Existing data will be overwritten!",
+    "importSuccess": "Profile imported successfully",
+    "importError": "Import error",
+    "invalidFile": "Invalid file",
+    "selectFile": "Select file",
+    "dataManagement": "Data Management",
+    "noProfile": "No profile available",
+    "createProfile": "Create Profile"
   }
 }

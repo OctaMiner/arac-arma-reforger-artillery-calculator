@@ -9,10 +9,13 @@
  * - Green theme for stations vs blue for missions
  */
 
+import { useTranslation } from 'react-i18next'
 import { StationSaveButton } from './StationSaveButton'
 import { StationList } from './StationList'
 
 export function StationPanel() {
+  const { t } = useTranslation()
+
   return (
     <div className="bg-gray-800/50 rounded-lg border border-gray-700">
       {/* Header */}
@@ -37,7 +40,7 @@ export function StationPanel() {
               d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          Mörser-Stellungen
+          {t('stations.title')}
         </h2>
       </div>
 
@@ -49,7 +52,7 @@ export function StationPanel() {
         {/* Stations List */}
         <div>
           <div className="text-xs font-semibold text-gray-400 uppercase mb-2 tracking-wide">
-            Gespeicherte Stellungen
+            {t('stations.savedStations')}
           </div>
           <StationList />
         </div>

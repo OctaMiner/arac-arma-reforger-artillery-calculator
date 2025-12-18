@@ -11,7 +11,12 @@
     "success": "Erfolg",
     "meters": "m",
     "mil": "MIL",
-    "seconds": "s"
+    "seconds": "s",
+    "calculating": "Berechne...",
+    "set": "Gesetzt",
+    "notSet": "Nicht gesetzt",
+    "setOnMap": "Auf Karte setzen:",
+    "coordinates": "Koordinaten"
   },
   "header": {
     "title": "ARAC",
@@ -32,7 +37,15 @@
     "he": "HE (Spreng)",
     "smoke": "Rauch",
     "illumination": "Leucht",
-    "ring": "Ring"
+    "ring": "Ring",
+    "mortarConfig": "Mörser-Konfiguration",
+    "positions": "Positionen",
+    "mortarPosition": "Mörser-Position",
+    "targetPosition": "Ziel-Position",
+    "autoChargeTitle": "Automatische Ladungsberechnung",
+    "autoChargeDesc": "Der optimale Ring wird basierend auf der Entfernung automatisch ermittelt",
+    "leftClickHint": "Linksklick auf die Karte",
+    "rightClickHint": "Rechtsklick oder Shift+Klick auf die Karte"
   },
   "positions": {
     "mortar": "Mörser",
@@ -57,7 +70,13 @@
     "setPositions": "Mörser und Ziel setzen",
     "ready": "BEREIT",
     "suboptimal": "SUBOPTIMAL",
-    "awaiting": "WARTE"
+    "awaiting": "WARTE",
+    "targetTooFar": "ZIEL ZU WEIT",
+    "targetTooClose": "ZIEL ZU NAH",
+    "tgt": "ZIEL",
+    "max": "MAX",
+    "min": "MIN",
+    "system": "System"
   },
   "map": {
     "leftClick": "Linksklick = Mörser",
@@ -73,10 +92,11 @@
     "noMissions": "Keine Missionen gespeichert"
   },
   "stations": {
-    "title": "Stationen",
+    "title": "Mörser-Stellungen",
     "save": "Station speichern",
     "name": "Name",
-    "noStations": "Keine Stationen gespeichert"
+    "noStations": "Keine Stationen gespeichert",
+    "savedStations": "Gespeicherte Stellungen"
   },
   "spotter": {
     "title": "Spotter",
@@ -89,7 +109,20 @@
     "left": "Links",
     "right": "Rechts",
     "add": "Drauf",
-    "drop": "Ab"
+    "drop": "Ab",
+    "enableHint": "Aktiviere Spotter-Modus für Vector 21 Integration"
+  },
+  "wind": {
+    "title": "Wind-Korrektur",
+    "toggle": "Wind aktivieren/deaktivieren",
+    "disabled": "Wind-Korrektur deaktiviert. Aktiviere den Schalter oben, um Wind zu berücksichtigen.",
+    "speed": "Windgeschwindigkeit",
+    "cardinal": "Himmelsrichtung",
+    "degrees": "Grad",
+    "direction": "Windrichtung (woher der Wind kommt)",
+    "currentDirection": "Aktuelle Richtung",
+    "activeTitle": "Wind-Korrektur aktiv",
+    "activeDesc": "Azimut und Elevation werden automatisch korrigiert. Die korrigierten Werte werden in der Ergebnisanzeige angezeigt."
   },
   "faq": {
     "title": "Hilfe / FAQ",
@@ -114,5 +147,67 @@
   "rangeWarning": {
     "outOfRange": "AUSSER REICHWEITE",
     "deadZone": "TOTZONE"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "theme": "Farbschema",
+    "themeDesc": "Wähle zwischen hellem und dunklem Modus",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "lightComingSoon": "Heller Modus kommt bald",
+    "language": "Sprache",
+    "languageDesc": "Wähle die Anzeigesprache",
+    "map": "Karte",
+    "showGrid": "Koordinaten-Raster anzeigen",
+    "showGridDesc": "Zeige oder verberge das Koordinaten-Raster auf der Karte",
+    "defaults": "Standardwerte",
+    "defaultMortarType": "Standard Mörser-Typ",
+    "defaultMortarTypeDesc": "Wird beim App-Start verwendet",
+    "defaultAmmo": "Standard Munitionstyp",
+    "defaultAmmoDesc": "Wird beim App-Start verwendet",
+    "resetToDefaults": "Auf Standardwerte zurücksetzen"
+  },
+  "history": {
+    "title": "Schuss-Historie",
+    "empty": "Keine Schüsse in der Historie",
+    "emptyDesc": "Jede berechnete Feuerlösung wird automatisch hier gespeichert",
+    "load": "Laden",
+    "clearAll": "Historie löschen",
+    "confirmClear": "Wirklich alle Einträge löschen?",
+    "confirmClearDesc": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "at": "um",
+    "savedHistory": "Gespeicherte Schüsse",
+    "missionRef": "Mission:",
+    "loadMore": "Weitere laden",
+    "cleared": "Historie gelöscht",
+    "loadedFromHistory": "Aus Historie geladen"
+  },
+  "profile": {
+    "title": "Profil",
+    "username": "Benutzername",
+    "usernamePlaceholder": "Dein Name...",
+    "editUsername": "Namen bearbeiten",
+    "statistics": "Statistiken",
+    "missions": "Missionen",
+    "shots": "Schüsse",
+    "stations": "Stellungen",
+    "totalMissions": "Gespeicherte Missionen",
+    "totalShots": "Berechnete Schüsse",
+    "totalStations": "Gespeicherte Stellungen",
+    "export": "Profil exportieren",
+    "import": "Profil importieren",
+    "exportDesc": "Alle Daten als JSON herunterladen",
+    "importDesc": "Daten aus JSON-Datei laden",
+    "importWarning": "Achtung: Vorhandene Daten werden überschrieben!",
+    "importSuccess": "Profil erfolgreich importiert",
+    "importError": "Fehler beim Import",
+    "invalidFile": "Ungültige Datei",
+    "selectFile": "Datei auswählen",
+    "dataManagement": "Datenverwaltung",
+    "noProfile": "Kein Profil vorhanden",
+    "createProfile": "Profil erstellen"
   }
 }

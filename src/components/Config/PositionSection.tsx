@@ -8,6 +8,7 @@
  * - Hint for map click to set position
  */
 
+import { useTranslation } from 'react-i18next'
 import type { Coordinate } from '../../types'
 import { CoordinateInput } from './CoordinateInput'
 import { HeightInput } from './HeightInput'
@@ -28,6 +29,8 @@ export function PositionSection({
   disabled = false,
   isTarget = false
 }: PositionSectionProps) {
+  const { t } = useTranslation()
+
   const handleHeightChange = (height: number) => {
     onChange({
       east: position?.east ?? 0,
@@ -45,12 +48,12 @@ export function PositionSection({
         {position ? (
           <span className="text-green-500 text-xs flex items-center gap-1">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            Gesetzt
+            {t('common.set')}
           </span>
         ) : (
           <span className="text-gray-500 text-xs flex items-center gap-1">
             <span className="w-2 h-2 bg-gray-500 rounded-full" />
-            Nicht gesetzt
+            {t('common.notSet')}
           </span>
         )}
       </div>
@@ -65,12 +68,12 @@ export function PositionSection({
           <div className="flex items-center gap-2">
             <span className="text-lg">{isTarget ? '🎯' : '📍'}</span>
             <div>
-              <strong>Auf Karte setzen:</strong>
+              <strong>{t('common.setOnMap')}</strong>
               <div className="mt-1">
                 {isTarget ? (
-                  <>Rechtsklick oder Shift+Klick auf die Karte</>
+                  <>{t('config.rightClickHint')}</>
                 ) : (
-                  <>Linksklick auf die Karte</>
+                  <>{t('config.leftClickHint')}</>
                 )}
               </div>
             </div>
@@ -79,14 +82,14 @@ export function PositionSection({
       )}
 
       <CoordinateInput
-        label="Koordinaten"
+        label={t('common.coordinates')}
         position={position}
         onChange={onChange}
         disabled={disabled}
       />
 
       <HeightInput
-        label="Höhe"
+        label={t('positions.height')}
         value={position?.height ?? 0}
         onChange={handleHeightChange}
         disabled={disabled}

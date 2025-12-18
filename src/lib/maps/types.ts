@@ -82,19 +82,15 @@ export type MapId =
 export const VANILLA_MAPS: MapId[] = ['everon', 'arland', 'kolguev']
 
 /**
- * Maps with height data available
+ * Maps with height data available (local files < 50MB)
+ * Large maps (>50MB) excluded: kolguev, anizay, gogland, saigon, zimnitrita
  */
 export const MAPS_WITH_HEIGHT_DATA: MapId[] = [
-  'everon',
-  'arland',
-  'kolguev',
-  'anizay',
-  'gogland',
-  'kunar',
-  'saigon',
-  'takistan',
-  'zarichne',
-  'zimnitrita'
+  'everon',   // 8.9 MB
+  'arland',   // 0.9 MB
+  'kunar',    // 20 MB
+  'takistan', // 29 MB
+  'zarichne'  // 31 MB
 ]
 
 /**

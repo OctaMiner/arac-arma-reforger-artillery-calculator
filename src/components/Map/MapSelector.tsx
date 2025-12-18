@@ -11,11 +11,13 @@
  * - Height data badge for maps with elevation data
  */
 
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../stores/useAppStore'
 import { getMapsByCategory, type MapId } from '../../lib/maps'
 import { Map, Mountain } from 'lucide-react'
 
 export function MapSelector() {
+  const { t } = useTranslation()
   const selectedMap = useAppStore((state) => state.selectedMap)
   const setSelectedMap = useAppStore((state) => state.setSelectedMap)
   const { vanilla, mods } = getMapsByCategory() // Grouped by category
@@ -33,12 +35,12 @@ export function MapSelector() {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <label htmlFor="map-select" className="block text-gray-400 text-xs uppercase font-medium">
-          Karte
+          {t('sidebar.map')}
         </label>
         {selectedMapConfig?.hasHeightData && (
           <div className="flex items-center gap-1 text-xs text-green-400">
             <Mountain className="w-3 h-3" />
-            <span>Höhendaten</span>
+            <span>{t('sidebar.heightData')}</span>
           </div>
         )}
       </div>
@@ -70,14 +72,14 @@ export function MapSelector() {
             text-sm
           "
         >
-          <optgroup label="Vanilla">
+          <optgroup label={t('sidebar.vanilla')}>
             {vanilla.map((map) => (
               <option key={map.id} value={map.id}>
                 {map.displayName} {map.hasHeightData ? '⛰️' : ''}
               </option>
             ))}
           </optgroup>
-          <optgroup label="Mods">
+          <optgroup label={t('sidebar.mods')}>
             {mods.map((map) => (
               <option key={map.id} value={map.id}>
                 {map.displayName} {map.hasHeightData ? '⛰️' : ''}
