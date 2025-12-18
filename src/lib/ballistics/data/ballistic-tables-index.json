@@ -1,0 +1,132 @@
+{
+  "version": "1.0",
+  "source": "Arma Reforger Mortar Calc.xlsx",
+  "tables": [
+    {
+      "file": "rus-he-ring0.json",
+      "mortarType": "RUS",
+      "ammoType": "HE",
+      "ringCount": 0,
+      "minRange": 50,
+      "maxRange": 500,
+      "entryCount": 10
+    },
+    {
+      "file": "rus-he-ring1.json",
+      "mortarType": "RUS",
+      "ammoType": "HE",
+      "ringCount": 1,
+      "minRange": 100,
+      "maxRange": 800,
+      "entryCount": 8
+    },
+    {
+      "file": "rus-he-ring2.json",
+      "mortarType": "RUS",
+      "ammoType": "HE",
+      "ringCount": 2,
+      "minRange": 200,
+      "maxRange": 1400,
+      "entryCount": 13
+    },
+    {
+      "file": "rus-he-ring3.json",
+      "mortarType": "RUS",
+      "ammoType": "HE",
+      "ringCount": 3,
+      "minRange": 300,
+      "maxRange": 1800,
+      "entryCount": 16
+    },
+    {
+      "file": "rus-he-ring4.json",
+      "mortarType": "RUS",
+      "ammoType": "HE",
+      "ringCount": 4,
+      "minRange": 400,
+      "maxRange": 2300,
+      "entryCount": 20
+    },
+    {
+      "file": "rus-illumination.json",
+      "mortarType": "RUS",
+      "ammoType": "Illumination",
+      "ringCount": "all",
+      "minRange": 100,
+      "maxRange": 2200,
+      "entryCount": 54
+    },
+    {
+      "file": "rus-smoke.json",
+      "mortarType": "RUS",
+      "ammoType": "Smoke",
+      "ringCount": "all",
+      "minRange": 50,
+      "maxRange": 1700,
+      "entryCount": 40
+    },
+    {
+      "file": "us-he-ring0.json",
+      "mortarType": "US",
+      "ammoType": "HE",
+      "ringCount": 0,
+      "minRange": 50,
+      "maxRange": 400,
+      "entryCount": 8
+    },
+    {
+      "file": "us-he-ring1.json",
+      "mortarType": "US",
+      "ammoType": "HE",
+      "ringCount": 1,
+      "minRange": 100,
+      "maxRange": 900,
+      "entryCount": 9
+    },
+    {
+      "file": "us-he-ring2.json",
+      "mortarType": "US",
+      "ammoType": "HE",
+      "ringCount": 2,
+      "minRange": 200,
+      "maxRange": 1600,
+      "entryCount": 15
+    },
+    {
+      "file": "us-he-ring3.json",
+      "mortarType": "US",
+      "ammoType": "HE",
+      "ringCount": 3,
+      "minRange": 300,
+      "maxRange": 2300,
+      "entryCount": 21
+    },
+    {
+      "file": "us-he-ring4.json",
+      "mortarType": "US",
+      "ammoType": "HE",
+      "ringCount": 4,
+      "minRange": 400,
+      "maxRange": 2900,
+      "entryCount": 26
+    },
+    {
+      "file": "us-illumination.json",
+      "mortarType": "US",
+      "ammoType": "Illumination",
+      "ringCount": "all",
+      "minRange": 200,
+      "maxRange": 2400,
+      "entryCount": 63
+    },
+    {
+      "file": "us-smoke.json",
+      "mortarType": "US",
+      "ammoType": "Smoke",
+      "ringCount": "all",
+      "minRange": 200,
+      "maxRange": 2400,
+      "entryCount": 63
+    }
+  ]
+}

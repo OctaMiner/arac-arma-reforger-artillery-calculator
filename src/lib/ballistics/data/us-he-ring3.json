@@ -1,0 +1,135 @@
+{
+  "mortarType": "US",
+  "ammoType": "HE",
+  "ringCount": 3,
+  "minRange": 300,
+  "maxRange": 2300,
+  "entries": [
+    {
+      "range": 300,
+      "elevation": 1534,
+      "tof": 31.7,
+      "dElev": 12
+    },
+    {
+      "range": 400,
+      "elevation": 1511,
+      "tof": 31.6,
+      "dElev": 11
+    },
+    {
+      "range": 500,
+      "elevation": 1489,
+      "tof": 31.6,
+      "dElev": 12
+    },
+    {
+      "range": 600,
+      "elevation": 1466,
+      "tof": 31.5,
+      "dElev": 12
+    },
+    {
+      "range": 700,
+      "elevation": 1442,
+      "tof": 31.4,
+      "dElev": 12
+    },
+    {
+      "range": 800,
+      "elevation": 1419,
+      "tof": 31.3,
+      "dElev": 12
+    },
+    {
+      "range": 900,
+      "elevation": 1395,
+      "tof": 31.1,
+      "dElev": 13
+    },
+    {
+      "range": 1000,
+      "elevation": 1370,
+      "tof": 31.0,
+      "dElev": 13
+    },
+    {
+      "range": 1100,
+      "elevation": 1344,
+      "tof": 30.8,
+      "dElev": 13
+    },
+    {
+      "range": 1200,
+      "elevation": 1318,
+      "tof": 30.6,
+      "dElev": 13
+    },
+    {
+      "range": 1300,
+      "elevation": 1291,
+      "tof": 30.3,
+      "dElev": 14
+    },
+    {
+      "range": 1400,
+      "elevation": 1263,
+      "tof": 30.1,
+      "dElev": 15
+    },
+    {
+      "range": 1500,
+      "elevation": 1233,
+      "tof": 29.0,
+      "dElev": 7
+    },
+    {
+      "range": 1600,
+      "elevation": 1202,
+      "tof": 29.4,
+      "dElev": 16
+    },
+    {
+      "range": 1700,
+      "elevation": 1169,
+      "tof": 29.0,
+      "dElev": 17
+    },
+    {
+      "range": 1800,
+      "elevation": 1133,
+      "tof": 28.5,
+      "dElev": 19
+    },
+    {
+      "range": 1900,
+      "elevation": 1094,
+      "tof": 28.0,
+      "dElev": 21
+    },
+    {
+      "range": 2000,
+      "elevation": 1051,
+      "tof": 27.3,
+      "dElev": 26
+    },
+    {
+      "range": 2100,
+      "elevation": 999,
+      "tof": 26.5,
+      "dElev": 31
+    },
+    {
+      "range": 2200,
+      "elevation": 931,
+      "tof": 25.3,
+      "dElev": 46
+    },
+    {
+      "range": 2300,
+      "elevation": 801,
+      "tof": 22.7,
+      "dElev": 0
+    }
+  ]
+}

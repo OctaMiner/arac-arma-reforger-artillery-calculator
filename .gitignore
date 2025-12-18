@@ -1,0 +1,102 @@
+# Claude Code / AI Assistant Folders (NICHT auf GitHub!)
+.claude/
+.claude-*
+*.claude
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+dist-electron/
+build/
+out/
+release/
+*.exe
+*.dmg
+*.AppImage
+*.snap
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Electron
+electron/dist/
+
+# Vite
+*.local
+
+# Personal/private files - IMPORTANT for GitHub
+# Never commit personal paths or private data
+personal/
+private/
+secrets/
+credentials/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Large image files (not needed in repo)
+3z111aqs2z1d1.jpeg
+Arland-Map.jpg
+Everon Teil 1.jpg
+Everon Teil 2.jpg
+Everon Teil 3.jpg
+Everon Teil 4.jpg
+i-made-a-python-script-to-calculate-mortar-ranging-v0-qwutfrte1fhe1.webp
+
+# Package manager locks (keep one)
+# package-lock.json  # Keep if using npm
+# yarn.lock          # Keep if using yarn
+# pnpm-lock.yaml     # Keep if using pnpm
+
+# Source maps (optional - remove if you want them)
+# *.map
+
+# Excel source files (original data - keep in docs if needed)
+# *.xlsx  # Uncomment if you don't want Excel files in repo

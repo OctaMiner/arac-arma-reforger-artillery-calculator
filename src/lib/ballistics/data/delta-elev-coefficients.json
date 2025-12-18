@@ -1,0 +1,38 @@
+{
+  "description": "Delta Elevation coefficients per 100m altitude difference",
+  "source": "Berechnungen Mor-ohne Map.xlsx - extracted from Polynome Delta ELEV Höhe section",
+  "unit": "mil per 100m altitude",
+  "coefficients": {
+    "ring0": {
+      "baseDistance": 50,
+      "coefficient": 60.7420475,
+      "description": "0 rings - highest trajectory"
+    },
+    "ring1": {
+      "baseDistance": 50,
+      "coefficient": 27.04692250871875,
+      "description": "1 ring"
+    },
+    "ring2": {
+      "baseDistance": 50,
+      "coefficient": 16.970439909375,
+      "description": "2 rings"
+    },
+    "ring3": {
+      "baseDistance": 50,
+      "coefficient": 12.071724479896876,
+      "description": "3 rings"
+    },
+    "ring4": {
+      "baseDistance": 50,
+      "coefficient": 9.11366672303125,
+      "description": "4 rings - lowest trajectory"
+    }
+  },
+  "usage": "To calculate elevation adjustment: deltaElev = coefficient * (targetAltitude - mortarAltitude) / 100",
+  "notes": [
+    "Coefficients are derived from Marcel's calculations",
+    "Higher ring counts have lower coefficients due to flatter trajectories",
+    "These values apply to both US and RUS mortars"
+  ]
+}

@@ -1,0 +1,425 @@
+@import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  --background: oklch(1.0000 0 0);
+  --foreground: oklch(0.4117 0.0329 223.1840);
+  --card: oklch(1.0000 0 0);
+  --card-foreground: oklch(0.4117 0.0329 223.1840);
+  --popover: oklch(1.0000 0 0);
+  --popover-foreground: oklch(0.4117 0.0329 223.1840);
+  --primary: oklch(0.7870 0.2618 142.7428);
+  --primary-foreground: oklch(1.0000 0 0);
+  --secondary: oklch(0.9921 0.0075 207.1431);
+  --secondary-foreground: oklch(0.4837 0.0297 218.3601);
+  --muted: oklch(1.0000 0 0);
+  --muted-foreground: oklch(0.5884 0.0252 229.3905);
+  --accent: oklch(0.9736 0.0421 150.6102);
+  --accent-foreground: oklch(0.4117 0.0329 223.1840);
+  --destructive: oklch(0.6747 0.2255 5.7366);
+  --destructive-foreground: oklch(1.0000 0 0);
+  --border: oklch(0.9659 0.0025 228.7842);
+  --input: oklch(0.9659 0.0025 228.7842);
+  --ring: oklch(0.7870 0.2618 142.7428);
+  --sidebar: oklch(0.9921 0.0075 207.1431);
+  --sidebar-foreground: oklch(0.4117 0.0329 223.1840);
+  --sidebar-primary: oklch(0.7870 0.2618 142.7428);
+  --sidebar-primary-foreground: oklch(1.0000 0 0);
+  --sidebar-accent: oklch(0.9736 0.0421 150.6102);
+  --sidebar-accent-foreground: oklch(0.4117 0.0329 223.1840);
+  --sidebar-border: oklch(0.9659 0.0025 228.7842);
+  --sidebar-ring: oklch(0.7870 0.2618 142.7428);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: oklch(0.2414 0.0367 238.0621);
+  --foreground: oklch(0.9111 0.0080 216.6275);
+  --card: oklch(0.3171 0.0375 227.2337);
+  --card-foreground: oklch(0.9111 0.0080 216.6275);
+  --popover: oklch(0.3171 0.0375 227.2337);
+  --popover-foreground: oklch(0.9111 0.0080 216.6275);
+  --primary: oklch(0.8064 0.2193 148.0156);
+  --primary-foreground: oklch(0.2414 0.0367 238.0621);
+  --secondary: oklch(0.3712 0.0342 225.9755);
+  --secondary-foreground: oklch(0.7442 0.0106 267.3334);
+  --muted: oklch(0.2765 0.0288 226.6057);
+  --muted-foreground: oklch(0.5884 0.0252 229.3905);
+  --accent: oklch(0.4117 0.0329 223.1840);
+  --accent-foreground: oklch(0.7442 0.0106 267.3334);
+  --destructive: oklch(0.6747 0.2255 5.7366);
+  --destructive-foreground: oklch(0.2414 0.0367 238.0621);
+  --border: oklch(0.4837 0.0297 218.3601);
+  --input: oklch(0.4837 0.0297 218.3601);
+  --ring: oklch(0.8064 0.2193 148.0156);
+  --sidebar: oklch(0.3171 0.0375 227.2337);
+  --sidebar-foreground: oklch(0.9111 0.0080 216.6275);
+  --sidebar-primary: oklch(0.8064 0.2193 148.0156);
+  --sidebar-primary-foreground: oklch(0.2414 0.0367 238.0621);
+  --sidebar-accent: oklch(0.4117 0.0329 223.1840);
+  --sidebar-accent-foreground: oklch(0.7442 0.0106 267.3334);
+  --sidebar-border: oklch(0.4837 0.0297 218.3601);
+  --sidebar-ring: oklch(0.8064 0.2193 148.0156);
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+/* Base Styles */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Scrollbar Styling - MilSim Dark Theme */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded;
+    border: 1px solid transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/60;
+  }
+}
+
+/* Component Styles - MilSim Military Design */
+@layer components {
+  /* Fire Solution Value Display - Large Monospace Numbers */
+  .value-display {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    @apply text-5xl font-black tracking-wider;
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  /* Panel Styling - Military Cards */
+  .panel {
+    @apply bg-card border border-border rounded-md p-4;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Military Section Headers */
+  .section-header {
+    @apply uppercase tracking-widest text-xs font-bold text-muted-foreground;
+    letter-spacing: 0.15em;
+  }
+
+  /* Input Fields - MilSim Style */
+  .input-field {
+    @apply bg-input border border-border rounded px-3 py-2 text-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent;
+    @apply transition-all duration-200;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  /* Button Styles - Military/Tactical */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-semibold px-4 py-2 rounded;
+    @apply hover:opacity-90 active:scale-95;
+    @apply transition-all duration-200;
+    @apply border border-primary/30;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground px-4 py-2 rounded;
+    @apply border border-border;
+    @apply hover:bg-secondary/80 active:scale-95;
+    @apply transition-all duration-200;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-danger {
+    @apply bg-destructive text-destructive-foreground px-4 py-2 rounded;
+    @apply hover:opacity-90 active:scale-95;
+    @apply transition-all duration-200;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Military Badge/Tag */
+  .badge {
+    @apply inline-block px-2 py-1 text-xs font-bold rounded;
+    @apply border uppercase tracking-wide;
+  }
+
+  .badge-primary {
+    @apply bg-primary/20 text-primary border-primary/40;
+  }
+
+  .badge-secondary {
+    @apply bg-muted text-muted-foreground border-border;
+  }
+
+  /* Scan Line Effect (optional - for CRT monitor feel) */
+  .scan-line {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scan-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(134, 239, 172, 0.3), transparent);
+    animation: scan 3s linear infinite;
+  }
+
+  @keyframes scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+  }
+}
+
+/* Utility Animations */
+@layer utilities {
+  /* Value Update Pulse */
+  .animate-pulse-value {
+    animation: pulse-value 0.4s ease-out;
+  }
+
+  @keyframes pulse-value {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Ready to Fire Pulse */
+  .pulse-ready {
+    animation: pulse-ready 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ready {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Fade In */
+  .fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* Leaflet Map Styling - Dark Theme Integration */
+.map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Dark theme for Leaflet controls */
+.leaflet-control-zoom {
+  @apply border border-border;
+}
+
+.leaflet-control-zoom a {
+  @apply bg-card text-foreground border-b border-border;
+}
+
+.leaflet-control-zoom a:hover {
+  @apply bg-muted;
+}
+
+/* Tooltip styling */
+.leaflet-tooltip {
+  @apply bg-card/95 border border-primary text-foreground;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 6px 8px;
+  backdrop-filter: blur(4px);
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before {
+  @apply border-t-card/95;
+}
+
+/* Map click instruction tooltip */
+.map-click-tooltip {
+  @apply bg-card/90 border border-primary rounded shadow-lg;
+  padding: 8px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+
+/* Marker styling - entferne Leaflet's Standard-Rahmen */
+.mortar-marker,
+.target-marker {
+  cursor: move;
+  transition: filter 0.2s;
+  background: none !important;
+  border: none !important;
+}
+
+.leaflet-div-icon {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove any Leaflet bounds/selection boxes */
+.leaflet-interactive:focus {
+  outline: none !important;
+}
+
+.leaflet-overlay-pane svg {
+  outline: none !important;
+}
+
+.leaflet-image-layer {
+  outline: none !important;
+  border: none !important;
+}
+
+/* Distance label styling */
+.distance-label {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.mortar-marker:hover,
+.target-marker:hover {
+  filter: brightness(1.3) drop-shadow(0 0 8px currentColor);
+}
+
+/* Fire Mission Display - Military Console Style */
+.fire-mission-display {
+  @apply bg-card border-2 border-primary/50;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  position: relative;
+}
+
+.fire-mission-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(134, 239, 172, 0.02) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Grid Lines for Military Feel */
+.grid-lines {
+  background-image:
+    linear-gradient(0deg, transparent 24%, rgba(134, 239, 172, 0.05) 25%, rgba(134, 239, 172, 0.05) 26%, transparent 27%, transparent 74%, rgba(134, 239, 172, 0.05) 75%, rgba(134, 239, 172, 0.05) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(134, 239, 172, 0.05) 25%, rgba(134, 239, 172, 0.05) 26%, transparent 27%, transparent 74%, rgba(134, 239, 172, 0.05) 75%, rgba(134, 239, 172, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+}
+
+/* Map Selector Component */
+.map-selector {
+  @apply flex flex-col gap-2;
+}
+
+.map-selector-label {
+  @apply text-sm font-medium text-gray-300 uppercase tracking-wide;
+}
+
+.map-selector-dropdown {
+  @apply w-full bg-[#0f0f1e] border border-gray-600 rounded-lg px-4 py-2.5;
+  @apply text-white font-medium cursor-pointer;
+  @apply hover:bg-[#16162e] hover:border-blue-500;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+  @apply transition-all duration-200;
+}
+
+.map-selector-dropdown option {
+  @apply bg-[#1a1a2e] text-white;
+}
+
+/* Coordinate Grid Labels - Military MGRS Style */
+.grid-label,
+.grid-label-easting,
+.grid-label-northing {
+  @apply pointer-events-none select-none;
+}
+
+.grid-coord {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-shadow:
+    0 0 4px rgba(0, 0, 0, 0.9),
+    1px 1px 2px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+/* Easting labels (bottom, vertical lines) */
+.grid-coord.easting {
+  color: #93c5fd; /* Blue tint for X-axis */
+}
+
+/* Northing labels (left, horizontal lines) */
+.grid-coord.northing {
+  color: #fca5a5; /* Red tint for Y-axis */
+}

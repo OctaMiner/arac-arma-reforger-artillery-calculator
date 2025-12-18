@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "source": "Arma Reforger Official Data",
+  "sourceUrl": "https://github.com/GeNeFRAG/ArmaReforger/blob/main/mortar_core/ballistic-data.json",
+  "lastUpdated": "2025-12-16T08:37:05.168675Z",
+  "note": "Reference data from GeNeFRAG - matches our local ballistic tables exactly. Contains additional tofPer100m field.",
+  "mortarTypes": [
+    {
+      "id": "RUS",
+      "name": "Russian 82mm Mortar",
+      "caliber": 82,
+      "shellTypes": [
+        {
+          "type": "HE",
+          "name": "High Explosive",
+          "charges": [
+            { "level": 0, "minRange": 50, "maxRange": 500 },
+            { "level": 1, "minRange": 100, "maxRange": 800 },
+            { "level": 2, "minRange": 200, "maxRange": 1400 },
+            { "level": 3, "minRange": 300, "maxRange": 1800 },
+            { "level": 4, "minRange": 400, "maxRange": 2300 }
+          ]
+        },
+        {
+          "type": "Illumination",
+          "name": "Illumination",
+          "charges": [
+            { "level": 1, "minRange": 100, "maxRange": 600 },
+            { "level": 2, "minRange": 200, "maxRange": 1100 },
+            { "level": 3, "minRange": 300, "maxRange": 1600 },
+            { "level": 4, "minRange": 400, "maxRange": 2200 }
+          ]
+        },
+        {
+          "type": "Smoke",
+          "name": "Smoke",
+          "charges": [
+            { "level": 1, "minRange": 50, "maxRange": 450 },
+            { "level": 2, "minRange": 200, "maxRange": 800 },
+            { "level": 3, "minRange": 300, "maxRange": 1200 },
+            { "level": 4, "minRange": 400, "maxRange": 1700 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US",
+      "name": "US M252 81mm Mortar",
+      "caliber": 81,
+      "shellTypes": [
+        {
+          "type": "HE",
+          "name": "High Explosive",
+          "charges": [
+            { "level": 0, "minRange": 50, "maxRange": 400 },
+            { "level": 1, "minRange": 100, "maxRange": 900 },
+            { "level": 2, "minRange": 200, "maxRange": 1600 },
+            { "level": 3, "minRange": 300, "maxRange": 2300 },
+            { "level": 4, "minRange": 400, "maxRange": 2900 }
+          ]
+        },
+        {
+          "type": "Illumination",
+          "name": "Illumination",
+          "charges": [
+            { "level": 1, "minRange": 200, "maxRange": 750 },
+            { "level": 2, "minRange": 200, "maxRange": 1400 },
+            { "level": 3, "minRange": 300, "maxRange": 1900 },
+            { "level": 4, "minRange": 400, "maxRange": 2400 }
+          ]
+        },
+        {
+          "type": "Smoke",
+          "name": "Smoke",
+          "charges": [
+            { "level": 1, "minRange": 200, "maxRange": 750 },
+            { "level": 2, "minRange": 200, "maxRange": 1400 },
+            { "level": 3, "minRange": 300, "maxRange": 1900 },
+            { "level": 4, "minRange": 400, "maxRange": 2400 }
+          ]
+        }
+      ]
+    }
+  ]
+}

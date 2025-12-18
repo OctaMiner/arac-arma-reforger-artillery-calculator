@@ -1,0 +1,272 @@
+/**
+ * Main App Store - Central state management for mortar calculator
+ *
+ * Manages:
+ * - Mortar configuration (type, ammo, charge)
+ * - Mortar and target positions
+ * - Fire solution calculation
+ * - Selected map
+ */
+
+import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
+import type {
+  Coordinate,
+  MortarConfig,
+  FireSolution,
+  MortarType,
+  AmmoType,
+  RingCount,
+  WindData
+} from '../types'
+import { calculateFireSolutionAuto, calculateFireSolution, calculateWindCorrection, applyWindToAzimuth } from '../lib/ballistics'
+
+interface AppState {
+  // Configuration
+  mortarConfig: MortarConfig
+  selectedMap: string
+
+  // Manual charge override (null = auto mode)
+  manualChargeOverride: RingCount | null
+
+  // Wind
+  windData: WindData | null
+
+  // Positions
+  mortarPosition: Coordinate | null
+  targetPosition: Coordinate | null
+
+  // Results
+  fireSolution: FireSolution | null
+
+  // UI State
+  isCalculating: boolean
+  error: string | null
+  showGrid: boolean
+
+  // Actions
+  setMortarConfig: (config: Partial<MortarConfig>) => void
+  setMortarType: (type: MortarType) => void
+  setAmmoType: (ammo: AmmoType) => void
+  setCharge: (charge: RingCount) => void
+  setManualChargeOverride: (charge: RingCount | null) => void
+  setWindData: (wind: WindData | null) => void
+  setMortarPosition: (position: Coordinate | null) => void
+  setTargetPosition: (position: Coordinate | null) => void
+  setSelectedMap: (mapId: string) => void
+  setShowGrid: (show: boolean) => void
+  toggleGrid: () => void
+  calculateSolution: () => void
+  reset: () => void
+}
+
+const DEFAULT_CONFIG: MortarConfig = {
+  type: 'US',
+  ammo: 'HE',
+  charge: 4
+}
+
+export const useAppStore = create<AppState>()(
+  devtools(
+    (set, get) => ({
+      // Initial state
+      mortarConfig: DEFAULT_CONFIG,
+      selectedMap: 'everon',
+      manualChargeOverride: null, // null = automatic mode
+      windData: null, // null = no wind
+      mortarPosition: null,
+      targetPosition: null,
+      fireSolution: null,
+      isCalculating: false,
+      error: null,
+      showGrid: true, // Grid enabled by default
+
+      // Actions
+      setMortarConfig: (config) =>
+        set(
+          (state) => ({
+            mortarConfig: { ...state.mortarConfig, ...config }
+          }),
+          false,
+          'setMortarConfig'
+        ),
+
+      setMortarType: (type) =>
+        set(
+          (state) => ({
+            mortarConfig: { ...state.mortarConfig, type }
+          }),
+          false,
+          'setMortarType'
+        ),
+
+      setAmmoType: (ammo) =>
+        set(
+          (state) => ({
+            mortarConfig: { ...state.mortarConfig, ammo }
+          }),
+          false,
+          'setAmmoType'
+        ),
+
+      setCharge: (charge) =>
+        set(
+          (state) => ({
+            mortarConfig: { ...state.mortarConfig, charge }
+          }),
+          false,
+          'setCharge'
+        ),
+
+      setManualChargeOverride: (charge) =>
+        set({ manualChargeOverride: charge }, false, 'setManualChargeOverride'),
+
+      setWindData: (wind) =>
+        set({ windData: wind }, false, 'setWindData'),
+
+      setMortarPosition: (position) =>
+        set({ mortarPosition: position }, false, 'setMortarPosition'),
+
+      setTargetPosition: (position) =>
+        set({ targetPosition: position }, false, 'setTargetPosition'),
+
+      setSelectedMap: (mapId) =>
+        set({ selectedMap: mapId }, false, 'setSelectedMap'),
+
+      setShowGrid: (show) =>
+        set({ showGrid: show }, false, 'setShowGrid'),
+
+      toggleGrid: () =>
+        set((state) => ({ showGrid: !state.showGrid }), false, 'toggleGrid'),
+
+      calculateSolution: () => {
+        const state = get()
+        const { mortarPosition, targetPosition, mortarConfig, manualChargeOverride, windData } = state
+
+        // Validation
+        if (!mortarPosition || !targetPosition) {
+          set({
+            error: 'Mörser- und Zielposition müssen gesetzt sein',
+            fireSolution: null
+          })
+          return
+        }
+
+        try {
+          set({ isCalculating: true, error: null }, false, 'calculateSolution/start')
+
+          let solution: FireSolution
+
+          // MANUAL MODE: User has explicitly chosen a ring
+          if (manualChargeOverride !== null) {
+            solution = calculateFireSolution({
+              mortar: mortarPosition,
+              target: targetPosition,
+              mortarType: mortarConfig.type,
+              ammoType: mortarConfig.ammo,
+              ringCount: manualChargeOverride
+            })
+          } else {
+            // AUTO MODE: Calculate with automatic optimal ring selection
+            solution = calculateFireSolutionAuto({
+              mortar: mortarPosition,
+              target: targetPosition,
+              mortarType: mortarConfig.type,
+              ammoType: mortarConfig.ammo
+            })
+
+            // Update the mortarConfig charge to match the calculated optimal charge
+            // This keeps the UI in sync but the calculation drives the charge, not the input
+            if (solution.recommendedCharge !== undefined) {
+              set(
+                (state) => ({
+                  mortarConfig: { ...state.mortarConfig, charge: solution.recommendedCharge! }
+                }),
+                false,
+                'calculateSolution/updateCharge'
+              )
+            }
+          }
+
+          // Apply wind correction if wind data is provided
+          if (windData && windData.speed > 0 && solution.inRange) {
+            const windCorrection = calculateWindCorrection(
+              windData,
+              solution.azimuthDeg,
+              solution.flightTime,
+              solution.distance
+            )
+
+            const azimuthWithWind = applyWindToAzimuth(
+              solution.azimuthMil,
+              windCorrection
+            )
+
+            // Wind affects elevation slightly through range correction
+            // For simplicity, we'll use the same elevation but could adjust for range change
+            const elevationWithWind = solution.elevationAdj
+
+            solution = {
+              ...solution,
+              windCorrection,
+              azimuthWithWind,
+              elevationWithWind
+            }
+          }
+
+          set(
+            {
+              fireSolution: solution,
+              isCalculating: false,
+              error: solution.inRange ? null : 'Ziel außer Reichweite'
+            },
+            false,
+            'calculateSolution/success'
+          )
+        } catch (err) {
+          set(
+            {
+              fireSolution: null,
+              isCalculating: false,
+              error:
+                err instanceof Error
+                  ? err.message
+                  : 'Fehler bei der Berechnung'
+            },
+            false,
+            'calculateSolution/error'
+          )
+        }
+      },
+
+      reset: () =>
+        set(
+          {
+            mortarConfig: DEFAULT_CONFIG,
+            manualChargeOverride: null,
+            windData: null,
+            mortarPosition: null,
+            targetPosition: null,
+            fireSolution: null,
+            isCalculating: false,
+            error: null,
+            showGrid: true // Keep grid visible after reset
+          },
+          false,
+          'reset'
+        )
+    }),
+    {
+      name: 'app-store',
+      enabled: process.env.NODE_ENV === 'development'
+    }
+  )
+)
+
+// Selectors for performance optimization
+export const selectMortarConfig = (state: AppState) => state.mortarConfig
+export const selectMortarPosition = (state: AppState) => state.mortarPosition
+export const selectTargetPosition = (state: AppState) => state.targetPosition
+export const selectFireSolution = (state: AppState) => state.fireSolution
+export const selectIsCalculating = (state: AppState) => state.isCalculating
+export const selectError = (state: AppState) => state.error

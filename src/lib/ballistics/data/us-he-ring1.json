@@ -1,0 +1,63 @@
+{
+  "mortarType": "US",
+  "ammoType": "HE",
+  "ringCount": 1,
+  "minRange": 100,
+  "maxRange": 900,
+  "entries": [
+    {
+      "range": 100,
+      "elevation": 1547,
+      "tof": 20.0,
+      "dElev": 28
+    },
+    {
+      "range": 200,
+      "elevation": 1492,
+      "tof": 19.9,
+      "dElev": 27
+    },
+    {
+      "range": 300,
+      "elevation": 1437,
+      "tof": 19.7,
+      "dElev": 29
+    },
+    {
+      "range": 400,
+      "elevation": 1378,
+      "tof": 19.5,
+      "dElev": 31
+    },
+    {
+      "range": 500,
+      "elevation": 1317,
+      "tof": 19.2,
+      "dElev": 33
+    },
+    {
+      "range": 600,
+      "elevation": 1249,
+      "tof": 18.8,
+      "dElev": 35
+    },
+    {
+      "range": 700,
+      "elevation": 1174,
+      "tof": 18.3,
+      "dElev": 42
+    },
+    {
+      "range": 800,
+      "elevation": 1085,
+      "tof": 17.5,
+      "dElev": 57
+    },
+    {
+      "range": 900,
+      "elevation": 954,
+      "tof": 16.1,
+      "dElev": 148
+    }
+  ]
+}

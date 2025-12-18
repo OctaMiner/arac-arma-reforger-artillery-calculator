@@ -1,0 +1,41 @@
+{
+  "weapon": "US Mortar",
+  "shell": "M821 HE",
+  "ringCount": 4,
+  "averageDispersion": "15m",
+  "source": "In-Game Artillery Table Screenshot",
+  "data": [
+    { "range": 400, "elevation": 1531, "timeOfFlight": 36.3, "dElevPer100m": 36, "tofPer100m": null },
+    { "range": 500, "elevation": 1514, "timeOfFlight": 36.2, "dElevPer100m": 37, "tofPer100m": null },
+    { "range": 600, "elevation": 1496, "timeOfFlight": 36.2, "dElevPer100m": 36, "tofPer100m": 0.1 },
+    { "range": 700, "elevation": 1478, "timeOfFlight": 36.1, "dElevPer100m": 36, "tofPer100m": null },
+    { "range": 800, "elevation": 1460, "timeOfFlight": 36.0, "dElevPer100m": 35, "tofPer100m": null },
+    { "range": 900, "elevation": 1442, "timeOfFlight": 35.9, "dElevPer100m": 35, "tofPer100m": null },
+    { "range": 1000, "elevation": 1424, "timeOfFlight": 35.8, "dElevPer100m": 36, "tofPer100m": null },
+    { "range": 1100, "elevation": 1405, "timeOfFlight": 35.7, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 1200, "elevation": 1385, "timeOfFlight": 35.6, "dElevPer100m": 34, "tofPer100m": 0.1 },
+    { "range": 1300, "elevation": 1366, "timeOfFlight": 35.4, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 1400, "elevation": 1346, "timeOfFlight": 35.3, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 1500, "elevation": 1326, "timeOfFlight": 35.1, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 1600, "elevation": 1305, "timeOfFlight": 34.9, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 1700, "elevation": 1283, "timeOfFlight": 34.6, "dElevPer100m": 34, "tofPer100m": 0.1 },
+    { "range": 1800, "elevation": 1261, "timeOfFlight": 34.4, "dElevPer100m": 34, "tofPer100m": 0.1 },
+    { "range": 1900, "elevation": 1238, "timeOfFlight": 34.1, "dElevPer100m": 35, "tofPer100m": 0.1 },
+    { "range": 2000, "elevation": 1214, "timeOfFlight": 33.8, "dElevPer100m": 34, "tofPer100m": 0.1 },
+    { "range": 2100, "elevation": 1188, "timeOfFlight": 33.5, "dElevPer100m": 34, "tofPer100m": null },
+    { "range": 2200, "elevation": 1162, "timeOfFlight": 33.1, "dElevPer100m": 35, "tofPer100m": 0.2 },
+    { "range": 2300, "elevation": 1134, "timeOfFlight": 32.7, "dElevPer100m": 36, "tofPer100m": 0.2 },
+    { "range": 2400, "elevation": 1104, "timeOfFlight": 32.2, "dElevPer100m": 36, "tofPer100m": 0.2 },
+    { "range": 2500, "elevation": 1070, "timeOfFlight": 31.7, "dElevPer100m": 36, "tofPer100m": 0.3 },
+    { "range": 2600, "elevation": 1034, "timeOfFlight": 31.0, "dElevPer100m": 38, "tofPer100m": 0.3 },
+    { "range": 2700, "elevation": 993, "timeOfFlight": 30.3, "dElevPer100m": 42, "tofPer100m": 0.5 },
+    { "range": 2800, "elevation": 942, "timeOfFlight": 29.2, "dElevPer100m": 48, "tofPer100m": 0.6 },
+    { "range": 2900, "elevation": 870, "timeOfFlight": 27.7, "dElevPer100m": 79, "tofPer100m": 1.5 }
+  ],
+  "notes": {
+    "elevation": "Elevation angle in MIL (milliradians)",
+    "dElevPer100m": "Elevation change per 100m height difference (for height correction)",
+    "tofPer100m": "Time of flight change per 100m height difference",
+    "usage": "For targets at different heights: if target is HIGHER, DECREASE elevation; if LOWER, INCREASE elevation"
+  }
+}

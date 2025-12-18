@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<!--
+  Reference Implementation: Arma Reforger Map Viewer
+  Source: https://github.com/GeNeFRAG/ArmaReforger/blob/main/maps_core/map_viewer.html
+  Author: GeNeFRAG
+
+  This is a reference implementation for Leaflet.js map integration.
+  Use this as a guide for implementing the MapView component.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arma Reforger Map Viewer (Reference)</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            max-width: 300px;
+        }
+
+        #controls h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        #map-selector {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #2a2a2a;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        #map-info {
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+
+        #map-info div {
+            margin: 4px 0;
+        }
+
+        #map-info label {
+            color: #888;
+            display: inline-block;
+            width: 80px;
+        }
+
+        #map-info span {
+            color: #4CAF50;
+        }
+
+        .grid-controls {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+
+        .grid-controls button {
+            width: 100%;
+            padding: 8px;
+            background: #2a2a2a;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .grid-controls button:hover {
+            background: #3a3a3a;
+        }
+
+        .grid-controls button.active {
+            background: #4CAF50;
+            color: #000;
+        }
+
+        .grid-controls input {
+            width: 100%;
+            margin-top: 8px;
+            padding: 6px;
+            background: #2a2a2a;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .tile-status {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+            font-size: 11px;
+            color: #888;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0a0a0a;
+        }
+
+        .leaflet-container {
+            background: #0a0a0a;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <h2>Arma Reforger Maps</h2>
+        <select id="map-selector">
+            <option value="">Loading maps...</option>
+        </select>
+        <div id="map-info">
+            <div><label>Size:</label><span id="info-size">-</span></div>
+            <div><label>Max Zoom:</label><span id="info-zoom">-</span></div>
+            <div><label>Namespace:</label><span id="info-namespace">-</span></div>
+            <div><label>N / E:</label><span id="info-coords">-</span></div>
+        </div>
+        <div class="grid-controls">
+            <button id="grid-toggle">Show Grid (10m)</button>
+            <input type="number" id="grid-size" value="10" min="10" max="1000" step="10" placeholder="Grid size (meters)">
+        </div>
+        <div class="tile-status">
+            <strong>CDN Mode:</strong> Maps loaded from external CDN
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // ===========================================
+        // REFERENCE IMPLEMENTATION NOTES:
+        // ===========================================
+        // Key concepts for ARAC implementation:
+        // 1. L.CRS.Simple - Pixel-based coordinate system
+        // 2. Bounds = [[0, 0], [height, width]] - Map bounds in pixels
+        // 3. Coordinates: lat = North (Y), lng = East (X)
+        // 4. Grid adapts to zoom level
+        // ===========================================
+
+        let map;
+        let currentLayer;
+        let mapsData = [];
+        let gridLayer = null;
+        let gridEnabled = false;
+        let currentMapData = null;
+
+        function initMap() {
+            map = L.map('map', {
+                crs: L.CRS.Simple,  // IMPORTANT: Use Simple CRS for game maps
+                minZoom: -2,
+                maxZoom: 7,
+                zoomControl: true,
+                attributionControl: false
+            });
+
+            map.setView([0, 0], 0);
+
+            // Track mouse position for coordinate display
+            map.on('mousemove', (e) => {
+                if (!currentMapData) return;
+
+                const coords = e.latlng;
+                const [width, height] = currentMapData.size;
+
+                // Convert Leaflet coords to game coords
+                // In Leaflet Simple CRS: lat = Y, lng = X
+                // In game: North = Y (from bottom), East = X (from left)
+                const east = Math.round(coords.lng);
+                const north = Math.round(height - coords.lat);
+
+                document.getElementById('info-coords').textContent = `${north} / ${east}`;
+            });
+
+            map.on('mouseout', () => {
+                document.getElementById('info-coords').textContent = '-';
+            });
+
+            // Adaptive grid based on zoom
+            map.on('zoomend', () => {
+                if (gridEnabled) {
+                    updateGridSizeForZoom();
+                    const currentIndex = document.getElementById('map-selector').selectedIndex;
+                    if (currentIndex >= 0 && mapsData[currentIndex]) {
+                        drawGrid(mapsData[currentIndex]);
+                    }
+                }
+            });
+        }
+
+        function updateGridSizeForZoom() {
+            const zoom = map.getZoom();
+            let gridSize;
+
+            // Adaptive grid sizes based on zoom level
+            if (zoom < -1) {
+                gridSize = 1000;  // 1km grid at very low zoom
+            } else if (zoom < 0) {
+                gridSize = 500;
+            } else if (zoom < 1) {
+                gridSize = 200;
+            } else if (zoom < 2) {
+                gridSize = 100;
+            } else if (zoom < 3) {
+                gridSize = 50;
+            } else if (zoom < 4) {
+                gridSize = 20;
+            } else {
+                gridSize = 10;   // 10m grid at high zoom
+            }
+
+            document.getElementById('grid-size').value = gridSize;
+            const button = document.getElementById('grid-toggle');
+            if (gridEnabled) {
+                button.textContent = `Hide Grid (${gridSize}m)`;
+            } else {
+                button.textContent = `Show Grid (${gridSize}m)`;
+            }
+        }
+
+        async function loadMapsData() {
+            try {
+                // In ARAC: Load from local data/maps/all_arma_maps.json
+                const response = await fetch('../data/maps/all_arma_maps.json');
+                if (!response.ok) throw new Error('Failed to load maps data');
+
+                mapsData = await response.json();
+                populateMapSelector();
+
+                if (mapsData.length > 0) {
+                    loadMap(0);
+                }
+            } catch (error) {
+                console.error('Error loading maps:', error);
+                document.getElementById('map-selector').innerHTML =
+                    '<option class="error">Error loading maps</option>';
+            }
+        }
+
+        function populateMapSelector() {
+            const selector = document.getElementById('map-selector');
+            selector.innerHTML = '';
+
+            mapsData.forEach((mapData, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = mapData.name;
+                selector.appendChild(option);
+            });
+        }
+
+        function loadMap(index) {
+            const mapData = mapsData[index];
+            if (!mapData) return;
+
+            currentMapData = mapData;
+
+            if (currentLayer) {
+                map.removeLayer(currentLayer);
+            }
+
+            const [width, height] = mapData.size;
+
+            // IMPORTANT: Bounds format for L.CRS.Simple
+            // [[south, west], [north, east]] = [[0, 0], [height, width]]
+            const bounds = [[0, 0], [height, width]];
+
+            // Load map image from CDN
+            const imageUrl = mapData.resources.map_image;
+            currentLayer = L.imageOverlay(imageUrl, bounds, {
+                opacity: 1,
+                interactive: false
+            });
+
+            currentLayer.addTo(map);
+            map.fitBounds(bounds);
+            map.setMaxZoom(mapData.max_zoom);
+            updateInfo(mapData);
+
+            if (gridEnabled) {
+                drawGrid(mapData);
+            }
+        }
+
+        function drawGrid(mapData) {
+            if (gridLayer) {
+                map.removeLayer(gridLayer);
+            }
+
+            const gridSizeMeters = parseInt(document.getElementById('grid-size').value) || 10;
+            // In Arma: 1 pixel = 1 meter (approximately)
+            const gridSizePixels = gridSizeMeters;
+
+            const [width, height] = mapData.size;
+            const lines = [];
+
+            // Vertical lines (East)
+            for (let x = 0; x <= width; x += gridSizePixels) {
+                lines.push([
+                    [0, x],
+                    [height, x]
+                ]);
+            }
+
+            // Horizontal lines (North)
+            for (let y = 0; y <= height; y += gridSizePixels) {
+                lines.push([
+                    [y, 0],
+                    [y, width]
+                ]);
+            }
+
+            gridLayer = L.layerGroup();
+
+            lines.forEach(coords => {
+                L.polyline(coords, {
+                    color: '#ffffff',
+                    weight: 1,
+                    opacity: 0.3,
+                    dashArray: '5, 5',
+                    interactive: false
+                }).addTo(gridLayer);
+            });
+
+            gridLayer.addTo(map);
+        }
+
+        function toggleGrid() {
+            gridEnabled = !gridEnabled;
+            const button = document.getElementById('grid-toggle');
+
+            if (gridEnabled) {
+                button.classList.add('active');
+                updateGridSizeForZoom();
+                const currentIndex = document.getElementById('map-selector').selectedIndex;
+                if (currentIndex >= 0 && mapsData[currentIndex]) {
+                    drawGrid(mapsData[currentIndex]);
+                }
+            } else {
+                button.classList.remove('active');
+                const gridSize = document.getElementById('grid-size').value;
+                button.textContent = `Show Grid (${gridSize}m)`;
+                if (gridLayer) {
+                    map.removeLayer(gridLayer);
+                    gridLayer = null;
+                }
+            }
+        }
+
+        function updateInfo(mapData) {
+            document.getElementById('info-size').textContent =
+                `${mapData.size[0]} x ${mapData.size[1]}m`;
+            document.getElementById('info-zoom').textContent =
+                mapData.max_zoom;
+            document.getElementById('info-namespace').textContent =
+                mapData.namespace;
+        }
+
+        // Event Listeners
+        document.getElementById('map-selector').addEventListener('change', (e) => {
+            const index = parseInt(e.target.value);
+            if (!isNaN(index)) {
+                loadMap(index);
+            }
+        });
+
+        document.getElementById('grid-toggle').addEventListener('click', toggleGrid);
+
+        document.getElementById('grid-size').addEventListener('change', (e) => {
+            const gridSize = e.target.value;
+            const button = document.getElementById('grid-toggle');
+            if (gridEnabled) {
+                button.textContent = `Hide Grid (${gridSize}m)`;
+                const currentIndex = document.getElementById('map-selector').selectedIndex;
+                if (currentIndex >= 0 && mapsData[currentIndex]) {
+                    drawGrid(mapsData[currentIndex]);
+                }
+            } else {
+                button.textContent = `Show Grid (${gridSize}m)`;
+            }
+        });
+
+        // Initialize
+        initMap();
+        loadMapsData();
+    </script>
+</body>
+</html>

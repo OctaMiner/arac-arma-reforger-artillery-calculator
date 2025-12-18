@@ -1,0 +1,340 @@
+{
+  "mortarType": "RUS",
+  "ammoType": "Illumination",
+  "rings": {
+    "1": [
+      {
+        "range": 100,
+        "elevation": 1421,
+        "tof": 16.4,
+        "dElev": 40
+      },
+      {
+        "range": 150,
+        "elevation": 1381,
+        "tof": 16.3,
+        "dElev": 42
+      },
+      {
+        "range": 200,
+        "elevation": 1339,
+        "tof": 16.2,
+        "dElev": 43
+      },
+      {
+        "range": 250,
+        "elevation": 1296,
+        "tof": 16.1,
+        "dElev": 45
+      },
+      {
+        "range": 300,
+        "elevation": 1251,
+        "tof": 15.9,
+        "dElev": 48
+      },
+      {
+        "range": 350,
+        "elevation": 1203,
+        "tof": 15.7,
+        "dElev": 52
+      },
+      {
+        "range": 400,
+        "elevation": 1151,
+        "tof": 15.4,
+        "dElev": 58
+      },
+      {
+        "range": 450,
+        "elevation": 1093,
+        "tof": 15.0,
+        "dElev": 65
+      },
+      {
+        "range": 500,
+        "elevation": 1028,
+        "tof": 14.5,
+        "dElev": 83
+      },
+      {
+        "range": 550,
+        "elevation": 945,
+        "tof": 13.8,
+        "dElev": 146
+      },
+      {
+        "range": 600,
+        "elevation": 799,
+        "tof": 12.3,
+        "dElev": 0
+      }
+    ],
+    "2": [
+      {
+        "range": 200,
+        "elevation": 1417,
+        "tof": 23.6,
+        "dElev": 21
+      },
+      {
+        "range": 300,
+        "elevation": 1374,
+        "tof": 23.5,
+        "dElev": 22
+      },
+      {
+        "range": 400,
+        "elevation": 1330,
+        "tof": 23.3,
+        "dElev": 23
+      },
+      {
+        "range": 500,
+        "elevation": 1284,
+        "tof": 23.1,
+        "dElev": 24
+      },
+      {
+        "range": 600,
+        "elevation": 1234,
+        "tof": 22.8,
+        "dElev": 25
+      },
+      {
+        "range": 700,
+        "elevation": 1182,
+        "tof": 22.4,
+        "dElev": 29
+      },
+      {
+        "range": 800,
+        "elevation": 1124,
+        "tof": 21.9,
+        "dElev": 32
+      },
+      {
+        "range": 900,
+        "elevation": 1057,
+        "tof": 21.3,
+        "dElev": 36
+      },
+      {
+        "range": 1000,
+        "elevation": 979,
+        "tof": 20.4,
+        "dElev": 48
+      },
+      {
+        "range": 1100,
+        "elevation": 870,
+        "tof": 18.9,
+        "dElev": 89
+      }
+    ],
+    "3": [
+      {
+        "range": 300,
+        "elevation": 1411,
+        "tof": 29.0,
+        "dElev": 16
+      },
+      {
+        "range": 400,
+        "elevation": 1380,
+        "tof": 28.9,
+        "dElev": 16
+      },
+      {
+        "range": 500,
+        "elevation": 1348,
+        "tof": 28.7,
+        "dElev": 16
+      },
+      {
+        "range": 600,
+        "elevation": 1315,
+        "tof": 28.6,
+        "dElev": 16
+      },
+      {
+        "range": 700,
+        "elevation": 1281,
+        "tof": 28.4,
+        "dElev": 17
+      },
+      {
+        "range": 800,
+        "elevation": 1246,
+        "tof": 28.1,
+        "dElev": 18
+      },
+      {
+        "range": 900,
+        "elevation": 1209,
+        "tof": 27.8,
+        "dElev": 19
+      },
+      {
+        "range": 1000,
+        "elevation": 1170,
+        "tof": 27.4,
+        "dElev": 21
+      },
+      {
+        "range": 1100,
+        "elevation": 1128,
+        "tof": 27.0,
+        "dElev": 23
+      },
+      {
+        "range": 1200,
+        "elevation": 1082,
+        "tof": 26.5,
+        "dElev": 25
+      },
+      {
+        "range": 1300,
+        "elevation": 1031,
+        "tof": 25.8,
+        "dElev": 28
+      },
+      {
+        "range": 1400,
+        "elevation": 973,
+        "tof": 25.0,
+        "dElev": 33
+      },
+      {
+        "range": 1500,
+        "elevation": 903,
+        "tof": 23.9,
+        "dElev": 43
+      },
+      {
+        "range": 1600,
+        "elevation": 807,
+        "tof": 22.3,
+        "dElev": 0
+      }
+    ],
+    "4": [
+      {
+        "range": 400,
+        "elevation": 1411,
+        "tof": 35.3,
+        "dElev": 12
+      },
+      {
+        "range": 500,
+        "elevation": 1388,
+        "tof": 35.2,
+        "dElev": 12
+      },
+      {
+        "range": 600,
+        "elevation": 1364,
+        "tof": 35.1,
+        "dElev": 11
+      },
+      {
+        "range": 700,
+        "elevation": 1341,
+        "tof": 35.0,
+        "dElev": 13
+      },
+      {
+        "range": 800,
+        "elevation": 1316,
+        "tof": 34.8,
+        "dElev": 13
+      },
+      {
+        "range": 900,
+        "elevation": 1291,
+        "tof": 34.7,
+        "dElev": 13
+      },
+      {
+        "range": 1000,
+        "elevation": 1265,
+        "tof": 34.4,
+        "dElev": 13
+      },
+      {
+        "range": 1100,
+        "elevation": 1238,
+        "tof": 34.2,
+        "dElev": 14
+      },
+      {
+        "range": 1200,
+        "elevation": 1210,
+        "tof": 33.9,
+        "dElev": 14
+      },
+      {
+        "range": 1300,
+        "elevation": 1181,
+        "tof": 33.6,
+        "dElev": 15
+      },
+      {
+        "range": 1400,
+        "elevation": 1150,
+        "tof": 33.2,
+        "dElev": 15
+      },
+      {
+        "range": 1500,
+        "elevation": 1119,
+        "tof": 32.8,
+        "dElev": 17
+      },
+      {
+        "range": 1600,
+        "elevation": 1085,
+        "tof": 32.4,
+        "dElev": 18
+      },
+      {
+        "range": 1700,
+        "elevation": 1048,
+        "tof": 31.8,
+        "dElev": 19
+      },
+      {
+        "range": 1800,
+        "elevation": 1009,
+        "tof": 31.2,
+        "dElev": 21
+      },
+      {
+        "range": 1900,
+        "elevation": 965,
+        "tof": 30.4,
+        "dElev": 23
+      },
+      {
+        "range": 2000,
+        "elevation": 917,
+        "tof": 29.6,
+        "dElev": 27
+      },
+      {
+        "range": 2100,
+        "elevation": 860,
+        "tof": 28.4,
+        "dElev": 34
+      },
+      {
+        "range": 2200,
+        "elevation": 787,
+        "tof": 26.9,
+        "dElev": 0
+      }
+    ]
+  },
+  "minRange": 100,
+  "maxRange": 2200
+}

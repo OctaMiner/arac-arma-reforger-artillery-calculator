@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-12-15 16:03:01.561449",
+  "validated_tables": [
+    "rus-he-ring0",
+    "rus-he-ring1",
+    "rus-he-ring2",
+    "rus-he-ring3",
+    "rus-he-ring4",
+    "rus-illumination",
+    "rus-smoke",
+    "us-he-ring0",
+    "us-he-ring1",
+    "us-he-ring2",
+    "us-he-ring3",
+    "us-he-ring4",
+    "us-illumination",
+    "us-smoke"
+  ],
+  "warnings": [],
+  "errors": []
+}

@@ -1,0 +1,57 @@
+{
+  "mortarType": "RUS",
+  "ammoType": "HE",
+  "ringCount": 1,
+  "minRange": 100,
+  "maxRange": 800,
+  "entries": [
+    {
+      "range": 100,
+      "elevation": 1446,
+      "tof": 19.5,
+      "dElev": 27
+    },
+    {
+      "range": 200,
+      "elevation": 1392,
+      "tof": 19.4,
+      "dElev": 28
+    },
+    {
+      "range": 300,
+      "elevation": 1335,
+      "tof": 19.2,
+      "dElev": 29
+    },
+    {
+      "range": 400,
+      "elevation": 1275,
+      "tof": 18.9,
+      "dElev": 31
+    },
+    {
+      "range": 500,
+      "elevation": 1212,
+      "tof": 18.6,
+      "dElev": 35
+    },
+    {
+      "range": 600,
+      "elevation": 1141,
+      "tof": 18.1,
+      "dElev": 40
+    },
+    {
+      "range": 700,
+      "elevation": 1058,
+      "tof": 17.4,
+      "dElev": 48
+    },
+    {
+      "range": 800,
+      "elevation": 952,
+      "tof": 16.4,
+      "dElev": 81
+    }
+  ]
+}
