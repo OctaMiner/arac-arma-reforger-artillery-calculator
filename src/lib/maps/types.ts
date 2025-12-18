@@ -39,7 +39,13 @@ export interface MapConfig {
   maxZoom: number // From source data (5-7)
   defaultZoom: number // Calculated default
   gridInterval: number // Grid spacing (100m default)
+  category: MapCategory // 'vanilla' or 'mods'
 }
+
+/**
+ * Map categories for organizing the map selector
+ */
+export type MapCategory = 'vanilla' | 'mods'
 
 /**
  * All available map IDs (namespaces)
@@ -71,6 +77,11 @@ export type MapId =
   | 'zimnitrita'
 
 /**
+ * Vanilla maps (official Bohemia maps)
+ */
+export const VANILLA_MAPS: MapId[] = ['everon', 'arland', 'kolguev']
+
+/**
  * Maps with height data available
  */
 export const MAPS_WITH_HEIGHT_DATA: MapId[] = [
@@ -91,6 +102,7 @@ export const MAPS_WITH_HEIGHT_DATA: MapId[] = [
  */
 export function convertRawToMapConfig(raw: ArmaMapRaw): MapConfig {
   const [width, height] = raw.size
+  const isVanilla = VANILLA_MAPS.includes(raw.namespace as MapId)
 
   return {
     id: raw.namespace,
@@ -105,7 +117,8 @@ export function convertRawToMapConfig(raw: ArmaMapRaw): MapConfig {
     minZoom: -3, // Lower min zoom to see full map
     maxZoom: raw.max_zoom,
     defaultZoom: -2, // Start zoomed out to see full map (Gene's approach: fitBounds)
-    gridInterval: 100
+    gridInterval: 100,
+    category: isVanilla ? 'vanilla' : 'mods'
   }
 }
 

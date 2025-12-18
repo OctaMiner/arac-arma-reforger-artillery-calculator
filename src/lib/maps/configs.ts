@@ -35,16 +35,18 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     max_zoom: 6,
     resources: {
       map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/arland_sat_z6_full.png",
-      height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/arland_height.json"
+      // Local height data for faster loading
+      height_data: "/height_data/arland_height.json"
     }
   },
   {
     name: "Kolguev",
     namespace: "kolguev",
     size: [12800, 12800],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading (~180MB vs ~600MB)
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/kolguev_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/kolguev_sat_z6_full.png",
+      // CDN height data (too large for GitHub: 134MB)
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/kolguev_height.json"
     }
   },
@@ -52,9 +54,9 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Anizay",
     namespace: "anizay",
     size: [10240, 10240],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/anizay_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/anizay_sat_z6_full.png",
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/anizay_height.json"
     }
   },
@@ -71,9 +73,9 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Belleau Wood",
     namespace: "belleau",
     size: [12032, 12032],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/belleau_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/belleau_sat_z6_full.png"
     }
   },
   {
@@ -89,9 +91,9 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Gogland",
     namespace: "gogland",
     size: [12286, 12286],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/gogland_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/gogland_sat_z6_full.png",
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/gogland_height.json"
     }
   },
@@ -118,18 +120,18 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Myccano",
     namespace: "myccano",
     size: [6655, 6655],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/myccano_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/myccano_sat_z6_full.png"
     }
   },
   {
     name: "Nizla Island",
     namespace: "nizla",
     size: [17150, 17150],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/nizla_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/nizla_sat_z6_full.png"
     }
   },
   {
@@ -154,27 +156,27 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Rostov",
     namespace: "rostov",
     size: [7935, 7935],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/rostov_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/rostov_sat_z6_full.png"
     }
   },
   {
     name: "Ruha",
     namespace: "ruha",
     size: [8150, 8150],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/ruha_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/ruha_sat_z6_full.png"
     }
   },
   {
     name: "Saigon",
     namespace: "saigon",
     size: [17150, 17150],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/saigon_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/saigon_sat_z6_full.png",
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/saigon_height.json"
     }
   },
@@ -191,18 +193,18 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Serhiivka",
     namespace: "serhiivka",
     size: [10240, 10240],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/serhiivka_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/serhiivka_sat_z6_full.png"
     }
   },
   {
     name: "Takistan",
     namespace: "takistan",
     size: [12900, 12900],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/takistan_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/takistan_sat_z6_full.png",
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/takistan_height.json"
     }
   },
@@ -210,9 +212,9 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Udachne",
     namespace: "udachne",
     size: [5120, 10240],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/udachne_sat_z7_full.png"
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/udachne_sat_z6_full.png"
     }
   },
   {
@@ -229,9 +231,9 @@ const RAW_MAP_DATA: ArmaMapRaw[] = [
     name: "Zimnitrita",
     namespace: "zimnitrita",
     size: [16384, 16384],
-    max_zoom: 7,
+    max_zoom: 6, // Downgraded from z7 for faster loading
     resources: {
-      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/zimnitrita_sat_z7_full.png",
+      map_image: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/zimnitrita_sat_z6_full.png",
       height_data: "https://pub-65310bd5bcd44d68b30addfbacb31e51.r2.dev/height_data/zimnitrita_height.json"
     }
   }
@@ -267,6 +269,19 @@ export function getAvailableMaps(): MapConfig[] {
   return Object.values(MAP_CONFIGS).sort((a, b) =>
     a.displayName.localeCompare(b.displayName)
   )
+}
+
+/**
+ * Get maps grouped by category (Vanilla vs Mods)
+ * Vanilla maps: Everon, Arland, Kolguev
+ * Mods: All other maps
+ */
+export function getMapsByCategory(): { vanilla: MapConfig[]; mods: MapConfig[] } {
+  const allMaps = getAvailableMaps()
+  return {
+    vanilla: allMaps.filter(m => m.category === 'vanilla'),
+    mods: allMaps.filter(m => m.category === 'mods')
+  }
 }
 
 /**

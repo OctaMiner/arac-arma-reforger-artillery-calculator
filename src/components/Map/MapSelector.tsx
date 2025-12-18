@@ -12,13 +12,13 @@
  */
 
 import { useAppStore } from '../../stores/useAppStore'
-import { getAvailableMaps, type MapId } from '../../lib/maps'
+import { getMapsByCategory, type MapId } from '../../lib/maps'
 import { Map, Mountain } from 'lucide-react'
 
 export function MapSelector() {
   const selectedMap = useAppStore((state) => state.selectedMap)
   const setSelectedMap = useAppStore((state) => state.setSelectedMap)
-  const availableMaps = getAvailableMaps() // Already sorted alphabetically
+  const { vanilla, mods } = getMapsByCategory() // Grouped by category
 
   const handleMapChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const mapId = event.target.value as MapId
@@ -26,7 +26,8 @@ export function MapSelector() {
   }
 
   // Get selected map config to show height data badge
-  const selectedMapConfig = availableMaps.find(m => m.id === selectedMap)
+  const allMaps = [...vanilla, ...mods]
+  const selectedMapConfig = allMaps.find(m => m.id === selectedMap)
 
   return (
     <div className="space-y-2">
@@ -69,11 +70,20 @@ export function MapSelector() {
             text-sm
           "
         >
-          {availableMaps.map((map) => (
-            <option key={map.id} value={map.id}>
-              {map.displayName} {map.hasHeightData ? '⛰️' : ''}
-            </option>
-          ))}
+          <optgroup label="Vanilla">
+            {vanilla.map((map) => (
+              <option key={map.id} value={map.id}>
+                {map.displayName} {map.hasHeightData ? '⛰️' : ''}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="Mods">
+            {mods.map((map) => (
+              <option key={map.id} value={map.id}>
+                {map.displayName} {map.hasHeightData ? '⛰️' : ''}
+              </option>
+            ))}
+          </optgroup>
         </select>
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
           <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
