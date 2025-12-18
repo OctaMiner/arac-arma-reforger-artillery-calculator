@@ -10,6 +10,7 @@
  */
 
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   Circle,
   Compass,
@@ -25,6 +26,7 @@ import { useAppStore } from '../../stores/useAppStore'
 import { getMaximumRange, getMinimumRange } from '../../lib/ballistics/range'
 
 export function ResultsBar() {
+  const { t } = useTranslation()
   const fireSolution = useAppStore((state) => state.fireSolution)
   const mortarConfig = useAppStore((state) => state.mortarConfig)
   const windData = useAppStore((state) => state.windData)
@@ -101,13 +103,13 @@ export function ResultsBar() {
   const getStatusText = () => {
     switch (status) {
       case 'ready':
-        return 'READY'
+        return t('results.ready', 'READY')
       case 'outOfRange':
-        return 'OUT OF RANGE'
+        return t('results.outOfRange')
       case 'suboptimal':
-        return 'SUBOPTIMAL'
+        return t('results.suboptimal', 'SUBOPTIMAL')
       default:
-        return 'AWAITING'
+        return t('results.awaiting', 'AWAITING')
     }
   }
 

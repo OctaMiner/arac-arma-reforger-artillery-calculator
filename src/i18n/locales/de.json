@@ -1,0 +1,118 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "meters": "m",
+    "mil": "MIL",
+    "seconds": "s"
+  },
+  "header": {
+    "title": "ARAC",
+    "subtitle": "Artillerie Rechner"
+  },
+  "sidebar": {
+    "language": "Sprache",
+    "map": "Karte",
+    "vanilla": "Vanilla",
+    "mods": "Mods",
+    "heightData": "Höhendaten"
+  },
+  "config": {
+    "title": "Konfiguration",
+    "mortarType": "Mörser-Typ",
+    "ammoType": "Munitionstyp",
+    "charge": "Ladung",
+    "he": "HE (Spreng)",
+    "smoke": "Rauch",
+    "illumination": "Leucht",
+    "ring": "Ring"
+  },
+  "positions": {
+    "mortar": "Mörser",
+    "target": "Ziel",
+    "east": "Ost",
+    "north": "Nord",
+    "height": "Höhe",
+    "auto": "Auto",
+    "manual": "Manuell"
+  },
+  "results": {
+    "title": "Feuerlösung",
+    "azimuth": "Azimut",
+    "elevation": "Elevation",
+    "distance": "Entfernung",
+    "flightTime": "Flugzeit",
+    "ringCount": "Ladung",
+    "heightDiff": "Höhendiff.",
+    "noSolution": "Keine Lösung",
+    "outOfRange": "AUSSER REICHWEITE",
+    "deadZone": "Totzone",
+    "setPositions": "Mörser und Ziel setzen",
+    "ready": "BEREIT",
+    "suboptimal": "SUBOPTIMAL",
+    "awaiting": "WARTE"
+  },
+  "map": {
+    "leftClick": "Linksklick = Mörser",
+    "rightClick": "Rechtsklick = Ziel",
+    "coordinates": "Koordinaten"
+  },
+  "missions": {
+    "title": "Missionen",
+    "save": "Mission speichern",
+    "load": "Laden",
+    "name": "Name",
+    "description": "Beschreibung",
+    "noMissions": "Keine Missionen gespeichert"
+  },
+  "stations": {
+    "title": "Stationen",
+    "save": "Station speichern",
+    "name": "Name",
+    "noStations": "Keine Stationen gespeichert"
+  },
+  "spotter": {
+    "title": "Spotter",
+    "enable": "Spotter-Modus",
+    "position": "Spotter-Position",
+    "distance": "Entfernung",
+    "azimuth": "Azimut",
+    "calculateTarget": "Ziel berechnen",
+    "correction": "Korrektur",
+    "left": "Links",
+    "right": "Rechts",
+    "add": "Drauf",
+    "drop": "Ab"
+  },
+  "faq": {
+    "title": "Hilfe / FAQ",
+    "quickRef": "Schnellreferenz",
+    "q_coordinates": "Was bedeutet das Koordinatenformat 049,8 / 038,5?",
+    "a_coordinates": "Die Koordinaten entsprechen dem Ingame-Format. Die 3 Ziffern vor dem Komma sind das 100m-Raster (wie auf der Ingame-Karte sichtbar), die Dezimalstelle zeigt die 10m-Position. Beispiel: 049,8 = 4980m vom Kartenrand. Das Format ist: Ost / Nord.",
+    "q_mortarPos": "Wie setze ich die Mörser-Position?",
+    "a_mortarPos": "Linksklick auf die Karte setzt die Mörser-Position (blauer Marker). Die Höhe wird automatisch aus den Kartendaten ermittelt.",
+    "q_targetPos": "Wie setze ich das Ziel?",
+    "a_targetPos": "Rechtsklick oder Shift+Klick auf die Karte setzt die Ziel-Position (roter Marker). Alternativ: Ctrl+Klick oder Alt+Klick.",
+    "q_circles": "Was bedeuten die farbigen Kreise?",
+    "a_circles": "Die Kreise zeigen die Reichweiten der verschiedenen Ladungsstufen (Ring 0-4). Grün = nah, Rot = weit. Der aktive Ring wird farbig gefüllt.",
+    "q_deadzone": "Was ist die Totzone?",
+    "a_deadzone": "Der dunkelrote innere Kreis markiert die Mindestreichweite. Ziele in diesem Bereich können nicht getroffen werden.",
+    "q_autoRing": "Wie funktioniert die automatische Ringwahl?",
+    "a_autoRing": "Der optimale Ring wird basierend auf der Entfernung zum Ziel automatisch berechnet. Niedrigere Ringe = kürzere Flugzeit = höhere Präzision.",
+    "q_azimuthElevation": "Was bedeuten Azimut und Elevation?",
+    "a_azimuthElevation": "Azimut = Richtung in MIL (0-6400). Elevation = Höhenwinkel in MIL. Diese Werte am Mörser einstellen.",
+    "q_savePositions": "Wie speichere ich Positionen?",
+    "a_savePositions": "Nutze die \"Stationen\" und \"Missionen\" Panels um häufig verwendete Positionen zu speichern und schnell wieder aufzurufen."
+  },
+  "rangeWarning": {
+    "outOfRange": "AUSSER REICHWEITE",
+    "deadZone": "TOTZONE"
+  }
+}

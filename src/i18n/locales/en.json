@@ -1,0 +1,118 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "meters": "m",
+    "mil": "MIL",
+    "seconds": "s"
+  },
+  "header": {
+    "title": "ARAC",
+    "subtitle": "Artillery Calculator"
+  },
+  "sidebar": {
+    "language": "Language",
+    "map": "Map",
+    "vanilla": "Vanilla",
+    "mods": "Mods",
+    "heightData": "Height Data"
+  },
+  "config": {
+    "title": "Configuration",
+    "mortarType": "Mortar Type",
+    "ammoType": "Ammo Type",
+    "charge": "Charge",
+    "he": "HE (Explosive)",
+    "smoke": "Smoke",
+    "illumination": "Illumination",
+    "ring": "Ring"
+  },
+  "positions": {
+    "mortar": "Mortar",
+    "target": "Target",
+    "east": "East",
+    "north": "North",
+    "height": "Height",
+    "auto": "Auto",
+    "manual": "Manual"
+  },
+  "results": {
+    "title": "Fire Solution",
+    "azimuth": "Azimuth",
+    "elevation": "Elevation",
+    "distance": "Distance",
+    "flightTime": "Flight Time",
+    "ringCount": "Charge",
+    "heightDiff": "Height Diff.",
+    "noSolution": "No Solution",
+    "outOfRange": "OUT OF RANGE",
+    "deadZone": "Dead Zone",
+    "setPositions": "Set mortar and target",
+    "ready": "READY",
+    "suboptimal": "SUBOPTIMAL",
+    "awaiting": "AWAITING"
+  },
+  "map": {
+    "leftClick": "Left-click = Mortar",
+    "rightClick": "Right-click = Target",
+    "coordinates": "Coordinates"
+  },
+  "missions": {
+    "title": "Missions",
+    "save": "Save Mission",
+    "load": "Load",
+    "name": "Name",
+    "description": "Description",
+    "noMissions": "No missions saved"
+  },
+  "stations": {
+    "title": "Stations",
+    "save": "Save Station",
+    "name": "Name",
+    "noStations": "No stations saved"
+  },
+  "spotter": {
+    "title": "Spotter",
+    "enable": "Spotter Mode",
+    "position": "Spotter Position",
+    "distance": "Distance",
+    "azimuth": "Azimuth",
+    "calculateTarget": "Calculate Target",
+    "correction": "Correction",
+    "left": "Left",
+    "right": "Right",
+    "add": "Add",
+    "drop": "Drop"
+  },
+  "faq": {
+    "title": "Help / FAQ",
+    "quickRef": "Quick Reference",
+    "q_coordinates": "What does the coordinate format 049.8 / 038.5 mean?",
+    "a_coordinates": "The coordinates match the in-game format. The 3 digits before the decimal are the 100m grid (as shown on the in-game map), the decimal shows the 10m position. Example: 049.8 = 4980m from map edge. Format is: East / North.",
+    "q_mortarPos": "How do I set the mortar position?",
+    "a_mortarPos": "Left-click on the map sets the mortar position (blue marker). Height is automatically determined from map data.",
+    "q_targetPos": "How do I set the target?",
+    "a_targetPos": "Right-click or Shift+click on the map sets the target position (red marker). Alternatively: Ctrl+click or Alt+click.",
+    "q_circles": "What do the colored circles mean?",
+    "a_circles": "The circles show the ranges of different charge levels (Ring 0-4). Green = close, Red = far. The active ring is filled with color.",
+    "q_deadzone": "What is the dead zone?",
+    "a_deadzone": "The dark red inner circle marks the minimum range. Targets in this area cannot be hit.",
+    "q_autoRing": "How does automatic ring selection work?",
+    "a_autoRing": "The optimal ring is automatically calculated based on the distance to target. Lower rings = shorter flight time = higher precision.",
+    "q_azimuthElevation": "What do azimuth and elevation mean?",
+    "a_azimuthElevation": "Azimuth = direction in MIL (0-6400). Elevation = angle in MIL. Set these values on the mortar.",
+    "q_savePositions": "How do I save positions?",
+    "a_savePositions": "Use the \"Stations\" and \"Missions\" panels to save frequently used positions and quickly recall them."
+  },
+  "rangeWarning": {
+    "outOfRange": "OUT OF RANGE",
+    "deadZone": "DEAD ZONE"
+  }
+}

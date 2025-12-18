@@ -3,7 +3,7 @@
  * Arma Reforger Artillery Calculator
  */
 
-import { Sidebar, MainContent, ResultsBar, FAQ } from './components/Layout'
+import { Sidebar, MainContent, ResultsBar, FAQ, LanguageSelector } from './components/Layout'
 import { ConfigPanel, WindInput } from './components/Config'
 import { MissionPanel } from './components/Mission'
 import { StationPanel } from './components/Station'
@@ -24,6 +24,7 @@ function App() {
     <div className="h-screen flex overflow-hidden bg-background">
       {/* Sidebar - Full Height, Contains Header + Panels */}
       <Sidebar>
+        <LanguageSelector />
         <ConfigPanel />
         <MissionPanel />
         <StationPanel />

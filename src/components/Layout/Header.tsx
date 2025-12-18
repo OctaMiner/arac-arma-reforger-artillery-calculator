@@ -8,10 +8,12 @@
  * - Compact design
  */
 
+import { useTranslation } from 'react-i18next'
 import { useAppStore } from '../../stores/useAppStore'
 import { Target } from 'lucide-react'
 
 export function Header() {
+  const { t } = useTranslation()
   const mortarType = useAppStore((state) => state.mortarConfig.type)
 
   return (
@@ -24,10 +26,10 @@ export function Header() {
           </div>
           <div className="flex flex-col">
             <h1 className="text-2xl font-black text-primary tracking-[0.2em] uppercase" style={{ fontFamily: "'Courier New', monospace" }}>
-              ARAC
+              {t('header.title')}
             </h1>
             <p className="section-header text-[10px] tracking-[0.25em]">
-              Artillery Calc v0.1
+              {t('header.subtitle')} v0.1
             </p>
           </div>
         </div>
@@ -35,7 +37,7 @@ export function Header() {
 
       {/* Mortar Type Badge */}
       <div className="flex items-center gap-2">
-        <span className="section-header text-[10px]">Mortar Type</span>
+        <span className="section-header text-[10px]">{t('config.mortarType')}</span>
         <span className={`badge ${mortarType === 'US' ? 'badge-primary' : 'bg-destructive/20 text-destructive border-destructive/40'}`}>
           {mortarType === 'US' ? 'M252 (USA)' : 'M82 (RUS)'}
         </span>
