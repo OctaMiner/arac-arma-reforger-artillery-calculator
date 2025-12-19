@@ -49,7 +49,10 @@ export {
 export {
   calculateFireSolution,
   calculateFireSolutionAuto,
+  calculateFireSolutionWithTerrain,
+  calculateFireSolutionWithTerrainAuto,
   type FireSolutionParams,
+  type FireSolutionWithTerrainParams,
 } from './fireSolution.js';
 
 // Wind correction calculations
@@ -76,4 +79,5 @@ export type {
   BallisticEntry,
   WindData,
   WindCorrection,
+  FireSolutionWithTerrain,
 } from '../../types/index.js';

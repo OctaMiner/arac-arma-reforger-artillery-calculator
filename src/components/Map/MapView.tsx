@@ -19,6 +19,8 @@ import MortarMarker from './MortarMarker';
 import TargetMarker from './TargetMarker';
 import SpotterMarker from './SpotterMarker';
 import StationMarkers from './StationMarkers';
+import CollisionMarker from './CollisionMarker';
+import MapLegend from './MapLegend';
 import FireLine from './FireLine';
 import SpotterLine from './SpotterLine';
 import RangeCircle from './RangeCircle';
@@ -280,6 +282,7 @@ const MapView = memo(() => {
           <StationMarkers />
           <MortarMarker />
           <TargetMarker />
+          <CollisionMarker />
           <SpotterMarker />
           <FireLine />
           <SpotterLine />
@@ -288,6 +291,9 @@ const MapView = memo(() => {
           <CoordinateDisplay />
         </MapContainer>
       )}
+
+      {/* Map Legend - positioned absolutely in bottom-left */}
+      <MapLegend />
     </div>
   );
 });

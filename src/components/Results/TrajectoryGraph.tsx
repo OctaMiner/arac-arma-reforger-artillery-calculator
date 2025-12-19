@@ -397,8 +397,10 @@ export function TrajectoryGraph() {
   const impactX = toSvgX(trajectoryEndDistance);
   const impactY = toSvgY(trajectoryEndHeight);
 
-  // Check if trajectory clears terrain and find worst collision point
-  let trajectoryBlocked = false;
+  // Use blockageInfo from fireSolution if available (synchronized with map marker)
+  // Otherwise fall back to local calculation for visual display
+  const blockageInfo = fireSolution.blockageInfo;
+  let trajectoryBlocked = fireSolution.trajectoryBlocked || fireSolution.originalRingBlocked || false;
   let worstCollision: {
     distance: number;
     terrainHeight: number;
@@ -406,7 +408,16 @@ export function TrajectoryGraph() {
     clearance: number;
   } | null = null;
 
-  if (terrainProfile) {
+  // Use fireSolution blockageInfo if available (ensures sync with map marker)
+  if (blockageInfo && blockageInfo.distance > 0) {
+    worstCollision = {
+      distance: blockageInfo.distance,
+      terrainHeight: blockageInfo.terrainHeight,
+      trajectoryHeight: blockageInfo.trajectoryHeight,
+      clearance: blockageInfo.trajectoryHeight - blockageInfo.terrainHeight,
+    };
+  } else if (terrainProfile) {
+    // Fallback: local calculation if no blockageInfo
     for (let i = 0; i < terrainProfile.length; i++) {
       const p = terrainProfile[i];
 
@@ -416,8 +427,6 @@ export function TrajectoryGraph() {
       }
 
       // Skip start and end zones (first/last 5% of trajectory)
-      // The trajectory naturally starts at mortar height and ends at impact,
-      // so checking these zones would always show false collisions
       if (
         p.distance < trajectoryEndDistance * 0.05 ||
         p.distance > trajectoryEndDistance * 0.95

@@ -13,18 +13,19 @@ import { devtools } from 'zustand/middleware';
 import type {
   Coordinate,
   MortarConfig,
-  FireSolution,
+  FireSolutionWithTerrain,
   MortarType,
   AmmoType,
   RingCount,
   WindData,
 } from '../types';
 import {
-  calculateFireSolutionAuto,
-  calculateFireSolution,
+  calculateFireSolutionWithTerrain,
+  calculateFireSolutionWithTerrainAuto,
   calculateWindCorrection,
   applyWindToAzimuth,
 } from '../lib/ballistics';
+import { getTerrainProfile, isHeightDataLoaded, preloadHeightData } from '../lib/maps/heightService';
 
 interface AppState {
   // Configuration
@@ -42,7 +43,7 @@ interface AppState {
   targetPosition: Coordinate | null;
 
   // Results
-  fireSolution: FireSolution | null;
+  fireSolution: FireSolutionWithTerrain | null;
 
   // UI State
   isCalculating: boolean;
@@ -61,7 +62,7 @@ interface AppState {
   setSelectedMap: (mapId: string) => void;
   setShowGrid: (show: boolean) => void;
   toggleGrid: () => void;
-  calculateSolution: () => void;
+  calculateSolution: () => Promise<void>;
   reset: () => void;
 }
 
@@ -154,7 +155,7 @@ export const useAppStore = create<AppState>()(
       toggleGrid: () =>
         set((state) => ({ showGrid: !state.showGrid }), false, 'toggleGrid'),
 
-      calculateSolution: () => {
+      calculateSolution: async () => {
         const state = get();
         const {
           mortarPosition,
@@ -162,6 +163,7 @@ export const useAppStore = create<AppState>()(
           mortarConfig,
           manualChargeOverride,
           windData,
+          selectedMap,
         } = state;
 
         // Validation
@@ -180,24 +182,43 @@ export const useAppStore = create<AppState>()(
             'calculateSolution/start'
           );
 
-          let solution: FireSolution;
+          // Preload height data if not already loaded, then get terrain profile
+          let terrainProfile = null;
+          if (!isHeightDataLoaded(selectedMap)) {
+            // Wait for height data to load (max 5 seconds)
+            await preloadHeightData(selectedMap);
+          }
+
+          if (isHeightDataLoaded(selectedMap)) {
+            terrainProfile = getTerrainProfile(
+              selectedMap,
+              mortarPosition.east,
+              mortarPosition.north,
+              targetPosition.east,
+              targetPosition.north
+            );
+          }
+
+          let solution: FireSolutionWithTerrain;
 
           // MANUAL MODE: User has explicitly chosen a ring
           if (manualChargeOverride !== null) {
-            solution = calculateFireSolution({
+            solution = calculateFireSolutionWithTerrain({
               mortar: mortarPosition,
               target: targetPosition,
               mortarType: mortarConfig.type,
               ammoType: mortarConfig.ammo,
               ringCount: manualChargeOverride,
+              terrainProfile,
             });
           } else {
-            // AUTO MODE: Calculate with automatic optimal ring selection
-            solution = calculateFireSolutionAuto({
+            // AUTO MODE: Calculate with automatic optimal ring selection + terrain
+            solution = calculateFireSolutionWithTerrainAuto({
               mortar: mortarPosition,
               target: targetPosition,
               mortarType: mortarConfig.type,
               ammoType: mortarConfig.ammo,
+              terrainProfile,
             });
 
             // Update the mortarConfig charge to match the calculated optimal charge
@@ -242,11 +263,21 @@ export const useAppStore = create<AppState>()(
             };
           }
 
+          // Determine error message: use solution's errorMessage if available
+          let errorMsg: string | null = null;
+          if (solution.errorMessage) {
+            errorMsg = solution.errorMessage;
+          } else if (solution.trajectoryBlocked) {
+            errorMsg = 'Aus dieser Stellung ist das Ziel nicht erreichbar. Bitte ändern Sie die Position der Mörserstellung.';
+          } else if (!solution.inRange) {
+            errorMsg = 'Ziel außer Reichweite';
+          }
+
           set(
             {
               fireSolution: solution,
               isCalculating: false,
-              error: solution.inRange ? null : 'Ziel außer Reichweite',
+              error: errorMsg,
             },
             false,
             'calculateSolution/success'

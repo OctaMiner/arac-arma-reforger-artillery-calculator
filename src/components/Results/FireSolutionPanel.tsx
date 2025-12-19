@@ -83,11 +83,14 @@ export const FireSolutionPanel = memo(() => {
     );
   }
 
+  // Check if trajectory is blocked by terrain
+  const isTerrainBlocked = fireSolution.trajectoryBlocked || false;
+
   // Render fire solution
   return (
     <div className="flex-1 flex flex-col p-6 gap-6 overflow-y-auto">
       {/* Range Warning - Full Width at Top */}
-      {!fireSolution.inRange && (
+      {!fireSolution.inRange && !isTerrainBlocked && (
         <RangeWarning
           distance={fireSolution.distance}
           minRange={minRange}
@@ -99,7 +102,7 @@ export const FireSolutionPanel = memo(() => {
 
       {/* Main Fire Solution Grid */}
       <div
-        className={`grid grid-cols-2 gap-8 ${!fireSolution.inRange ? 'opacity-50' : ''}`}
+        className={`grid grid-cols-2 gap-8 ${!fireSolution.inRange || isTerrainBlocked ? 'opacity-50' : ''}`}
       >
         {/* PRIMARY VALUES - Top Row (Azimuth & Elevation) */}
         <div className="flex items-center justify-center p-8 bg-bg-secondary border-2 border-accent-blue/30 rounded-lg">
@@ -135,7 +138,7 @@ export const FireSolutionPanel = memo(() => {
 
       {/* TERTIARY INFO - Distance (Full Width) */}
       <div
-        className={`flex items-center justify-center p-6 bg-bg-secondary border border-border rounded-lg ${!fireSolution.inRange ? 'opacity-50' : ''}`}
+        className={`flex items-center justify-center p-6 bg-bg-secondary border border-border rounded-lg ${!fireSolution.inRange || isTerrainBlocked ? 'opacity-50' : ''}`}
       >
         <DistanceDisplay distance={fireSolution.distance} />
       </div>

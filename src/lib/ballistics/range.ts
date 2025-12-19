@@ -400,6 +400,113 @@ export function findOptimalRingForHeight(
 }
 
 /**
+ * Parabola parameters for trajectory calculation
+ */
+export interface ParabolaParams {
+  /** Coefficient a in y = a(x-h)² + k */
+  a: number;
+  /** X position of apex (distance from mortar) */
+  apexX: number;
+  /** Height of apex (absolute meters) */
+  apexHeight: number;
+  /** Mortar height (meters) */
+  mortarHeight: number;
+}
+
+/**
+ * Calculate parabola parameters for trajectory
+ *
+ * Uses vertex form: y = a(x - h)² + k where (h, k) is the apex
+ * This formula ensures the parabola passes through both start and end points
+ *
+ * The apex X position is determined by the elevation angle:
+ * - Higher elevation (steeper) = apex earlier in flight
+ * - Lower elevation (flatter) = apex closer to midpoint
+ *
+ * @param distance - Target distance in meters
+ * @param elevation - Elevation angle in mils
+ * @param mortarHeight - Mortar altitude in meters
+ * @param targetHeight - Target altitude in meters
+ * @param flightTime - Estimated flight time in seconds (for apex height calculation)
+ * @returns Parabola parameters for trajectory calculation
+ */
+export function calculateParabolaParams(
+  distance: number,
+  elevation: number,
+  mortarHeight: number,
+  targetHeight: number,
+  flightTime: number = 25
+): ParabolaParams {
+  const d = distance;
+  const startHeight = mortarHeight;
+  const endHeight = targetHeight;
+  const heightDiff = endHeight - startHeight;
+
+  // Determine apex X position based on elevation
+  // Higher elevation (steeper) = apex earlier in flight
+  // Range: 800 MIL (flat, ~45°) → ratio 0.45
+  //        1200 MIL (steep, ~67°) → ratio 0.35
+  //        1500 MIL (very steep, ~84°) → ratio 0.25
+  let apexXRatio: number;
+  if (elevation === 0 || flightTime === 0) {
+    apexXRatio = 0.45; // Default for max range
+  } else {
+    apexXRatio = Math.max(0.25, Math.min(0.48, 0.55 - (elevation - 800) / 2000));
+  }
+
+  // Clamp apex to before midpoint for downward-opening parabola
+  let apexX = d * apexXRatio;
+  apexX = Math.min(apexX, d * 0.48);
+
+  // Calculate parabola parameters
+  // From vertex form through two points:
+  // a = heightDiff / [d × (d - 2h)]
+  // k = startHeight - a × h²
+  const denominator = d * (d - 2 * apexX);
+
+  let parabolaA: number;
+  let apexHeight: number;
+
+  if (Math.abs(denominator) > 0.001) {
+    parabolaA = heightDiff / denominator;
+    apexHeight = startHeight - parabolaA * apexX * apexX;
+  } else {
+    // Fallback: apex at 40% of distance, estimate height from flight time
+    apexX = d * 0.4;
+    const g = 9.81;
+    const timeToApex = flightTime * 0.4;
+    apexHeight = startHeight + (timeToApex * timeToApex * g) / 2;
+    parabolaA = (startHeight - apexHeight) / (apexX * apexX);
+  }
+
+  // Ensure apex is above both endpoints (sanity check)
+  const minApexHeight = Math.max(startHeight, endHeight) + 30;
+  if (apexHeight < minApexHeight) {
+    apexHeight = minApexHeight;
+    // Recalculate parabolaA to pass through start
+    parabolaA = (startHeight - apexHeight) / (apexX * apexX);
+  }
+
+  return {
+    a: parabolaA,
+    apexX,
+    apexHeight,
+    mortarHeight,
+  };
+}
+
+/**
+ * Calculate trajectory height at a given distance using parabola parameters
+ *
+ * @param x - Distance from mortar in meters
+ * @param params - Parabola parameters from calculateParabolaParams
+ * @returns Absolute height at distance x in meters
+ */
+export function getTrajectoryHeightAt(x: number, params: ParabolaParams): number {
+  return params.a * (x - params.apexX) * (x - params.apexX) + params.apexHeight;
+}
+
+/**
  * Calculate trajectory apex (maximum height) for a mortar round
  *
  * Ballistic trajectory physics:
@@ -422,6 +529,7 @@ export function findOptimalRingForHeight(
  * @param elevation - Elevation angle in mils
  * @param ringCount - Propellant ring count (0-4)
  * @returns Estimated apex height above mortar in meters
+ * @deprecated Use calculateParabolaParams and getTrajectoryHeightAt instead
  */
 export function calculateTrajectoryApex(
   distance: number,
@@ -453,32 +561,49 @@ export function calculateTrajectoryApex(
 /**
  * Check if trajectory collides with terrain
  *
+ * Uses accurate parabola calculation that matches TrajectoryGraph visualization
  * Samples the trajectory at regular intervals and checks against terrain profile
  * with safety margin
  *
  * @param distance - Target distance in meters
  * @param elevation - Elevation angle in mils
- * @param ringCount - Propellant ring count
+ * @param _ringCount - Propellant ring count (deprecated, kept for API compatibility)
  * @param mortarHeight - Mortar altitude in meters
  * @param terrainProfile - Array of terrain points between mortar and target
+ * @param targetHeight - Target altitude in meters (optional, defaults to last terrain point or mortarHeight)
+ * @param flightTime - Flight time in seconds (optional, for apex calculation)
  * @returns True if trajectory hits terrain, false if clear
  */
 export function checkTerrainCollision(
   distance: number,
   elevation: number,
-  ringCount: RingCount,
+  _ringCount: RingCount,
   mortarHeight: number,
-  terrainProfile: TerrainPoint[]
+  terrainProfile: TerrainPoint[],
+  targetHeight?: number,
+  flightTime?: number
 ): boolean {
   if (!terrainProfile || terrainProfile.length === 0) {
     return false; // No terrain data = assume clear
   }
 
-  // Calculate apex height
-  const apex = calculateTrajectoryApex(distance, elevation, ringCount);
+  // Get target height from last terrain point if not provided
+  const actualTargetHeight =
+    targetHeight ??
+    terrainProfile[terrainProfile.length - 1]?.height ??
+    mortarHeight;
 
-  // Safety margin: require 20m clearance above terrain
-  const SAFETY_MARGIN = 20;
+  // Calculate parabola parameters (same as TrajectoryGraph)
+  const params = calculateParabolaParams(
+    distance,
+    elevation,
+    mortarHeight,
+    actualTargetHeight,
+    flightTime ?? 25
+  );
+
+  // Safety margin: require 10m clearance above terrain
+  const SAFETY_MARGIN = 10;
 
   // Check each terrain point
   for (const point of terrainProfile) {
@@ -492,28 +617,16 @@ export function checkTerrainCollision(
       continue;
     }
 
-    // Calculate trajectory height at this distance
-    // Parabolic approximation with apex at midpoint
-    const progressRatio = point.distance / distance;
-
-    // Parabolic trajectory: rises to apex at midpoint, then descends
-    let trajectoryHeight: number;
-
-    if (progressRatio <= 0.5) {
-      // Ascending phase: quadratic rise to apex
-      const t = progressRatio * 2; // 0 to 1
-      trajectoryHeight = apex * (2 * t - t * t);
-    } else {
-      // Descending phase: quadratic descent from apex
-      const t = (progressRatio - 0.5) * 2; // 0 to 1
-      trajectoryHeight = apex * (1 - t * t);
+    // Skip first and last 5% of trajectory (similar to TrajectoryGraph)
+    if (point.distance < distance * 0.05 || point.distance > distance * 0.95) {
+      continue;
     }
 
-    // Add mortar altitude to get absolute height
-    const absoluteTrajectoryHeight = mortarHeight + trajectoryHeight;
+    // Calculate trajectory height at this distance using accurate parabola
+    const trajectoryHeight = getTrajectoryHeightAt(point.distance, params);
 
     // Check collision with safety margin
-    if (point.height + SAFETY_MARGIN > absoluteTrajectoryHeight) {
+    if (point.height + SAFETY_MARGIN > trajectoryHeight) {
       return true; // Terrain blocks trajectory (or too close)
     }
   }
@@ -590,12 +703,14 @@ export function findBestRing(
 
       // Check 2: Terrain collision?
       if (terrainProfile && terrainProfile.length > 0) {
+        const targetHeight = mortarHeight + heightDiff;
         const hasCollision = checkTerrainCollision(
           distance,
           elevation,
           ring,
           mortarHeight,
-          terrainProfile
+          terrainProfile,
+          targetHeight
         );
 
         if (hasCollision) {

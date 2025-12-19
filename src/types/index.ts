@@ -63,6 +63,44 @@ export interface FireSolution {
   recommendedCharge?: RingCount;
 }
 
+// --- Fire Solution with Terrain Analysis (erweitert) ---
+export interface FireSolutionWithTerrain extends FireSolution {
+  /** Indicates if trajectory is blocked by terrain */
+  trajectoryBlocked: boolean;
+
+  /** Original ring was blocked (auto-corrected to different ring) */
+  originalRingBlocked?: boolean;
+
+  /** Suggested alternative if terrain collision detected */
+  suggestedAlternative?: {
+    /** Recommended ring count to clear obstacle */
+    ring: RingCount;
+    /** Optional azimuth correction in MIL (positive = right) */
+    azimuthCorrection?: number;
+    /** Reason for suggestion */
+    reason: string;
+  };
+
+  /** Details about terrain blockage */
+  blockageInfo?: {
+    /** Distance from mortar where blockage occurs (meters) */
+    distance: number;
+    /** Terrain height at blockage point (meters) */
+    terrainHeight: number;
+    /** Trajectory height at blockage point (meters) */
+    trajectoryHeight: number;
+    /** Minimum apex height needed to clear (meters) */
+    minApexNeeded: number;
+    /** East coordinate of collision point */
+    east?: number;
+    /** North coordinate of collision point */
+    north?: number;
+  };
+
+  /** Error message if no solution possible */
+  errorMessage?: string;
+}
+
 // --- Fire Mission (Gespeicherte Mission) ---
 export interface FireMission {
   id: string;

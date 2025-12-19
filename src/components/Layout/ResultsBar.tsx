@@ -88,6 +88,17 @@ export function ResultsBar() {
     return value.toFixed(0);
   };
 
+  // Convert MIL to degrees (6400 MIL = 360°)
+  const milToDegrees = (mil: number | null | undefined) => {
+    if (mil === null || mil === undefined) return null;
+    return (mil * 360) / 6400;
+  };
+
+  const formatDegrees = (value: number | null | undefined) => {
+    if (value === null || value === undefined) return '--.-';
+    return value.toFixed(1);
+  };
+
   // Status colors and icons
   const getStatusIcon = () => {
     switch (status) {
@@ -254,6 +265,32 @@ export function ResultsBar() {
                     )}
               </span>
               <span className="text-xs text-muted-foreground">MIL</span>
+            </div>
+          </div>
+
+          <div className="h-8 w-px bg-border"></div>
+
+          {/* Elevation in Degrees */}
+          <div className="flex items-center gap-1">
+            <div className="flex items-baseline gap-1">
+              <span
+                className={`font-mono text-base font-semibold ${
+                  status === 'ready'
+                    ? 'text-accent-green/80'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                {isCalculating
+                  ? '--.-'
+                  : formatDegrees(
+                      milToDegrees(
+                        windData && fireSolution?.elevationWithWind !== undefined
+                          ? fireSolution.elevationWithWind
+                          : fireSolution?.elevationAdj
+                      )
+                    )}
+                °
+              </span>
             </div>
           </div>
 
